@@ -1,9 +1,13 @@
-import { Upi } from "../../components";
+import { Upi, BankTransfer, Intent } from "../../components";
 import "./Transactions.css";
 
 function Transactions() {
     return (
-        <Upi />
+        <>
+            {/* <Upi /> */}
+            {/* <BankTransfer /> */}
+            <Intent />
+        </>
     )
 }
 

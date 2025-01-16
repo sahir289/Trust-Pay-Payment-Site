@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
-import "./Upi.css";
-import UtrOrScreenShot from "../../components/utrOrScreenShot/UtrOrScreenShot";
-import { IoCopy } from "react-icons/io5";
+import "./Intent.css";
 
-function Upi() {
+function Intent() {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
+    const [selected, setSelected] = useState(null);
+
+    const handleSelect = (index) => {
+        setSelected(index);
+    };
+
+    const paymentOptions = [
+        { id: 1, name: "Google Pay", img: "src/assets/google-pay.svg" },
+        { id: 2, name: "Phone Pe", img: "src/assets/phone-pe.svg" },
+        { id: 3, name: "Paytm", img: "src/assets/paytm.svg" },
+        { id: 4, name: "Bhim UPI", img: "src/assets/bhim.svg" },
+    ];
 
     useEffect(() => {
         if (remainingTime > 0) {
@@ -48,10 +58,10 @@ function Upi() {
     };
 
     return (
-        <div className="upi-container rounded-3xl">
-            <div className="bg-white p-3 rounded-3xl shadow-md upi-body">
+        <div className="intent-container rounded-3xl">
+            <div className="bg-white p-3 rounded-3xl shadow-md intent-body">
                 <div className="mb-5">
-                    <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
+                    <div className="w-full flex justify-between rounded-t-3xl p-4 text-white intent-header">
                         <div className="flex flex-col items-center self-center">
                             <p className="text-black text-xl">
                                 Payment Time Left
@@ -69,23 +79,23 @@ function Upi() {
                                         className="progress-background"
                                         cx="50"
                                         cy="50"
-                                        r="40" /* Adjusted radius for the new size */
+                                        r="40"
                                         fill="none"
                                         stroke="#e5e5e5"
-                                        strokeWidth="8" /* Scaled stroke width */
+                                        strokeWidth="8"
                                     />
                                     <circle
                                         className="progress-bar"
                                         cx="50"
                                         cy="50"
-                                        r="40" /* Adjusted radius for the new size */
+                                        r="40"
                                         fill="none"
                                         stroke={calculateColor()}
-                                        strokeWidth="8" /* Scaled stroke width */
-                                        strokeDasharray={2 * Math.PI * 40} /* Circumference based on new radius */
+                                        strokeWidth="8"
+                                        strokeDasharray={2 * Math.PI * 40}
                                         strokeDashoffset={2 * Math.PI * 40 - (progressPercentage / 100) * 2 * Math.PI * 40}
                                         strokeLinecap="round"
-                                        transform="rotate(-90 50 50)" /* Adjusted rotation center */
+                                        transform="rotate(-90 50 50)"
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
@@ -101,44 +111,55 @@ function Upi() {
                             ₹900
                         </div>
                     </div>
-                    <p className="text-black text-center text-lg sm:text-base mb-2">
-                        Scan QR Code to Pay
-                    </p>
-                    <div className="flex justify-center items-center qr-code-placeholder">
-                        <div className="qr-code" aria-label="QR Code Placeholder"></div>
-                    </div>
-                    <p className="text-red-500 text-center text-lg sm:text-base mb-4">
-                        <b>ATTENTION: </b>Avoid depositing through PhonePe for any inconvenience
-                    </p>
 
-                    <div className="flex items-center justify-center mb-4">
-                        <p className="text-lg mr-2">uniqueshoe@psbpay</p>
-                        <button aria-label="Copy UPI ID">
-                            <IoCopy className="h-4 w-4" />
-                        </button>
+                    <div className="w-full flex justify-around mb-5 mt-5">
+                        <div
+                            className={`grid ${selected !== null ? "grid-cols-1 place-items-center" : "grid-cols-2 gap-4"}`}
+                        >
+                            {paymentOptions.map((option, index) => (
+                                selected === null || selected === index ? (
+                                    <button
+                                        key={option.id}
+                                        onClick={() => handleSelect(index)}
+                                        className={`flex items-center justify-center p-4 border rounded-lg shadow transition-all
+                                            ${selected === index
+                                                ? "scale-110 text-black bg-gray-200 animate-slide-to-center"  // Apply sliding animation for selected item
+                                                : "bg-gray-200 hover:bg-gray-300"
+                                            }
+                                        `}
+                                        aria-label={`Select ${option.name}`}
+                                    >
+                                        <img
+                                            src={option.img}
+                                            alt={option.name}
+                                            className="w-8 h-8 mr-2"
+                                        />
+                                        <span className="text-lg font-medium">{option.name}</span>
+                                    </button>
+                                ) : null // Remove non-selected items when an option is selected
+                            ))}
+                        </div>
                     </div>
-                </div>
-                <div className="mt-5">
-                    <UtrOrScreenShot />
+
                 </div>
                 <button
                     className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"
                     aria-label="Submit payment details"
                 >
-                    SUBMIT
+                    PAY
                 </button>
                 <p className="text-black text-start text-lg sm:text-base mb-4">
                     <b>Steps for Payment: </b>
                     <br />
-                    1. Scan the QR code displayed above.<span className="text-red-500">*</span>
+                    1. Select the UPI App from which you want to pay.<span className="text-red-500">*</span>
                     <br />
-                    2. Enter UTR number or upload screen shot.<span className="text-red-500">*</span>
+                    2. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
                     <br />
-                    3. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
+                    3. Pay the display Amount.<span className="text-red-500">*</span>
                 </p>
             </div>
         </div>
     );
 }
 
-export default Upi;
+export default Intent;

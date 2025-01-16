@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+.intent-container {
+    /* width: 600px; */
+    max-width: 600px; /* Limit max width for larger screens */
+    margin: auto; /* Center the container */
+    padding: 16px; /* Add padding */
+    background-color: #f1f1eb;
+}
+
+.intent-header {
+    text-align: center; /* Center text */
+}
+
+.progress-circle {
+    margin: 0 auto; /* Center the SVG */
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
+    .intent-header {
+        padding: 16px; /* Adjust padding for mobile */
+    }
+
+    .text-lg {
+        font-size: 1.25rem; /* Adjust font size for mobile */
+    }
+
+    .text-4xl {
+        font-size: 2rem; /* Adjust font size for mobile */
+    }
+
+    .bg-blue-400 {
+        padding: 12px; /* Adjust padding for mobile */
+    }
+
+    .bg-white {
+        padding: 12px; /* Adjust padding for mobile */
+    }
+}
+
+.text-gradient {
+    background: linear-gradient(to right, #68d391, #4299e1); /* Matches green-400 to blue-500 */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.progress-circle {
+    transform: rotate(0deg);
+}
+
+.progress-background {
+    stroke-width: 10;
+}
+
+.progress-bar {
+    stroke-width: 10;
+    transition: stroke-dashoffset 1s linear, stroke 1s linear;
+    stroke-linecap: round;
+}
+
+/* Ensure the container is positioned relative */
+.intent-container {
+    position: relative;
+}
+
+/* Keyframe animation to slide the element from its initial position to center */
+@keyframes slide-to-center {
+    0% {
+        transform: translateX(0); /* Start from the current position */
+    }
+    100% {
+        transform: translateX(calc(50% - 50%)); /* Move it to the center */
+    }
+}
+
+/* Apply animation only to the selected element */
+.animate-slide-to-center {
+    animation: slide-to-center 20s ease-in-out forwards; /* Slow down animation */
+}
+
+.selected-item {
+    position: relative;  /* Keep element in the flow */
+    transform: translateX(0); /* Start at its original position */
+    transition: transform 20s ease-in-out; /* Ensure smooth sliding */
+}

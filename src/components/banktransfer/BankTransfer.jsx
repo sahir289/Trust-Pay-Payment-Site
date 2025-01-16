@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./Upi.css";
+import "./BankTransfer.css";
 import UtrOrScreenShot from "../../components/utrOrScreenShot/UtrOrScreenShot";
 import { IoCopy } from "react-icons/io5";
 
-function Upi() {
+function BankTransfer() {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
 
@@ -48,10 +48,10 @@ function Upi() {
     };
 
     return (
-        <div className="upi-container rounded-3xl">
-            <div className="bg-white p-3 rounded-3xl shadow-md upi-body">
+        <div className="bank-container rounded-3xl">
+            <div className="bg-white p-3 rounded-3xl shadow-md bank-body">
                 <div className="mb-5">
-                    <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
+                    <div className="w-full flex justify-between rounded-t-3xl p-4 text-white bank-header">
                         <div className="flex flex-col items-center self-center">
                             <p className="text-black text-xl">
                                 Payment Time Left
@@ -101,21 +101,54 @@ function Upi() {
                             ₹900
                         </div>
                     </div>
-                    <p className="text-black text-center text-lg sm:text-base mb-2">
-                        Scan QR Code to Pay
-                    </p>
-                    <div className="flex justify-center items-center qr-code-placeholder">
-                        <div className="qr-code" aria-label="QR Code Placeholder"></div>
-                    </div>
-                    <p className="text-red-500 text-center text-lg sm:text-base mb-4">
-                        <b>ATTENTION: </b>Avoid depositing through PhonePe for any inconvenience
-                    </p>
 
-                    <div className="flex items-center justify-center mb-4">
-                        <p className="text-lg mr-2">uniqueshoe@psbpay</p>
-                        <button aria-label="Copy UPI ID">
-                            <IoCopy className="h-4 w-4" />
-                        </button>
+                    <div className="w-full flex justify-between mb-5 mt-5">
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">Bank Name</p>
+                        </div>
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">SAURABH
+                                <button aria-label="Copy Bank Name">
+                                    <IoCopy className="h-4 w-4 ml-2" />
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="w-full flex justify-between mb-5 mt-5">
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">Account Number</p>
+                        </div>
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">11451100000447
+                                <button aria-label="Copy Account Number">
+                                    <IoCopy className="h-4 w-4 ml-2" />
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="w-full flex justify-between mb-5 mt-5">
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">Name</p>
+                        </div>
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">SAURABH
+                                <button aria-label="Copy Name">
+                                    <IoCopy className="h-4 w-4 ml-2" />
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="w-full flex justify-between mb-5 mt-5">
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">IFSC Code</p>
+                        </div>
+                        <div className="flex flex-col item-center">
+                            <p className="text-lg mr-2">PSIB0021145
+                                <button aria-label="Copy IFSC Code">
+                                    <IoCopy className="h-4 w-4 ml-2" />
+                                </button>
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div className="mt-5">
@@ -130,7 +163,7 @@ function Upi() {
                 <p className="text-black text-start text-lg sm:text-base mb-4">
                     <b>Steps for Payment: </b>
                     <br />
-                    1. Scan the QR code displayed above.<span className="text-red-500">*</span>
+                    1. Transfer the displayed Amount using the Bank Transfer.<span className="text-red-500">*</span>
                     <br />
                     2. Enter UTR number or upload screen shot.<span className="text-red-500">*</span>
                     <br />
@@ -141,4 +174,4 @@ function Upi() {
     );
 }
 
-export default Upi;
+export default BankTransfer;
