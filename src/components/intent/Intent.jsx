@@ -114,16 +114,33 @@ function Intent() {
 
                     <div className="w-full flex justify-around mb-5 mt-5">
                         <div
-                            className={`grid ${selected !== null ? "grid-cols-1 place-items-center" : "grid-cols-2 gap-4"}`}
+                            className={`grid ${selected !== null ? "grid-cols-1 place-items-center" : "grid-cols-2 gap-4"
+                                }`}
                         >
-                            {paymentOptions.map((option, index) => (
-                                selected === null || selected === index ? (
+                            {paymentOptions.map((option, index) => {
+                                // Determine the animation class based on the index or position
+                                const getAnimationClass = (index) => {
+                                    switch (index) {
+                                        case 0: // Top-left
+                                            return "animate-top-left";
+                                        case 1: // Top-right
+                                            return "animate-top-right";
+                                        case 2: // Bottom-left
+                                            return "animate-bottom-left";
+                                        case 3: // Bottom-right
+                                            return "animate-bottom-right";
+                                        default:
+                                            return "";
+                                    }
+                                };
+
+                                return selected === null || selected === index ? (
                                     <button
                                         key={option.id}
                                         onClick={() => handleSelect(index)}
                                         className={`flex items-center justify-center p-4 border rounded-lg shadow transition-all
                                             ${selected === index
-                                                ? "scale-110 text-black bg-gray-200 animate-slide-to-center"  // Apply sliding animation for selected item
+                                                ? `scale-110 text-black bg-gray-200 ${getAnimationClass(index)}`
                                                 : "bg-gray-200 hover:bg-gray-300"
                                             }
                                         `}
@@ -136,8 +153,8 @@ function Intent() {
                                         />
                                         <span className="text-lg font-medium">{option.name}</span>
                                     </button>
-                                ) : null // Remove non-selected items when an option is selected
-                            ))}
+                                ) : null; // Remove non-selected items when an option is selected
+                            })}
                         </div>
                     </div>
 

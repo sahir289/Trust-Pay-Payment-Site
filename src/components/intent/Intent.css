@@ -4,11 +4,11 @@
 
 /* Base styles */
 .intent-container {
-    /* width: 600px; */
     max-width: 600px; /* Limit max width for larger screens */
     margin: auto; /* Center the container */
     padding: 16px; /* Add padding */
     background-color: #f1f1eb;
+    position: relative; /* Allows relative positioning of children */
 }
 
 .intent-header {
@@ -67,23 +67,69 @@
     position: relative;
 }
 
-/* Keyframe animation to slide the element from its initial position to center */
-@keyframes slide-to-center {
+/* Animation Classes */
+.animate-top-left {
+    animation: slide-from-top-left 1s ease-out forwards;
+}
+
+.animate-top-right {
+    animation: slide-from-top-right 1s ease-out forwards;
+}
+
+.animate-bottom-left {
+    animation: slide-from-bottom-left 1s ease-out forwards;
+}
+
+.animate-bottom-right {
+    animation: slide-from-bottom-right 1s ease-out forwards;
+}
+
+/* Adjusted Animation Keyframes */
+@keyframes slide-from-top-left {
     0% {
-        transform: translateX(0); /* Start from the current position */
+        transform: translate(-50%, -50%); /* Start from current position */
+        opacity: 0;
     }
     100% {
-        transform: translateX(calc(50% - 50%)); /* Move it to the center */
+        transform: translate(0, 0); /* End at its original position */
+        opacity: 1;
     }
 }
 
-/* Apply animation only to the selected element */
-.animate-slide-to-center {
-    animation: slide-to-center 20s ease-in-out forwards; /* Slow down animation */
+@keyframes slide-from-top-right {
+    0% {
+        transform: translate(50%, -50%);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-from-bottom-left {
+    0% {
+        transform: translate(-50%, 50%);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-from-bottom-right {
+    0% {
+        transform: translate(50%, 50%);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
 }
 
 .selected-item {
-    position: relative;  /* Keep element in the flow */
-    transform: translateX(0); /* Start at its original position */
-    transition: transform 20s ease-in-out; /* Ensure smooth sliding */
+    position: absolute; /* Enable absolute positioning for movement */
+    left: 0; /* Initial position */
 }
