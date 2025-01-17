@@ -1,4 +1,5 @@
 import { Upi, BankTransfer, Intent } from "../../components";
+import { Chaticon } from "../../components/Chaticon";
 import "./Transactions.css";
 
 function Transactions() {
@@ -7,6 +8,7 @@ function Transactions() {
             {/* <Upi /> */}
             {/* <BankTransfer /> */}
             <Intent />
+            <Chaticon/>
         </>
     )
 }
