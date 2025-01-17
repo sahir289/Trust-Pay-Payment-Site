@@ -1,5 +1,4 @@
-import { Upi, BankTransfer, Intent } from "../../components";
-import { Chaticon } from "../../components/Chaticon";
+import { Upi, BankTransfer, Intent, Chaticon } from "../../components";
 import "./Transactions.css";
 
 function Transactions() {
