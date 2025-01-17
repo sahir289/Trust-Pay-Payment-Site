@@ -2,11 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+.modal-overlay {
+    position: absolute;
+   top:3%;
+   right: 30%;
+    width: 100%;
+    /* background-color: rgba(0, 0, 0, 0.5);  Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+  }
 /* Base styles */
 .bank-container {
-    max-width: 600px; /* Limit max width for larger screens */
+    max-width: 450px; /* Limit max width for larger screens */
     margin: auto; /* Center the container */
-    padding: 16px; /* Add padding */
+    padding: 16px; 
     background-color: #f1f1eb;
 }
 

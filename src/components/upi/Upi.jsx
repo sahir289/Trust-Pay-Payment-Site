@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./Upi.css";
 import UtrOrScreenShot from "../../components/utrOrScreenShot/UtrOrScreenShot";
 import { IoCopy } from "react-icons/io5";
+import AmountPage from "../AmountPage/AmountPage";
 
-function Upi() {
+
+function Upi({amount}) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
 
@@ -48,8 +50,11 @@ function Upi() {
     };
 
     return (
-        <div className="upi-container rounded-3xl">
-            <div className="bg-white p-3 rounded-3xl shadow-md upi-body">
+        <div className="w-full h-full">
+        {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
+
+        <div className="upi-container rounded-3xl modal-overlay">
+            <div className="bg-white p-3  rounded-3xl shadow-md upi-body">
                 <div className="mb-5">
                     <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
                         <div className="flex flex-col items-center self-center">
@@ -98,7 +103,7 @@ function Upi() {
                     </div>
                     <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
                         <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
-                            ₹900
+                            {amount}
                         </div>
                     </div>
                     <p className="text-black text-center text-lg sm:text-base mb-2">
@@ -122,7 +127,9 @@ function Upi() {
                     <UtrOrScreenShot />
                 </div>
                 <button
-                    className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"
+                    className="
+                    bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4
+                    "
                     aria-label="Submit payment details"
                 >
                     SUBMIT
@@ -137,7 +144,7 @@ function Upi() {
                     3. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
                 </p>
             </div>
-        </div>
+        </div></div>
     );
 }
 

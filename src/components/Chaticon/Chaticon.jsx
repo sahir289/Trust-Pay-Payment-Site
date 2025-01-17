@@ -11,7 +11,7 @@ const ChatIcon = () => {
   return (
     <div>
     <div
-      className="fixed bottom-4 right-4 bg-gradient-to-r from-green-400 to-blue-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
+      className="fixed bottom-4 transform transition-transform duration-300 hover:scale-125  right-4 bg-gradient-to-r from-green-400 to-blue-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
       onClick={toggleChat}
     >
       <RiChatAiFill className="text-3xl" />
