@@ -4,9 +4,9 @@ import "./Transactions.css";
 function Transactions() {
     return (
         <>
-            {/* <Upi /> */}
+            <Upi />
             {/* <BankTransfer /> */}
-            <Intent />
+            {/* <Intent /> */}
             <Chaticon/>
         </>
     )

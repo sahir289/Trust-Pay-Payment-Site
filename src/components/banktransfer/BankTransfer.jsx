@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./BankTransfer.css";
-import UtrOrScreenShot from "../../components/utrOrScreenShot/UtrOrScreenShot";
+import { UtrOrScreenShot } from '../utrOrScreenShot'
+import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { IoCopy } from "react-icons/io5";
 
 function BankTransfer() {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
+    const [link, setLink] = useState();
 
     useEffect(() => {
+        setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
             const timer = setInterval(() => {
                 setRemainingTime((prevTime) => prevTime - 1);
@@ -169,6 +172,7 @@ function BankTransfer() {
                     <br />
                     3. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
                 </p>
+                <NortonAndVideoLink link={link} />
             </div>
         </div>
     );

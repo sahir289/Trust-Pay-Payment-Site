@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Upi.css";
-import UtrOrScreenShot from "../../components/utrOrScreenShot/UtrOrScreenShot";
+import { UtrOrScreenShot } from '../utrOrScreenShot'
+import { NortonAndVideoLink } from '../nortonAndVideoLink'
+import { QrGenerator } from '../qr-generator'
 import { IoCopy } from "react-icons/io5";
 
 function Upi() {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
+    const [link, setLink] = useState();
+    const placeholderRef = useRef(null);
+    const [size, setSize] = useState(300);
 
     useEffect(() => {
+        setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
             const timer = setInterval(() => {
                 setRemainingTime((prevTime) => prevTime - 1);
@@ -16,6 +22,33 @@ function Upi() {
             return () => clearInterval(timer); // Cleanup timer on component unmount
         }
     }, [remainingTime]);
+
+    useEffect(() => {
+        const updateSize = () => {
+            if (placeholderRef.current) {
+                const { width, height } = placeholderRef.current.getBoundingClientRect();
+                // Set size as 90% of the smaller dimension
+                const newSize = Math.min(width, height) * 0.9;
+                setSize(newSize);
+            }
+        };
+    
+        // Initial size calculation
+        updateSize();
+    
+        // Recalculate size when window resizes or screen orientation changes
+        const resizeObserver = new ResizeObserver(updateSize);
+        if (placeholderRef.current) {
+            resizeObserver.observe(placeholderRef.current);
+        }
+    
+        return () => {
+            if (placeholderRef.current) {
+                resizeObserver.unobserve(placeholderRef.current);
+            }
+            resizeObserver.disconnect();
+        };
+    }, []);    
 
     const formatTime = (seconds) => {
         const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -104,8 +137,10 @@ function Upi() {
                     <p className="text-black text-center text-lg sm:text-base mb-2">
                         Scan QR Code to Pay
                     </p>
-                    <div className="flex justify-center items-center qr-code-placeholder">
-                        <div className="qr-code" aria-label="QR Code Placeholder"></div>
+                    <div ref={placeholderRef} className="flex justify-center items-center qr-code-placeholder">
+                        <div className="qr-code" aria-label="QR Code Placeholder">
+                            <QrGenerator upi_id={"uniqueshoe@psbpay"} amount={900} size={size} />
+                        </div>
                     </div>
                     <p className="text-red-500 text-center text-lg sm:text-base mb-4">
                         <b>ATTENTION: </b>Avoid depositing through PhonePe for any inconvenience
@@ -127,7 +162,7 @@ function Upi() {
                 >
                     SUBMIT
                 </button>
-                <p className="text-black text-start text-lg sm:text-base mb-4">
+                <p className="text-black text-start text-lg sm:text-base mb-5">
                     <b>Steps for Payment: </b>
                     <br />
                     1. Scan the QR code displayed above.<span className="text-red-500">*</span>
@@ -136,6 +171,7 @@ function Upi() {
                     <br />
                     3. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
                 </p>
+                <NortonAndVideoLink link={link} />
             </div>
         </div>
     );

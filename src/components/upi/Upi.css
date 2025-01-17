@@ -54,15 +54,15 @@
 
 /* Default (mobile first) */
 .qr-code-placeholder {
-    width: 370px; /* Fixed width for small screens */
-    height: 200px; /* Fixed height for small screens */
+    width: 350px; /* Fixed width for small screens */
+    height: 225px; /* Fixed height for small screens */
 }
 
 /* Medium screens (641px and up) */
 @media (min-width: 641px) {
     .qr-code-placeholder {
         width: 500px; /* Fixed width for medium screens */
-        height: 250px; /* Fixed height for medium screens */
+        height: 335px; /* Fixed height for medium screens */
     }
 }
 
@@ -70,7 +70,7 @@
 @media (min-width: 1024px) {
     .qr-code-placeholder {
         width: 510px; /* Fixed width for large screens */
-        height: 300px; /* Fixed height for large screens */
+        height: 335px; /* Fixed height for large screens */
     }
 }
 
@@ -81,7 +81,6 @@
         height: 350px; /* Fixed height for extra-large screens */
     }
 }
-
 
 /* Container for the entire payment section */
 .payment-container {
