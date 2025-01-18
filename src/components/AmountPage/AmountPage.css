@@ -4,13 +4,10 @@
 
 /* Base styles */
 .amount-container {
-  max-width: 600px;
-  /* Limit max width for larger screens */
-  margin: auto;
-  /* Center the container */
-  padding: 16px;
-  /* Add padding */
-  background-color: #f1f1eb;
+    max-width: 600px; /* Limit max width for larger screens */
+    /* margin: auto;  */
+    padding: 16px; /* Add padding */
+    background-color: #f1f1eb;
 }
 
 .amount-header {
@@ -59,19 +56,19 @@
 }
 
 @keyframes increaseSize {
-  from {
-    transform: scale(1);
-    /* Initial size */
-    filter: blur(0px);
+    from {
+      transform: scale(0.9); /* Initial size */
+      filter: blur(0px);
+    }
+    to {
+      transform: scale(0.9); /* Increased size by 1.5 times */
+      filter: blur(30px);
+    }
   }
-
-  to {
-    transform: scale(1.5);
-    /* Increased size by 1.5 times */
-    filter: blur(30px);
+  
+  .element {
+    animation: increaseSize 1.5s ease-in-out forwards;
   }
-}
+  
 
-.element {
-  animation: increaseSize 1.5s ease-in-out forwards;
-}
+  

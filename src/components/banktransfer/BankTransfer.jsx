@@ -51,7 +51,7 @@ function BankTransfer({ amount }) {
     };
 
     return (
-        <div className="bank-container py-2 px-2 rounded-3xl modal-overlay ">
+        <div className="bank-container py-2 px-2 rounded-3xl modal-overlay-bank ">
             <div className="bg-white p-3 rounded-3xl shadow-md bank-body">
                 <div className="mb-5">
                     <div className="w-full flex justify-between rounded-t-3xl p-4 text-white bank-header">

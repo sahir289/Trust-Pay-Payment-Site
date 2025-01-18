@@ -16,7 +16,9 @@ function AmountPage() {
     const [visibleBank, setVisibleBank] = useState(false)
     const [visiblecard, setVisiblecard] = useState(false)
 
+
     const navigate = useNavigate();
+
 
     const handleAmount = (e) => {
         setAmount(e.target.value);
@@ -29,17 +31,20 @@ function AmountPage() {
     };
 
     const handlePayClick = (a) => {
+
         if (a === "upi") {
 
             setIncreaseSize(true); // Increase size
             // navigate('/upi'); // Navigate to UPI page
             setVisible(true)
         }
+
         if (a === "cardpay") {
             setIncreaseSize(true); // Increase size
             // navigate('/upi'); // Navigate to UPI page
             setVisiblecard(true)
         }
+
         if (a === "bank") {
             setIncreaseSize(true); // Increase size
             // navigate('/upi'); // Navigate to UPI page
@@ -48,19 +53,22 @@ function AmountPage() {
     };
 
 
+
     return (
         <div
-            //   className={`amount-container h-full w-full rounded-3xl py-8  `}
-            onClick={() => setClick(false)}
+            className={`${increaseSize ? " " : "sm:w-[46vw] amount-container  flex justify-center  sm:mt-5  w-full rounded-3xl py-8 "} `} onClick={() => setClick(false)}
         >
-            {<div className={`bg-white  p-3 rounded-3xl shadow-md py-8 ${increaseSize ? " w-[100%] z-0 element" : "w-[50vw]"}`}>
+            {<div className={`bg-white  p-3 rounded-3xl shadow-md py-8 ${increaseSize ? "sm:w-[100%] z-0 element" : "sm:w-[41vw]"}`}>
                 <div className="flex flex-col px-2 mt-2 py-1">
+                    <div className="flex flex-col items-center self-center">
+
+                    </div>
                     <div className="flex flex-col items-center self-center">
 
                     </div>
 
                     <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 hover:scale-105 font-bold bg-white py-2 px-4 ">
-                        Please enter the amount for this transaction :
+                        Please enter the amount :
                     </label>
                     <input
                         type="number"
@@ -81,22 +89,22 @@ function AmountPage() {
                 </div>
 
                 {selectMethod && <>
-                    <h1 className="text-2xl text-gray-500 font-bold px-6 py-2">Select Payment Method:</h1>
-                    <div className="flex flex-row justify-start mt-5 mb-5 w-full">
+                    <h1 className="text-2xl text-gray-500 font-bold px-6 py-2">Payment Method:</h1>
+                    <div className="flex flex-col sm:flex-row justify-start mt-5 mb-5 sm:w-full">
                         <button
-                            className={`w-[30vw] text-white transform transition-transform duration-300 hover:scale-105  text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg transition-container`}
+                            className={`sm:w-[30vw] h-[10vh] sm:h-[20vh] sm:py-8  text-white transform transition-transform duration-300 hover:scale-105  text-xl font-bold px-4 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg transition-container`}
                             onClick={() => handlePayClick("upi")}
                         >
                             UPI
                         </button>
                         <button
-                            className="w-[30vw] transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                            className="sm:w-[30vw] h-[10vh] sm:h-[20vh] sm:py-8  transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                             onClick={() => handlePayClick("bank")}
                         >
                             Bank Transfer
                         </button>
                         <button
-                            className="w-[30vw] transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                            className="sm:w-[30vw] h-[10vh] sm:h-[20vh] sm:py-8  transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4  mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                             onClick={() => handlePayClick("cardpay")}
                         >
                             Card Payment
@@ -115,8 +123,16 @@ function AmountPage() {
             }
             {visiblecard && <CardPay amount={amount} />}
             {/* </div> */}
+            {visible &&
+                <Upi amount={amount} />
+            }
+            {visibleBank &&
+                <BankTransfer amount={amount} />
+            }
+            {visiblecard && <CardPay amount={amount} />}
+            {/* </div> */}
         </div>
     );
 }
-
+        
 export default AmountPage;

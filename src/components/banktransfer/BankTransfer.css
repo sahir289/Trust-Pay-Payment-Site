@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.modal-overlay {
+.modal-overlay-bank {
     position: absolute;
     top: 3%;
     right: 30%;
@@ -22,7 +22,25 @@
     padding: 16px;
     background-color: #f1f1eb;
 }
-
+@media screen and (max-width: 768px) {  
+    .modal-overlay-bank {
+        position: absolute;
+       top:0%;
+       right: 0%;
+        width: 100%;
+        /* background-color: rgba(0, 0, 0, 0.5);  Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+      }
+    /* Base styles */
+    .bank-container {
+        max-width: 450px; /* Limit max width for larger screens */
+        margin: auto; /* Center the container */
+        padding: 16px; 
+        background-color: #f1f1eb;
+    }
+}
 .bank-header {
     text-align: center;
     /* Center text */

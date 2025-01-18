@@ -4,7 +4,7 @@ import "./CardPay.css";
 import { LiaCcVisa } from "react-icons/lia";
 import { IoCopy } from "react-icons/io5";
 import { RiMastercardLine } from "react-icons/ri";
-import { SiAmericanexpress } from "react-icons/si";
+// import { SiAmericanexpress } from "react-icons/si";
 import { FaCcDiscover } from "react-icons/fa6";
 import { FaCcJcb } from "react-icons/fa6";
 import { FaCcDinersClub } from "react-icons/fa";
@@ -64,7 +64,7 @@ function CardPay({ amount }) {
         const cardPatterns = [
             { type: "Visa", pattern: /^4[0-9]{12}(?:[0-9]{3})?(?:[0-9]{3})?$/, logo: <LiaCcVisa size={55} /> },
             { type: "MasterCard", pattern: /^(?:5[1-5][0-9]{14}|2(?:2[2-9][0-9]{12}|[3-7][0-9]{13}))$/, logo: <RiMastercardLine size={55} /> },
-            { type: "American Express", pattern: /^3[47][0-9]{13}$/, logo: <SiAmericanexpress /> },
+            // { type: "American Express", pattern: /^3[47][0-9]{13}$/, logo: <SiAmericanexpress /> },
             { type: "Discover", pattern: /^6(?:011|5[0-9]{2}|22[1-9]|2[3-9][0-9]{2})[0-9]{12}$/, logo: <FaCcDiscover size={55} /> },
             { type: "JCB", pattern: /^(?:35[2-8][0-9]{13})$/, logo: <FaCcJcb size={55} /> },
             { type: "Diners Club", pattern: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/, logo: <FaCcDinersClub size={55} /> },
@@ -93,9 +93,9 @@ function CardPay({ amount }) {
     return (
 
         <div className="w-full h-full flex justify-center">
-            <div className="upi-container flex justify-center rounded-3xl modal-overlay">
-                <div className="flex w-[60vw]  rounded-2xl justify-center h-[90vh] bg-white p-2">
-                    <div className="bg-white h-[80vh] py-6 w-116 rounded-xl">
+            <div className="w-[100vw]  sm:w-[40vw] mr-0 sm:mr-8  card-container flex justify-center rounded-3xl modal-overlay-card">
+                <div className="flex w-[100vw] sm:w-[60vw]  rounded-2xl justify-center h-[90vh] bg-white p-2">
+                    <div className="bg-white h-[80vh] pb-6  sm:w-116 rounded-xl">
                         <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
                             <div className="w-full flex justify-between items-center rounded-t-3xl p-4 text-white bank-header">
 
@@ -146,11 +146,11 @@ function CardPay({ amount }) {
 
                                 </div>  </div>
                         </div>
-                        <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
+                        <div className="flex justify-center items-center ml-2 sm:w-0 w-[96vw] sm:w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
 
                             ₹ {amount}
                         </div>
-                        <div className="w-96 h-56 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg shadow-lg p-6 text-white relative">
+                        <div className="ml-2 sm:ml-0 sm:w-96 h-56 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg shadow-lg p-6 text-white relative">
 
                             <div className="w-12 h-8 bg-yellow-400 rounded-lg mb-4"></div>
 
@@ -171,7 +171,7 @@ function CardPay({ amount }) {
                             </div>
 
                             {/* Visa/MasterCard Logo */}
-                            <div className="absolute bottom-2  right-7">
+                            <div className="absolute bottom-2 right-7">
                                 {/* <img
             src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Visa_2021.svg"
             alt="Visa Logo"
@@ -182,26 +182,26 @@ function CardPay({ amount }) {
                             </div>
                         </div>
                         <div>
-                            <div className="w-full pt- flex justify-between mb-3 mt-5">
+                            <div className="w-[98vw] sm:w-full ml-2 sm:ml-0 flex justify-between mb-3 mt-5">
 
                                 <div className="flex flex-col  item-center">
                                     <input onChange={handleCred} name="acc" className="px-2 py-1  text-gray-500  border-2 border-gray-100  focus:outline-none focus:border-green-500 rounded-lg" placeholder="Account Number" />
                                 </div>
                                 <div className="flex flex-col item-center">
-                                    <input className="px-2 py-1 text-gray-500 borber-2 border-gray-100 w-[10vw] focus:outline-none border-2 focus:border-green-500 rounded-lg" placeholder="CVV" />
+                                    <input className="px-2 py-1 text-gray-500 borber-2 border-gray-100 w-[28vw] sm:w-[10vw] focus:outline-none border-2 focus:border-green-500 rounded-lg" placeholder="CVV" />
                                 </div>
                             </div>
-                            <div className="w-full flex justify-between mb-5 ">
+                            <div className="w-full ml-2 sm:ml-0 flex justify-between mb-5 ">
 
                                 <div className="flex flex-col item-center">
                                     <input onChange={handleCred} name="name" placeholder="Cardholder Name" className=" focus:outline-none border-3 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" />
                                 </div>
                                 <div className="flex flex-col item-center">
-                                    <input onChange={handleCred} name="date" placeholder="Expires on" className=" focus:outline-none border-3 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" type="date" />
+                                    <input onChange={handleCred} name="date" placeholder="Expires on" className=" focus:outline-none border-3 ml-2 sm:ml-0 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" type="date" />
                                 </div>
                             </div>
                             <button className="
-                    bg-gradient-to-r  from-green-400 to-blue-500 w-full py-4 text-2xl text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-0 mt-4
+                    bg-gradient-to-r ml-4 sm:ml-0 w-[95vw] sm:mx-0 from-green-400 to-blue-500 sm:w-full py-4 text-2xl text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-0 mt-4
                     ">
                                 Submit
                             </button>
