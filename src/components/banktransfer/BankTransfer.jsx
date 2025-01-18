@@ -4,7 +4,7 @@ import { UtrOrScreenShot } from '../utrOrScreenShot'
 import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { IoCopy } from "react-icons/io5";
 
-function BankTransfer({amount}) {
+function BankTransfer({ amount }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -101,7 +101,7 @@ function BankTransfer({amount}) {
                     </div>
                     <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
                         <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
-                        ₹ {amount}
+                            ₹ {amount}
                         </div>
                     </div>
 

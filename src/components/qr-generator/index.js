@@ -1,3 +1,3 @@
 import QrGenerator from "./QrGenerator";
 
-export {QrGenerator}
+export { QrGenerator }

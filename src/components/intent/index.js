@@ -1,3 +1,3 @@
 import Intent from "./Intent";
 
-export {Intent}
+export { Intent }

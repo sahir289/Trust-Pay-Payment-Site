@@ -1,3 +1,3 @@
 import UtrOrScreenShot from "./UtrOrScreenShot";
 
-export {UtrOrScreenShot}
+export { UtrOrScreenShot }

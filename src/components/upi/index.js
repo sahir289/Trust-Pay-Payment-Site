@@ -1,3 +1,3 @@
 import Upi from "./Upi";
 
-export {Upi}
+export { Upi }

@@ -1,3 +1,3 @@
 import NortonAndVideoLink from "./NortonAndVideoLink";
 
-export {NortonAndVideoLink}
+export { NortonAndVideoLink }

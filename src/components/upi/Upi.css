@@ -4,29 +4,34 @@
 
 .modal-overlay {
     position: absolute;
-   top:3%;
-   right: 30%;
+    top: 3%;
+    right: 30%;
     width: 100%;
     /* background-color: rgba(0, 0, 0, 0.5);  Semi-transparent background */
     display: flex;
     justify-content: center;
     z-index: 1000;
-  }
-  
+}
+
 /* Base styles */
 .upi-container {
-    max-width: 600px; /* Limit max width for larger screens */
-    margin: auto; /* Center the container */
-    padding: 16px; /* Add padding */
+    max-width: 600px;
+    /* Limit max width for larger screens */
+    margin: auto;
+    /* Center the container */
+    padding: 16px;
+    /* Add padding */
     background-color: #f1f1eb;
 }
 
 .upi-header {
-    text-align: center; /* Center text */
+    text-align: center;
+    /* Center text */
 }
 
 .progress-circle {
-    margin: 0 auto; /* Center the SVG */
+    margin: 0 auto;
+    /* Center the SVG */
 }
 
 .qr-code-placeholder {
@@ -38,15 +43,18 @@
 /* Responsive styles */
 @media (max-width: 640px) {
     .upi-header {
-        padding: 16px; /* Adjust padding for mobile */
+        padding: 16px;
+        /* Adjust padding for mobile */
     }
 
     .text-lg {
-        font-size: 1.25rem; /* Adjust font size for mobile */
+        font-size: 1.25rem;
+        /* Adjust font size for mobile */
     }
 
     .text-4xl {
-        font-size: 2rem; /* Adjust font size for mobile */
+        font-size: 2rem;
+        /* Adjust font size for mobile */
     }
 
     /* .qr-code-placeholder {
@@ -55,41 +63,51 @@
     } */
 
     .bg-blue-400 {
-        padding: 12px; /* Adjust padding for mobile */
+        padding: 12px;
+        /* Adjust padding for mobile */
     }
 
     .bg-white {
-        padding: 12px; /* Adjust padding for mobile */
+        padding: 12px;
+        /* Adjust padding for mobile */
     }
 }
 
 /* Default (mobile first) */
 .qr-code-placeholder {
-    width: 350px; /* Fixed width for small screens */
-    height: 225px; /* Fixed height for small screens */
+    width: 350px;
+    /* Fixed width for small screens */
+    height: 225px;
+    /* Fixed height for small screens */
 }
 
 /* Medium screens (641px and up) */
 @media (min-width: 641px) {
     .qr-code-placeholder {
-        width: 500px; /* Fixed width for medium screens */
-        height: 335px; /* Fixed height for medium screens */
+        width: 500px;
+        /* Fixed width for medium screens */
+        height: 335px;
+        /* Fixed height for medium screens */
     }
 }
 
 /* Large screens (1024px and up) */
 @media (min-width: 1024px) {
     .qr-code-placeholder {
-        width: 510px; /* Fixed width for large screens */
-        height: 335px; /* Fixed height for large screens */
+        width: 510px;
+        /* Fixed width for large screens */
+        height: 335px;
+        /* Fixed height for large screens */
     }
 }
 
 /* Extra-large screens (1440px and up) */
 @media (min-width: 1440px) {
     .qr-code-placeholder {
-        width: 550px; /* Fixed width for extra-large screens */
-        height: 350px; /* Fixed height for extra-large screens */
+        width: 550px;
+        /* Fixed width for extra-large screens */
+        height: 350px;
+        /* Fixed height for extra-large screens */
     }
 }
 
@@ -97,37 +115,46 @@
 .payment-container {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     justify-content: center;
     padding: 20px;
 }
 
 /* QR code styles */
 .qr-code {
-    width: 100%;               /* Full width of its container */
-    max-width: 300px;          /* Default maximum width */
-    aspect-ratio: 1 / 1;       /* Keeps the element square */
-    background-color: #e5e5e5; /* Background color */
-    border-radius: 8px;        /* Rounded corners */
-    margin: 0 auto;            /* Centers it horizontally */
+    width: 100%;
+    /* Full width of its container */
+    max-width: 300px;
+    /* Default maximum width */
+    aspect-ratio: 1 / 1;
+    /* Keeps the element square */
+    background-color: #e5e5e5;
+    /* Background color */
+    border-radius: 8px;
+    /* Rounded corners */
+    margin: 0 auto;
+    /* Centers it horizontally */
 }
 
 /* Adjust for small screens (max-width: 640px) */
 @media (max-width: 640px) {
     .qr-code {
-        max-width: 250px; /* Reduce maximum size for smaller screens */
+        max-width: 250px;
+        /* Reduce maximum size for smaller screens */
     }
 }
 
 /* Adjust for extra small screens (max-width: 480px) */
 @media (max-width: 480px) {
     .qr-code {
-        max-width: 200px; /* Further reduce size for extra-small screens */
+        max-width: 200px;
+        /* Further reduce size for extra-small screens */
     }
 }
 
 .text-gradient {
-    background: linear-gradient(to right, #68d391, #4299e1); /* Matches green-400 to blue-500 */
+    background: linear-gradient(to right, #68d391, #4299e1);
+    /* Matches green-400 to blue-500 */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
