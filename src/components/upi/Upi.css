@@ -3,12 +3,10 @@
 @tailwind utilities;
 
 .upi-container {
-    max-width: 100px; /* Limit max width for larger screens */
-  
-   
+    max-width: 600px; /* Limit max width for larger screens */
+    margin: auto; /* Center the container */
+    padding: 16px; /* Add padding */
     background-color: #f1f1eb;
-     display: flex;
-    justify-content: center;
 }
 
 
