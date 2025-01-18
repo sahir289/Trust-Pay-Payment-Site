@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .upi-container {
-    max-width: 300px; /* Limit max width for larger screens */
+    max-width: 100px; /* Limit max width for larger screens */
   
    
     background-color: #f1f1eb;
