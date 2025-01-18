@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AmountPage.css";
 import { Upi } from "../upi";
 import { BankTransfer } from "../bankTransfer";
+import { CardPay } from "../CardPay";
 
 function AmountPage() {
     const [amount, setAmount] = useState("");
@@ -13,9 +14,10 @@ function AmountPage() {
     const [blueColor, setBlueColor] = useState(false); // New state for color change
     const [visible, setVisible]= useState(false)
     const [visibleBank, setVisibleBank]= useState(false)
-
+    const [visiblecard, setVisiblecard] = useState(false)
+    
     const navigate = useNavigate();
-
+    
     const handleAmount = (e) => {
         setAmount(e.target.value);
     };
@@ -32,13 +34,19 @@ function AmountPage() {
             setIncreaseSize(true); // Increase size
             // navigate('/upi'); // Navigate to UPI page
             setVisible(true)
-        }else{
+        }
+        if(a==="cardpay"){
+            setIncreaseSize(true); // Increase size
+            // navigate('/upi'); // Navigate to UPI page
+            setVisiblecard(true)
+        }
+        if(a==="bank"){
             setIncreaseSize(true); // Increase size
             // navigate('/upi'); // Navigate to UPI page
             setVisibleBank(true)
         }
     };
-
+ 
 
     return (
         <div
@@ -47,6 +55,10 @@ function AmountPage() {
         >
           { <div className= {`bg-white  p-3 rounded-3xl shadow-md py-8 ${increaseSize ? " w-[100%] z-0 element" : "w-[50vw]"}`}>
                 <div className="flex flex-col px-2 mt-2 py-1">
+                <div className="flex flex-col items-center self-center">
+                           
+                        </div>
+
                     <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 hover:scale-105 font-bold bg-white py-2 px-4 ">
                         Please enter the amount for this transaction :
                     </label>
@@ -72,16 +84,22 @@ function AmountPage() {
                     <h1 className="text-2xl text-gray-500 font-bold px-6 py-2">Select Payment Method:</h1>
                     <div className="flex flex-row justify-start mt-5 mb-5 w-full">
                         <button
-                            className={`w-[40vw] text-white transform transition-transform duration-300 hover:scale-105  text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg transition-container`}
+                            className={`w-[30vw] text-white transform transition-transform duration-300 hover:scale-105  text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg transition-container`}
                             onClick={()=>handlePayClick("upi")} 
                         >
                             UPI
                         </button>
                         <button
-                            className="w-[40vw] transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                            className="w-[30vw] transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                             onClick={() => handlePayClick("bank")}
                         >
                             Bank Transfer
+                        </button>
+                        <button
+                            className="w-[30vw] transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                            onClick={() => handlePayClick("cardpay")}
+                        >
+                            Card Payment
                         </button>
                     </div>
                 </>}
@@ -95,6 +113,7 @@ function AmountPage() {
 {visibleBank &&   
 <BankTransfer amount={amount}/>
 }
+{visiblecard && <CardPay amount={amount}/>}
 {/* </div> */}
         </div>
     );

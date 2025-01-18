@@ -5,6 +5,7 @@ import React, { Suspense } from 'react';
 import { BankTransfer, Upi } from './components/index.js';
 import AmountPage from './components/AmountPage/AmountPage.jsx';
 import ChatIcon from './components/Chaticon/Chaticon.jsx';
+import CardPay from './components/CardPay/CardPay.jsx';
 
 const Transactions = React.lazy(() => import('./screens/transactions/Transactions.jsx'));
 
@@ -22,6 +23,7 @@ function App() {
                 />
               <Route path="/upi" element={<Upi/>} />
               <Route path="/banktranfer" element={<BankTransfer/>} />
+              <Route path='/cardpay' element={<CardPay/>} />
             </Routes>
           </ErrorBoundary>
         </Suspense>

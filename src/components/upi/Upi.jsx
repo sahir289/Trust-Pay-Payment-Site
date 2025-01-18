@@ -51,7 +51,7 @@ function Upi({amount}) {
 
     return (
         <div className="w-full h-full">
-        {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
+            {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
 
         <div className="upi-container rounded-3xl modal-overlay">
             <div className="bg-white p-3  rounded-3xl shadow-md upi-body">
@@ -103,7 +103,7 @@ function Upi({amount}) {
                     </div>
                     <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
                         <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
-                            {amount}
+                        ₹ {amount}
                         </div>
                     </div>
                     <p className="text-black text-center text-lg sm:text-base mb-2">
