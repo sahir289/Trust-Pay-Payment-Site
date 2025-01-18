@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./Intent.css";
+import { NortonAndVideoLink } from '../nortonAndVideoLink'
 
 function Intent() {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [selected, setSelected] = useState(null);
+    const [link, setLink] = useState();
 
     const handleSelect = (index) => {
         setSelected(index);
@@ -18,6 +20,7 @@ function Intent() {
     ];
 
     useEffect(() => {
+        setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
             const timer = setInterval(() => {
                 setRemainingTime((prevTime) => prevTime - 1);
@@ -174,6 +177,7 @@ function Intent() {
                     <br />
                     3. Pay the display Amount.<span className="text-red-500">*</span>
                 </p>
+                <NortonAndVideoLink link={link} />
             </div>
         </div>
     );

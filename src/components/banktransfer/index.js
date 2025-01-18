@@ -1,3 +1,3 @@
 import BankTransfer from "./BankTransfer";
 
-export {BankTransfer}
+export { BankTransfer }

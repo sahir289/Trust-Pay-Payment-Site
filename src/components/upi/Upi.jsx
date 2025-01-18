@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Upi.css";
-import UtrOrScreenShot from "../../components/utrOrScreenShot/UtrOrScreenShot";
+import { UtrOrScreenShot } from '../utrOrScreenShot'
+import { NortonAndVideoLink } from '../nortonAndVideoLink'
+import { QrGenerator } from '../qr-generator'
 import { IoCopy } from "react-icons/io5";
 import AmountPage from "../AmountPage/AmountPage";
 
 
-function Upi({amount}) {
+function Upi({ amount }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
+    const [link, setLink] = useState();
+    const placeholderRef = useRef(null);
+    const [size, setSize] = useState(300);
 
     useEffect(() => {
+        setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
             const timer = setInterval(() => {
                 setRemainingTime((prevTime) => prevTime - 1);
@@ -18,6 +24,33 @@ function Upi({amount}) {
             return () => clearInterval(timer); // Cleanup timer on component unmount
         }
     }, [remainingTime]);
+
+    useEffect(() => {
+        const updateSize = () => {
+            if (placeholderRef.current) {
+                const { width, height } = placeholderRef.current.getBoundingClientRect();
+                // Set size as 90% of the smaller dimension
+                const newSize = Math.min(width, height) * 0.9;
+                setSize(newSize);
+            }
+        };
+
+        // Initial size calculation
+        updateSize();
+
+        // Recalculate size when window resizes or screen orientation changes
+        const resizeObserver = new ResizeObserver(updateSize);
+        if (placeholderRef.current) {
+            resizeObserver.observe(placeholderRef.current);
+        }
+
+        return () => {
+            if (placeholderRef.current) {
+                resizeObserver.unobserve(placeholderRef.current);
+            }
+            resizeObserver.disconnect();
+        };
+    }, []);
 
     const formatTime = (seconds) => {
         const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -116,18 +149,18 @@ function Upi({amount}) {
                         <b>ATTENTION: </b>Avoid depositing through PhonePe for any inconvenience
                     </p>
 
-                    <div className="flex items-center justify-center mb-4">
-                        <p className="text-lg mr-2">uniqueshoe@psbpay</p>
-                        <button aria-label="Copy UPI ID">
-                            <IoCopy className="h-4 w-4" />
-                        </button>
+                        <div className="flex items-center justify-center mb-4">
+                            <p className="text-lg mr-2">uniqueshoe@psbpay</p>
+                            <button aria-label="Copy UPI ID">
+                                <IoCopy className="h-4 w-4" />
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div className="mt-5">
-                    <UtrOrScreenShot />
-                </div>
-                <button
-                    className="
+                    <div className="mt-5">
+                        <UtrOrScreenShot />
+                    </div>
+                    <button
+                        className="
                     bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4
                     "
                     aria-label="Submit payment details"

@@ -1,3 +1,3 @@
 import Chaticon from "./Chaticon";
 
-export {Chaticon}
+export { Chaticon }

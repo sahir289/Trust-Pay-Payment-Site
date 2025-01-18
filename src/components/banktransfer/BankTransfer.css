@@ -4,55 +4,66 @@
 
 .modal-overlay {
     position: absolute;
-   top:3%;
-   right: 30%;
+    top: 3%;
+    right: 30%;
     width: 100%;
     /* background-color: rgba(0, 0, 0, 0.5);  Semi-transparent background */
     display: flex;
     justify-content: center;
     z-index: 1000;
-  }
+}
+
 /* Base styles */
 .bank-container {
-    max-width: 450px; /* Limit max width for larger screens */
-    margin: auto; /* Center the container */
-    padding: 16px; 
+    max-width: 450px;
+    /* Limit max width for larger screens */
+    margin: auto;
+    /* Center the container */
+    padding: 16px;
     background-color: #f1f1eb;
 }
 
 .bank-header {
-    text-align: center; /* Center text */
+    text-align: center;
+    /* Center text */
 }
 
 .progress-circle {
-    margin: 0 auto; /* Center the SVG */
+    margin: 0 auto;
+    /* Center the SVG */
 }
 
 /* Responsive styles */
 @media (max-width: 640px) {
     .bank-header {
-        padding: 16px; /* Adjust padding for mobile */
+        padding: 16px;
+        /* Adjust padding for mobile */
     }
 
     .text-lg {
-        font-size: 1.25rem; /* Adjust font size for mobile */
+        font-size: 1.25rem;
+        /* Adjust font size for mobile */
     }
 
     .text-4xl {
-        font-size: 2rem; /* Adjust font size for mobile */
+        font-size: 2rem;
+        /* Adjust font size for mobile */
     }
 
     .bg-blue-400 {
-        padding: 12px; /* Adjust padding for mobile */
+        padding: 12px;
+        /* Adjust padding for mobile */
     }
 
     .bg-white {
-        padding: 12px; /* Adjust padding for mobile */
+        padding: 12px;
+        /* Adjust padding for mobile */
     }
 }
 
 .text-gradient {
-    background: linear-gradient(to right, #68d391, #4299e1); /* Matches green-400 to blue-500 */
+    background: linear-gradient(to right, #68d391, #4299e1);
+    /* Matches green-400 to blue-500 */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

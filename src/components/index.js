@@ -1,4 +1,6 @@
 export * from "./upi"
 export * from "./bankTransfer"
 export * from "./intent"
-export * from "./Chaticon/Chaticon"
+export * from "./CardPay"
+export * from "./AmountPage"
+export * from "./Chaticon"

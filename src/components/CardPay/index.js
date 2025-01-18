@@ -1,4 +1,3 @@
 import CardPay from "./CardPay";
 
-export {CardPay} 
- 
+export { CardPay }

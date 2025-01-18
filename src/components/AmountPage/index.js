@@ -1,3 +1,3 @@
-import AmountPage from ".";
+import AmountPage from "./AmountPage";
 
-export {AmountPage}
+export { AmountPage }
