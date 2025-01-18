@@ -50,10 +50,10 @@ function AmountPage() {
 
     return (
         <div
-        //   className={`amount-container h-full w-full rounded-3xl py-8  `}
+        className={`amount-container  flex justify-center  sm:mt-5  w-full rounded-3xl py-8 ${increaseSize ? " w-[100%] z-0 element" : "sm:w-[46vw]"} `}
             onClick={() => setClick(false)}
         >
-          { <div className= {`bg-white  p-3 rounded-3xl shadow-md py-8 ${increaseSize ? " w-[100%] z-0 element" : "w-[50vw]"}`}>
+          { <div className= {`bg-white  p-3 rounded-3xl shadow-md py-8 ${increaseSize ? " w-[100%] z-0 element" : "sm:w-[41vw]"}`}>
                 <div className="flex flex-col px-2 mt-2 py-1">
                 <div className="flex flex-col items-center self-center">
                            
@@ -82,21 +82,21 @@ function AmountPage() {
 
                 {selectMethod && <>
                     <h1 className="text-2xl text-gray-500 font-bold px-6 py-2">Select Payment Method:</h1>
-                    <div className="flex flex-row justify-start mt-5 mb-5 w-full">
+                    <div className="flex flex-col sm:flex-row justify-start mt-5 mb-5 sm:w-full">
                         <button
-                            className={`w-[30vw] text-white transform transition-transform duration-300 hover:scale-105  text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg transition-container`}
+                            className={`sm:w-[30vw] h-[10vh] sm:h-[20vh] sm:py-8  text-white transform transition-transform duration-300 hover:scale-105  text-xl font-bold px-4 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg transition-container`}
                             onClick={()=>handlePayClick("upi")} 
                         >
                             UPI
                         </button>
                         <button
-                            className="w-[30vw] transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                            className="sm:w-[30vw] h-[10vh] sm:h-[20vh] sm:py-8  transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                             onClick={() => handlePayClick("bank")}
                         >
                             Bank Transfer
                         </button>
                         <button
-                            className="w-[30vw] transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4 py-8 mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                            className="sm:w-[30vw] h-[10vh] sm:h-[20vh] sm:py-8  transform transition-transform duration-300 hover:scale-105  text-white text-xl font-bold px-4  mx-2 my-2 bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                             onClick={() => handlePayClick("cardpay")}
                         >
                             Card Payment

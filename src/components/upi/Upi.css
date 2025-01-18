@@ -2,24 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.modal-overlay {
-    position: absolute;
-   top:3%;
-   right: 30%;
-    width: 100%;
-    /* background-color: rgba(0, 0, 0, 0.5);  Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-/* Base styles */
 .upi-container {
-    max-width: 600px; /* Limit max width for larger screens */
-    margin: auto; /* Center the container */
-    padding: 16px; /* Add padding */
+    max-width: 300px; /* Limit max width for larger screens */
+  
+   
     background-color: #f1f1eb;
+     display: flex;
+    justify-content: center;
 }
+
 
 .upi-header {
     text-align: center; /* Center text */
@@ -35,6 +26,9 @@
     align-items: center;
 }
 
+@media (max-width: 768px) {
+    
+}
 /* Responsive styles */
 @media (max-width: 640px) {
     .upi-header {
@@ -48,12 +42,15 @@
     .text-4xl {
         font-size: 2rem; /* Adjust font size for mobile */
     }
+    
 
     /* .qr-code-placeholder {
         width: 340px;
         height: 300px;
     } */
-
+    .modal-overlay {
+       
+      }
     .bg-blue-400 {
         padding: 12px; /* Adjust padding for mobile */
     }
@@ -61,6 +58,7 @@
     .bg-white {
         padding: 12px; /* Adjust padding for mobile */
     }
+   
 }
 
 /* Default (mobile first) */
@@ -75,6 +73,7 @@
         width: 500px; /* Fixed width for medium screens */
         height: 250px; /* Fixed height for medium screens */
     }
+    
 }
 
 /* Large screens (1024px and up) */

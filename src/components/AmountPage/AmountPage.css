@@ -9,6 +9,15 @@
     padding: 16px; /* Add padding */
     background-color: #f1f1eb;
 }
+@media (max-width: 768px) {
+  .amount-container {
+    max-width: 600px; /* Limit max width for larger screens */
+    margin: auto; /* Center the container */
+    padding: 16px; /* Add padding */
+    background-color: #f1f1eb;
+}
+
+}
 
 .amount-header {
     text-align: center; /* Center text */
@@ -48,11 +57,11 @@
 
 @keyframes increaseSize {
     from {
-      transform: scale(1); /* Initial size */
+      transform: scale(0.9); /* Initial size */
       filter: blur(0px);
     }
     to {
-      transform: scale(1.5); /* Increased size by 1.5 times */
+      transform: scale(0.9); /* Increased size by 1.5 times */
       filter: blur(30px);
     }
   }
