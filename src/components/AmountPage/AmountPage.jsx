@@ -128,14 +128,7 @@ function AmountPage() {
             }
             {visiblecard && <CardPay amount={amount} />}
             {/* </div> */}
-            {visible &&
-                <Upi amount={amount} />
-            }
-            {visibleBank &&
-                <BankTransfer amount={amount} />
-            }
-            {visiblecard && <CardPay amount={amount} />}
-            {/* </div> */}
+         
         </div>
         // </div>
     );
