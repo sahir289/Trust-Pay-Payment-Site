@@ -83,11 +83,11 @@ function Upi({ amount }) {
     };
 
     return (
+<div className="flex justify-center">
         <div className="sm:w-full sm:h-full">
             {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
-
         <div className="upi-container rounded-3xl modal-overlay">
-            <div className=" ml-20 sm:ml-0 bg-white w-[95vw] p-3  rounded-3xl shadow-md ">
+            <div className="bg-white sm:w-[95vw] p-3  rounded-3xl shadow-md ">
                 <div className="mb-5">
                     <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
                         <div className="flex flex-col items-center self-center">
@@ -177,7 +177,7 @@ function Upi({ amount }) {
                     3. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
                 </p>
             </div>
-        </div>
+        </div></div>
         </div>
     );
 }
