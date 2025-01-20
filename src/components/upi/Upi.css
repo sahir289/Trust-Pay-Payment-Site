@@ -1,109 +1,243 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.upi-container {
-    max-width: 600px; /* Limit max width for larger screens */
-    margin: auto; /* Center the container */
-    padding: 16px; /* Add padding */
-    background-color: #f1f1eb;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
-.upi-header {
-    text-align: center;
-    /* Center text */
-}
+@media (min-width: 320px) and (max-width: 375px){
+    .upi-container {
+        width: 100%;
+        /* Limit max width for larger screens */
+        margin: 0px;
+        /* Center the container */
+        padding: 0px 0px;
+        /* Add padding */
+        /* background-color: #f1f1eb; */
 
-.progress-circle {
-    margin: 0 auto;
-    /* Center the SVG */
-}
 
-.qr-code-placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-@media (max-width: 768px) {
-    
-}
-/* Responsive styles */
-@media (max-width: 640px) {
-    .upi-header {
-        padding: 16px;
-        /* Adjust padding for mobile */
     }
 
-    .text-lg {
-        font-size: 1.25rem;
-        /* Adjust font size for mobile */
-    }
-
-    .text-4xl {
-        font-size: 2rem;
-        /* Adjust font size for mobile */
-    }
-    
-
-    /* .qr-code-placeholder {
-        width: 340px;
-        height: 300px;
-    } */
     .modal-overlay {
-       
-      }
-    .bg-blue-400 {
-        padding: 12px;
-        /* Adjust padding for mobile */
+        position: absolute;
+        left: 0% !important;
+        top: 0%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+
     }
 
-    .bg-white {
-        padding: 12px;
-        /* Adjust padding for mobile */
-    }
-   
-}
-
-/* Default (mobile first) */
-.qr-code-placeholder {
-    width: 350px;
-    /* Fixed width for small screens */
-    height: 225px;
-    /* Fixed height for small screens */
-}
-
-/* Medium screens (641px and up) */
-@media (min-width: 641px) {
     .qr-code-placeholder {
-        width: 500px;
-        /* Fixed width for medium screens */
-        height: 335px;
-        /* Fixed height for medium screens */
+        position: relative;
+        left: 12% !important;
+        top: 10% !important;
+        width: 225px !important;
+        display: flex !important;
+        justify-content: center !important;
+
     }
-    
 }
+
+@media (min-width: 375px) and (max-width: 425px){
+    .upi-container {
+        width: 100%;
+        /* Limit max width for larger screens */
+        margin: 0px;
+        /* Center the container */
+        padding: 0px 0px;
+        /* Add padding */
+        /* background-color: #f1f1eb; */
+
+
+    }
+
+    .modal-overlay {
+        position: absolute;
+        left: 0% !important;
+        top: 0%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+
+    }
+
+    .qr-code-placeholder {
+        position: relative;
+        left: 18% !important;
+        top: 10% !important;
+        width: 225px !important;
+        display: flex !important;
+        justify-content: center !important;
+
+    }
+}
+
+
+
+
+
+
+
+
+@media (min-width: 425px) and (max-width: 768px){
+
+    .upi-container {
+        width: 100%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+        display: flex;
+        justify-content: center;
+    }
+
+    .modal-overlay {
+        position: absolute;
+        left: 0% !important;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+
+    .qr-code-placeholder {
+        position: relative;
+        left: 23% !important;
+        top: 10% !important;
+        width: 205px !important;
+        display: flex !important;
+        justify-content: center !important;
+        margin-bottom: 10px;
+
+    }
+}
+
+
 
 /* Large screens (1024px and up) */
-@media (min-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px){
+    .upi-container {
+        width: 60%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+    }
+
+    .modal-overlay {
+        position: absolute;
+        left: 22% !important;
+        top: 3%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+
     .qr-code-placeholder {
-        width: 510px;
+        position: relative;
+        left: 15% !important;
+        top: 10% !important;
+        width: 300px !important;
         /* Fixed width for large screens */
-        height: 335px;
+        height: 335px !important;
         /* Fixed height for large screens */
+        display: flex;
+        justify-content: center;
     }
 }
 
 /* Extra-large screens (1440px and up) */
-@media (min-width: 1440px) {
+@media (min-width: 1024px) and (max-width: 1440px){
+
+    .upi-container {
+        width: 50%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+    }
+
+    .modal-overlay {
+        position: absolute;
+        left: 27% !important;
+        top: 3% !important;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+
     .qr-code-placeholder {
-        width: 550px;
+        position: relative;
+        left: 16% !important;
+        top: 1% !important;
+        width: 320px !important;
         /* Fixed width for extra-large screens */
-        height: 350px;
+        height: 350px !important;
         /* Fixed height for extra-large screens */
+        display: flex;
+        justify-content: center;
+
     }
 }
+
+@media (min-width: 1440px) and (max-width: 2560px){
+    .upi-container {
+        width: 40%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+    }
+
+    .modal-overlay {
+        position: absolute;
+        left: 32% !important;
+        top: 3%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+    .qr-code-placeholder {
+        position: relative;
+        left: 18% !important;
+        top: 1% !important;
+        width: 350px !important;
+        /* Fixed width for extra-large screens */
+        height: 350px !important;
+        /* Fixed height for extra-large screens */
+        display: flex;
+        justify-content: center;
+
+    }
+}
+@media (min-width: 2560px) {
+    .qr-code-placeholder {
+        position: relative;
+        left: 32% !important;
+        top: 1% !important;
+        width: 350px !important;
+        /* Fixed width for extra-large screens */
+        height: 350px !important;
+        /* Fixed height for extra-large screens */
+        display: flex;
+        justify-content: center;
+
+    }
+}
+
+
+
+
 
 /* Container for the entire payment section */
 .payment-container {
@@ -118,7 +252,7 @@
 .qr-code {
     width: 100%;
     /* Full width of its container */
-    max-width: 300px;
+    /* max-width: 300px; */
     /* Default maximum width */
     aspect-ratio: 1 / 1;
     /* Keeps the element square */
@@ -126,24 +260,8 @@
     /* Background color */
     border-radius: 8px;
     /* Rounded corners */
-    margin: 0 auto;
+    /* margin: 0 auto; */
     /* Centers it horizontally */
-}
-
-/* Adjust for small screens (max-width: 640px) */
-@media (max-width: 640px) {
-    .qr-code {
-        max-width: 250px;
-        /* Reduce maximum size for smaller screens */
-    }
-}
-
-/* Adjust for extra small screens (max-width: 480px) */
-@media (max-width: 480px) {
-    .qr-code {
-        max-width: 200px;
-        /* Further reduce size for extra-small screens */
-    }
 }
 
 .text-gradient {
@@ -166,3 +284,20 @@
     transition: stroke-dashoffset 1s linear, stroke 1s linear;
     stroke-linecap: round;
 }
+
+
+.upi-header {
+    text-align: center;
+    /* Center text */
+}
+
+.progress-circle {
+    margin: 0 auto;
+    /* Center the SVG */
+}
+
+
+
+
+
+

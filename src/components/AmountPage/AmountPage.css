@@ -4,7 +4,6 @@
 
 /* Base styles */
 .amount-container {
-    max-width: 600px; /* Limit max width for larger screens */
     /* margin: auto;  */
     padding: 16px; /* Add padding */
     background-color: #f1f1eb;
