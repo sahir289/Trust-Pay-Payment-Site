@@ -4,9 +4,10 @@
 
 /* Base styles */
 .amount-container {
-    /* margin: auto;  */
-    padding: 16px; /* Add padding */
-    background-color: #f1f1eb;
+  /* margin: auto;  */
+  padding: 16px;
+  /* Add padding */
+  background-color: #f1f1eb;
 }
 
 .amount-header {
@@ -55,19 +56,19 @@
 }
 
 @keyframes increaseSize {
-    from {
-      transform: scale(0.9); /* Initial size */
-      filter: blur(0px);
-    }
-    to {
-      transform: scale(0.9); /* Increased size by 1.5 times */
-      filter: blur(30px);
-    }
+  from {
+    transform: scale(0.9);
+    /* Initial size */
+    filter: blur(0px);
   }
-  
-  .element {
-    animation: increaseSize 1.5s ease-in-out forwards;
-  }
-  
 
-  
+  to {
+    transform: scale(0.9);
+    /* Increased size by 1.5 times */
+    filter: blur(30px);
+  }
+}
+
+.element {
+  animation: increaseSize 1.5s ease-in-out forwards;
+}

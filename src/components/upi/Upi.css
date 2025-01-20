@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 
-@media (min-width: 320px) and (max-width: 375px){
+@media (min-width: 320px) and (max-width: 375px) {
     .upi-container {
         width: 100%;
         /* Limit max width for larger screens */
@@ -37,7 +37,7 @@
     }
 }
 
-@media (min-width: 375px) and (max-width: 425px){
+@media (min-width: 375px) and (max-width: 425px) {
     .upi-container {
         width: 100%;
         /* Limit max width for larger screens */
@@ -78,7 +78,7 @@
 
 
 
-@media (min-width: 425px) and (max-width: 768px){
+@media (min-width: 425px) and (max-width: 768px) {
 
     .upi-container {
         width: 100%;
@@ -116,7 +116,7 @@
 
 
 /* Large screens (1024px and up) */
-@media (min-width: 768px) and (max-width: 1024px){
+@media (min-width: 768px) and (max-width: 1024px) {
     .upi-container {
         width: 60%;
         /* Limit max width for larger screens */
@@ -150,7 +150,7 @@
 }
 
 /* Extra-large screens (1440px and up) */
-@media (min-width: 1024px) and (max-width: 1440px){
+@media (min-width: 1024px) and (max-width: 1440px) {
 
     .upi-container {
         width: 50%;
@@ -185,7 +185,7 @@
     }
 }
 
-@media (min-width: 1440px) and (max-width: 2560px){
+@media (min-width: 1440px) and (max-width: 2560px) {
     .upi-container {
         width: 40%;
         /* Limit max width for larger screens */
@@ -204,6 +204,7 @@
         justify-content: center;
         z-index: 0;
     }
+
     .qr-code-placeholder {
         position: relative;
         left: 18% !important;
@@ -217,6 +218,7 @@
 
     }
 }
+
 @media (min-width: 2560px) {
     .qr-code-placeholder {
         position: relative;
@@ -292,9 +294,3 @@
     margin: 0 auto;
     /* Center the SVG */
 }
-
-
-
-
-
-
