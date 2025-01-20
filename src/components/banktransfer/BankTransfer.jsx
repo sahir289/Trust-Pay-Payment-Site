@@ -7,6 +7,8 @@ import { IoCopy } from "react-icons/io5";
 function BankTransfer({ amount }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
+        const [isUpi, setIsUpi] = useState(true);
+    
     const [link, setLink] = useState();
 
     useEffect(() => {
@@ -155,7 +157,7 @@ function BankTransfer({ amount }) {
                     </div>
                 </div>
                 <div className="mt-5">
-                    <UtrOrScreenShot />
+                    <UtrOrScreenShot isUpi={isUpi}/>
                 </div>
                 <button
                     className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"

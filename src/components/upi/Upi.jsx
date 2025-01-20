@@ -12,6 +12,7 @@ function Upi({ amount }) {
     const [link, setLink] = useState();
     const placeholderRef = useRef(null);
     const [size, setSize] = useState(300);
+    const [isUpi, setIsUpi] = useState(false);
 
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
@@ -158,7 +159,7 @@ function Upi({ amount }) {
                             </div>
                         </div>
                         <div className="mt-5">
-                            <UtrOrScreenShot />
+                            <UtrOrScreenShot isUpi={isUpi} />
                         </div>
                         <button
                             className="

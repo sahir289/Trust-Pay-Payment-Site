@@ -186,10 +186,10 @@ function CardPay({ amount }) {
                         <div className="sm:ml-0 md:ml-5 xl:mr-2 2xl:mr-0 2xl:ml-0 w-[80vw] sm:w-[30vw] md:w-[45vw]  lg:w-[20vw] xl:w-[15vw]">
                             <div className="w-[90vw]  sm:w-full 2xl:ml-4 sm:ml-0 flex justify-between mb-3 mt-5">
                                 <div className="flex flex-colitem-center">
-                                    <input onChange={handleCred} name="acc" className="px-2 py-1 lg:mr-4 text-gray-500  border-2 border-gray-100  focus:outline-none focus:border-green-500 rounded-lg xl:w-[19vw] xl:mr-8 md:w-[32vw]" placeholder="Account Number" />
+                                    <input onChange={handleCred} name="acc" className="px-2 py-1 lg:mr-4 text-gray-500  border-2 border-gray-100  focus:outline-none focus:border-green-500 rounded-lg xl:w-[21vw] xl:mr-8 md:w-[32vw] lg:w-[21vw] 2xl:w-[19vw]" placeholder="Account Number" />
                                 </div>
                                 <div className="flex flex-col item-center">
-                                    <input className="px-2 py-1 w-[18vw] sm:w-[10vw]  text-gray-500 borber-2 border-gray-100  focus:outline-none border-2 focus:border-green-500 2xl:w-[5vw] rounded-lg" placeholder="CVV" />
+                                    <input className="px-2 py-1 w-[18vw] sm:w-[10vw]  text-gray-500 borber-2 border-gray-100  focus:outline-none border-2 focus:border-green-500 2xl:w-[5vw] lg:w-[8vw] rounded-lg" placeholder="CVV" />
                                 </div>
                             </div>
                             <div className="w-full 2xl:ml-4  ml-2 sm:ml-0 flex justify-between mb-5 ">
