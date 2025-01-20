@@ -2,45 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.modal-overlay-bank {
-    position: absolute;
-    top: 3%;
-    right: 30%;
-    width: 100%;
-    /* background-color: rgba(0, 0, 0, 0.5);  Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    z-index: 1000;
-}
 
-/* Base styles */
-.bank-container {
-    /* width: 750px; */
-    /* Limit max width for larger screens */
-    margin: auto;
-    /* Center the container */
-    padding: 16px;
-    background-color: #f1f1eb;
-}
-@media screen and (max-width: 768px) {  
-    .modal-overlay-bank {
-        position: absolute;
-       top:0%;
-       right: 0%;
-        width: 100%;
-        /* background-color: rgba(0, 0, 0, 0.5);  Semi-transparent background */
-        display: flex;
-        justify-content: center;
-        z-index: 0;
-      }
-    /* Base styles */
-    .bank-container {
-        max-width: 450px; /* Limit max width for larger screens */
-        margin: auto; /* Center the container */
-        padding: 16px; 
-        background-color: #f1f1eb;
-    }
-}
+
 .bank-header {
     text-align: center;
     /* Center text */
@@ -51,43 +14,6 @@
     /* Center the SVG */
 }
 
-/* Responsive styles */
-@media (max-width: 640px) {
-    .bank-header {
-        padding: 16px;
-        /* Adjust padding for mobile */
-    }
-
-    .text-lg {
-        font-size: 1.25rem;
-        /* Adjust font size for mobile */
-    }
-
-    .text-4xl {
-        font-size: 2rem;
-        /* Adjust font size for mobile */
-    }
-
-    .bg-blue-400 {
-        padding: 12px;
-        /* Adjust padding for mobile */
-    }
-
-    .bg-white {
-        padding: 12px;
-        /* Adjust padding for mobile */
-    }
-}
-@media (max-width: 320px) {
-    .modal-overlay-bank {
-        position: absolute;
-       top:0%;
-       right: 0%;
-       
-        z-index: 0;
-      }
-   
-}
 
 
 .text-gradient {
@@ -110,3 +36,178 @@
     transition: stroke-dashoffset 1s linear, stroke 1s linear;
     stroke-linecap: round;
 }
+
+
+@media (min-width: 320px) and (max-width: 375px){
+    .bank-container {
+        width: 100%;
+        /* Limit max width for larger screens */
+        margin: 0px;
+        /* Center the container */
+        padding: 0px 0px;
+        /* Add padding */
+        /* background-color: #f1f1eb; */
+
+
+    }
+
+    .modal-overlay-bank {
+        position: absolute;
+        left: 0% !important;
+        top: 0%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+
+    }
+
+   
+}
+
+@media (min-width: 375px) and (max-width: 425px){
+    .bank-container {
+        width: 100%;
+        /* Limit max width for larger screens */
+        margin: 0px;
+        /* Center the container */
+        padding: 0px 0px;
+        /* Add padding */
+        /* background-color: #f1f1eb; */
+
+
+    }
+
+    .modal-overlay-bank {
+        position: absolute;
+        left: 0% !important;
+        top: 0%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+
+    }
+
+ 
+}
+
+
+
+
+
+
+
+
+@media (min-width: 425px) and (max-width: 768px){
+
+    .bank-container {
+        width: 100%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+        display: flex;
+        justify-content: center;
+    }
+
+    .modal-overlay-bank {
+        position: absolute;
+        left: 0% !important;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+
+  
+}
+
+
+
+/* Large screens (1024px and up) */
+@media (min-width: 768px) and (max-width: 1024px){
+    .bank-container {
+        width: 60%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+    }
+
+    .modal-overlay-bank {
+        position: absolute;
+        left: 22% !important;
+        top: 3%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+
+  
+}
+
+/* Extra-large screens (1440px and up) */
+@media (min-width: 1024px) and (max-width: 1440px){
+
+    .bank-container {
+        width: 47%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+    }
+
+    .modal-overlay-bank {
+        position: absolute;
+        left: 27% !important;
+        top: 3% !important;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+
+  
+}
+
+@media (min-width: 1440px) and (max-width: 2560px){
+    .bank-container {
+        width: 35%;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+    }
+
+    .modal-overlay-bank {
+        position: absolute;
+        left: 34% !important;
+        top: 3%;
+        display: flex;
+        justify-content: center;
+        z-index: 0;
+    }
+   
+}
+@media (min-width: 2560px) {
+    
+    .bank-container {
+        width: 33% !important;
+        /* Limit max width for larger screens */
+        margin: auto;
+        /* Center the container */
+        padding: 15px;
+        /* Add padding */
+        background-color: #f1f1eb;
+    }
+}
+
+
+
+

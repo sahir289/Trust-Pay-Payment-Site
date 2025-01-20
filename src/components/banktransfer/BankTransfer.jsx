@@ -107,10 +107,10 @@ function BankTransfer({ amount }) {
 
                     <div className="w-full flex justify-between mb-5 mt-5">
                         <div className="flex flex-col item-center">
-                            <p className="text-lg mr-2">Bank Name</p>
+                            <p className="text-md sm:text-lgmr-2">Bank Name</p>
                         </div>
                         <div className="flex flex-col item-center">
-                            <p className="text-lg mr-2">SAURABH
+                            <p className="text-sm sm:text-lg mr-2">SAURABH
                                 <button aria-label="Copy Bank Name">
                                     <IoCopy className="h-4 w-4 ml-2" />
                                 </button>
@@ -122,7 +122,7 @@ function BankTransfer({ amount }) {
                             <p className="text-lg mr-2">Account Number</p>
                         </div>
                         <div className="flex flex-col item-center">
-                            <p className="text-lg mr-2">11451100000447
+                            <p className="text-sm sm:text-lg mt-1 sm:mt-0 mr-2">11451100000447
                                 <button aria-label="Copy Account Number">
                                     <IoCopy className="h-4 w-4 ml-2" />
                                 </button>
@@ -134,7 +134,7 @@ function BankTransfer({ amount }) {
                             <p className="text-lg mr-2">Name</p>
                         </div>
                         <div className="flex flex-col item-center">
-                            <p className="text-lg mr-2">SAURABH
+                            <p className="text-sm sm:text-lg  mr-2">SAURABH
                                 <button aria-label="Copy Name">
                                     <IoCopy className="h-4 w-4 ml-2" />
                                 </button>
@@ -146,7 +146,7 @@ function BankTransfer({ amount }) {
                             <p className="text-lg mr-2">IFSC Code</p>
                         </div>
                         <div className="flex flex-col item-center">
-                            <p className="text-lg mr-2">PSIB0021145
+                            <p className="text-sm sm:text-lg  mr-2">PSIB0021145
                                 <button aria-label="Copy IFSC Code">
                                     <IoCopy className="h-4 w-4 ml-2" />
                                 </button>
