@@ -92,11 +92,11 @@ function CardPay({ amount }) {
 
     return (
 
-        <div className="w-full h-full flex justify-center">
+        <div className="w-full h-[90vh] flex justify-center">
             <div className="w-[100vw]  sm:w-[40vw] mr-0 sm:mr-8  card-container flex justify-center rounded-3xl modal-overlay-card">
-                <div className="flex w-[100vw] sm:w-[60vw]  rounded-2xl justify-center h-[90vh] bg-white p-2">
-                    <div className="bg-white h-[80vh] pb-6  sm:w-116 rounded-xl">
-                        <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
+                <div className="flex h-[90vh]  w-[100vw] sm:w-[60vw] lg:w-[20vw] rounded-2xl justify-center h-[90vh] bg-white p-2">
+                    <div className="bg-white  h-[80vh] pb-6 pl-14 sm:pl-0 w-[120vw] sm:w-116 lg:w-[20vw] rounded-xl">
+                        <div className="flexflex-col sm:flex-row justify-center items-center mb-2">
                             <div className="w-full flex justify-between items-center rounded-t-3xl p-4 text-white bank-header">
 
                                 <div className="flex flex-col ">
@@ -146,11 +146,11 @@ function CardPay({ amount }) {
 
                                 </div>  </div>
                         </div>
-                        <div className="flex justify-center items-center ml-2 sm:w-0 w-[96vw] sm:w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
+                        <div className="flex justify-center lg:w-[20vw] items-center ml-2  w-[100vw] sm:w-[40vw] h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
 
                             ₹ {amount}
                         </div>
-                        <div className="ml-2 sm:ml-0 sm:w-96 h-56 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg shadow-lg p-6 text-white relative">
+                        <div className="ml-2 sm:ml-0 w-[100vw] sm:w-[40vw] lg:w-[20vw] h-56 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg shadow-lg p-6 text-white relative">
 
                             <div className="w-12 h-8 bg-yellow-400 rounded-lg mb-4"></div>
 
@@ -194,14 +194,14 @@ function CardPay({ amount }) {
                             <div className="w-full ml-2 sm:ml-0 flex justify-between mb-5 ">
 
                                 <div className="flex flex-col item-center">
-                                    <input onChange={handleCred} name="name" placeholder="Cardholder Name" className=" focus:outline-none border-3 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" />
+                                    <input onChange={handleCred} name="name" placeholder="Cardholder Name" className=" focus:outline-none w-[47vw] lg:w-[10vw] border-3 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" />
                                 </div>
                                 <div className="flex flex-col item-center">
                                     <input onChange={handleCred} name="date" placeholder="Expires on" className=" focus:outline-none border-3 ml-2 sm:ml-0 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" type="date" />
                                 </div>
                             </div>
                             <button className="
-                    bg-gradient-to-r ml-4 sm:ml-0 w-[95vw] sm:mx-0 from-green-400 to-blue-500 sm:w-full py-4 text-2xl text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-0 mt-4
+                    bg-gradient-to-r lg:w-[20vw] ml-4 sm:ml-0 w-[95vw] sm:mx-0 from-green-400 to-blue-500 sm:w-[40vw] py-4 text-2xl text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-0 mt-4
                     ">
                                 Submit
                             </button>
