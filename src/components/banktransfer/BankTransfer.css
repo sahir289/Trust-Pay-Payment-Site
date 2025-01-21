@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 .bank-header {
     text-align: center;
     /* Center text */
@@ -13,8 +11,6 @@
     margin: 0 auto;
     /* Center the SVG */
 }
-
-
 
 .text-gradient {
     background: linear-gradient(to right, #68d391, #4299e1);
@@ -37,8 +33,7 @@
     stroke-linecap: round;
 }
 
-
-@media (min-width: 320px) and (max-width: 375px){
+@media (min-width: 320px) and (max-width: 375px) {
     .bank-container {
         width: 100%;
         /* Limit max width for larger screens */
@@ -47,8 +42,6 @@
         padding: 0px 0px;
         /* Add padding */
         /* background-color: #f1f1eb; */
-
-
     }
 
     .modal-overlay-bank {
@@ -58,13 +51,10 @@
         display: flex;
         justify-content: center;
         z-index: 0;
-
     }
-
-   
 }
 
-@media (min-width: 375px) and (max-width: 425px){
+@media (min-width: 375px) and (max-width: 425px) {
     .bank-container {
         width: 100%;
         /* Limit max width for larger screens */
@@ -73,8 +63,6 @@
         padding: 0px 0px;
         /* Add padding */
         /* background-color: #f1f1eb; */
-
-
     }
 
     .modal-overlay-bank {
@@ -84,20 +72,10 @@
         display: flex;
         justify-content: center;
         z-index: 0;
-
     }
-
- 
 }
 
-
-
-
-
-
-
-
-@media (min-width: 425px) and (max-width: 768px){
+@media (min-width: 425px) and (max-width: 768px) {
 
     .bank-container {
         width: 100%;
@@ -119,14 +97,10 @@
         justify-content: center;
         z-index: 0;
     }
-
-  
 }
 
-
-
 /* Large screens (1024px and up) */
-@media (min-width: 768px) and (max-width: 1024px){
+@media (min-width: 768px) and (max-width: 1024px) {
     .bank-container {
         width: 60%;
         /* Limit max width for larger screens */
@@ -145,13 +119,10 @@
         justify-content: center;
         z-index: 0;
     }
-
-  
 }
 
 /* Extra-large screens (1440px and up) */
-@media (min-width: 1024px) and (max-width: 1440px){
-
+@media (min-width: 1024px) and (max-width: 1440px) {
     .bank-container {
         width: 47%;
         /* Limit max width for larger screens */
@@ -170,11 +141,9 @@
         justify-content: center;
         z-index: 0;
     }
-
-  
 }
 
-@media (min-width: 1440px) and (max-width: 2560px){
+@media (min-width: 1440px) and (max-width: 2560px) {
     .bank-container {
         width: 35%;
         /* Limit max width for larger screens */
@@ -193,10 +162,9 @@
         justify-content: center;
         z-index: 0;
     }
-   
 }
+
 @media (min-width: 2560px) {
-    
     .bank-container {
         width: 33% !important;
         /* Limit max width for larger screens */
@@ -207,7 +175,3 @@
         background-color: #f1f1eb;
     }
 }
-
-
-
-

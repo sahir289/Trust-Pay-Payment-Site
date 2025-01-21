@@ -12,8 +12,6 @@
         padding: 0px 0px;
         /* Add padding */
         /* background-color: #f1f1eb; */
-
-
     }
 
     .modal-overlay {
@@ -23,15 +21,13 @@
         display: flex;
         justify-content: center;
         z-index: 0;
-
     }
 
     .qr-code-placeholder {
-        
+
         width: 225px !important;
         display: flex !important;
         justify-content: center !important;
-
     }
 }
 
@@ -44,8 +40,6 @@
         padding: 0px 0px;
         /* Add padding */
         /* background-color: #f1f1eb; */
-
-
     }
 
     .modal-overlay {
@@ -55,7 +49,6 @@
         display: flex;
         justify-content: center;
         z-index: 0;
-
     }
 
     .qr-code-placeholder {
@@ -65,7 +58,6 @@
         width: 225px !important;
         display: flex !important;
         justify-content: center !important;
-
     }
 }
 
@@ -101,11 +93,8 @@
         display: flex !important;
         justify-content: center !important;
         margin-bottom: 10px;
-
     }
 }
-
-
 
 /* Large screens (1024px and up) */
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -154,9 +143,7 @@
         background-color: #f1f1eb;
     }
 
-    .modal-overlay {
-       
-    }
+    .modal-overlay {}
 
     .qr-code-placeholder {
         position: relative;
@@ -168,7 +155,6 @@
         /* Fixed height for extra-large screens */
         display: flex;
         justify-content: center;
-
     }
 }
 
@@ -202,7 +188,6 @@
         /* Fixed height for extra-large screens */
         display: flex;
         justify-content: center;
-
     }
 }
 
@@ -217,13 +202,8 @@
         /* Fixed height for extra-large screens */
         display: flex;
         justify-content: center;
-
     }
 }
-
-
-
-
 
 /* Container for the entire payment section */
 .payment-container {
@@ -270,7 +250,6 @@
     transition: stroke-dashoffset 1s linear, stroke 1s linear;
     stroke-linecap: round;
 }
-
 
 .upi-header {
     text-align: center;

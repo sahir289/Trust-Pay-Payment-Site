@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Upi.css";
 import { UtrOrScreenShot } from '../utrOrScreenShot'
 import { NortonAndVideoLink } from '../nortonAndVideoLink'
@@ -12,7 +12,6 @@ function Upi({ amount }) {
     const [link, setLink] = useState();
     const placeholderRef = useRef(null);
     const [size, setSize] = useState(300);
-    const [isUpi, setIsUpi] = useState(false);
 
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
@@ -161,12 +160,9 @@ function Upi({ amount }) {
                             </div>
                         </div>
                         <div className="mt-5 flex justify-center">
-                            <UtrOrScreenShot isUpi={isUpi} />
+                            <UtrOrScreenShot />
                         </div>
-                        <button
-                            className="
-                    bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4
-                    "
+                        <button className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"
                             aria-label="Submit payment details"
                         >
                             SUBMIT
@@ -178,11 +174,12 @@ function Upi({ amount }) {
                             <br />
                             2. Enter UTR number or upload screen shot.<span className="text-red-500">*</span>
                             <br />
-                            3. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
+                            3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
                         </p>
                         <NortonAndVideoLink link={link} />
                     </div>
-                </div></div>
+                </div>
+            </div>
         </div>
     );
 }

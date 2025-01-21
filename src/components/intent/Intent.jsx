@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Intent.css";
 import { NortonAndVideoLink } from '../nortonAndVideoLink'
 
@@ -173,7 +173,7 @@ function Intent() {
                     <br />
                     1. Select the UPI App from which you want to pay.<span className="text-red-500">*</span>
                     <br />
-                    2. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
+                    2. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
                     <br />
                     3. Pay the display Amount.<span className="text-red-500">*</span>
                 </p>

@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./CardPay.css";
 // import creditCardType from 'credit-card-type';
 import { LiaCcVisa } from "react-icons/lia";
-import { IoCopy } from "react-icons/io5";
+// import { IoCopy } from "react-icons/io5";
 import { RiMastercardLine } from "react-icons/ri";
 // import { SiAmericanexpress } from "react-icons/si";
 import { FaCcDiscover } from "react-icons/fa6";
 import { FaCcJcb } from "react-icons/fa6";
 import { FaCcDinersClub } from "react-icons/fa";
 import { PiUnionFill } from "react-icons/pi";
+import { NortonAndVideoLink } from "../nortonAndVideoLink";
 
 function CardPay({ amount }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
+    const [link, setLink] = useState();
     // const creditCardType = require("credit-card-type");
     const [cardDetails, setCardDetails] = useState({
         acc: "XXXX XXXX XXXX XXXX",
         name: "",
         date: "",
     });
+
     useEffect(() => {
+        setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
             const timer = setInterval(() => {
                 setRemainingTime((prevTime) => prevTime - 1);
@@ -73,40 +77,28 @@ function CardPay({ amount }) {
         ];
 
         for (const card of cardPatterns) {
-            console.log(card.pattern.test(cardNumber), "*")
             if (card.pattern.test(cardNumber)) {
-
                 return card.logo;
             }
         }
         return "";
     }
+
     const handleCred = (e) => {
         const { name, value } = e.target;
         setCardDetails((prev) => ({ ...prev, [name]: value }));
-
-
     }
-    console.log(cardDetails.acc, getCardType(cardDetails.acc))
-
 
     return (
 
         <div className="absolute w-full h-[full] flex justify-center">
-            <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-6 ">
-
-                <div className="w-62.5   flex justify-center rounded-3xl ">
-                    <div className="
-                flex rounded-2xl justify-center  bg-white p-2
-                ">
-                        <div className="
-                    ">
+            <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2 mt-6 ">
+                <div className="w-62.5   flex justify-center rounded-3xl">
+                    <div className="flex rounded-2xl justify-center  bg-white p-2">
+                        <div className="">
                             <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
                                 <div className="w-full flex justify-between items-center rounded-t-3xl p-4 text-white">
-
                                     <div className="flex flex-col ">
-
-
                                         <p className="text-black text-xl">
                                             Payment Time Left
                                         </p>
@@ -148,25 +140,22 @@ function CardPay({ amount }) {
                                                 </p>
                                             </div>
                                         </div>
-
-                                    </div>  </div>
+                                    </div>
+                                </div>
                             </div>
                             <div className="flex justify-center">
-                                <div className="
-                                flex justify-center items-center  w-[90vw] sm:w-[60vw] md:w-[30vw]  items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2
-                                ">
-
+                                <div className="flex justify-center items-center  w-[90vw] sm:w-[60vw] md:w-[30vw]  items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
                                     ₹ {amount}
-                                </div></div>
+                                </div>
+                            </div>
                             <div className="flex justify-center mt-4 mb-6">
                                 <div className="w-62.5 xl:w-96 h-46 lg:h-48 bg-gradient-to-r  from-blue-500 to-purple-500   rounded-lg shadow-lg p-6 text-white relative">
                                     <div className="flex flex-row justify-between ">
                                         <div className="w-12 h-8 bg-yellow-400 mt-3 rounded-lg mb-4"></div>
                                         <div className="w-12 h-8 ">
-
                                             {getCardType(cardDetails.acc)}
-                                            {/* <LiaCcVisa size={55} /> */}
-                                        </div></div>
+                                        </div>
+                                    </div>
                                     <div className="mb-6">
                                         <p className="text-lg font-semibold tracking-widest">{cardDetails.acc}</p>
                                     </div>
@@ -182,10 +171,9 @@ function CardPay({ amount }) {
                                             <p className="font-medium">{cardDetails.date}</p>
                                         </div>
                                     </div>
-
                                     {/* Visa/MasterCard Logo */}
-
-                                </div></div>
+                                </div>
+                            </div>
 
                             <div className="w-[90vw] sm:w-full pl-2 gap-1 flex justify-between mb-3 mt-5">
                                 <div className="flex flex-col items-center">
@@ -223,17 +211,27 @@ function CardPay({ amount }) {
                                     />
                                 </div>
                             </div>
-<div className="flex justify-center">
-                            <button className="
-                                flex justify-center mb-8 items-center   w-[90vw] sm:w-[60vw] md:w-[30vw] items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2
-                            ">
-                                Submit
-                            </button></div>
+                            <div className="flex justify-center">
+                                <button className="flex justify-center mb-8 items-center w-[90vw] sm:w-[60vw] md:w-[30vw] items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
+                                    Submit
+                                </button>
+                            </div>
+                            <p className="text-black text-start text-lg sm:text-base mb-5">
+                                <b>Steps for Payment: </b>
+                                <br />
+                                1. Fill the card details<span className="text-red-500">*</span>
+                                <br />
+                                2. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
+                                <br />
+                                3. Pay the display Amount.<span className="text-red-500">*</span>
+                            </p>
+                            <NortonAndVideoLink link={link} />
                         </div>
                     </div>
                 </div>
 
-            </div></div>
+            </div>
+        </div>
 
     )
 }

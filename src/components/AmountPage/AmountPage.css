@@ -7,7 +7,6 @@
   /* margin: auto;  */
   padding: 16px;
   /* Add padding */
-  
 }
 
 .amount-header {
@@ -35,15 +34,14 @@
 /* TransitionPage.css */
 /* Transition styles */
 .transition-active {
-  animation: zoomOut 0.5s ease-out forwards ;
+  animation: zoomOut 0.5s ease-out forwards;
 }
 
 @media (max-width: 768px) {
   .transition-active {
-    animation: none ;
+    animation: none;
   }
 }
-
 
 @keyframes zoomOut {
   0% {
