@@ -25,17 +25,17 @@ function AmountPage({popupRef, closeChat}) {
 
     const handlePayClick = (a) => {
 
-        if (a === "upi") {
+        if (a === "upi" && (!visibleBank && !visiblecard)) {
             setIncreaseSize(true); // Increase size
             setVisible(true)
         }
 
-        if (a === "cardpay") {
+        if (a === "cardpay" && (!visibleBank && !visible)) {
             setIncreaseSize(true); // Increase size
             setVisiblecard(true)
         }
 
-        if (a === "bank") {
+        if (a === "bank" && (!visible && !visiblecard)) {
             setIncreaseSize(true); // Increase size
             setVisibleBank(true)
         }
