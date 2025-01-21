@@ -43,15 +43,15 @@ function AmountPage({popupRef, closeChat}) {
 
     
     return (
-        <div ref={popupRef} className="flex justify-center items-center">
-            <div
-                className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => setClick(false)}
+        <div ref={popupRef}onClick={closeChat} className="flex justify-center items-center">
+            <div 
+                className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => {setClick(false)}}
             >
                 {
                     <div className="flex justify-center">
                         <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem]  lg:shadow-md ${increaseSize ? "h-100  transition-active " : " bg-white "}`}>
                             <div className="flex flex-col px-2 mt-2  flex justify-center">
-                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 hover:scale-105 font-bold bg-white py-2 px-4 ">
+                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 hover:scale-105 font-bold py-2 px-4 ">
                                     Please enter the amount :
                                 </label>
                                 <input

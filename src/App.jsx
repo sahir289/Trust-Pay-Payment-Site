@@ -16,7 +16,7 @@ function App() {
     setIsChatOpen(false);
   };
 
-  // Close popup when clicking outside of it
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -36,14 +36,14 @@ function App() {
 
   return (
     <>
-      <Router>  {/* Wrap your app with BrowserRouter */}
+      <Router> 
         <div className='app'>
           <Suspense fallback={<div>Loading Transaction...</div>}>
             <ErrorBoundary>
               <Routes>
                 <Route
                   path='/transaction'
-                  element={<AmountPage isChatOpen={isChatOpen} popupRef={popupRef} setIsChatOpen={setIsChatOpen} closeChat={closeChat}/>}
+                  element={<AmountPage isChatOpen={isChatOpen} popupRef={popupRef} closeChat={closeChat}/>}
                 />
                 <Route path="/upi" element={<Upi closeChat={closeChat}/>} />
                 <Route path="/banktranfer" element={<BankTransfer  closeChat={closeChat}/>} />
