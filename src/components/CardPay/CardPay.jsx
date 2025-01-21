@@ -92,121 +92,143 @@ function CardPay({ amount }) {
 
     return (
 
-        <div className="w-full h-[full] flex justify-center">
-            <div className="w-[100vw] md:w-[50vw] sm:w-[40vw] mr-0 sm:mr-8   card-container flex justify-center rounded-3xl modal-overlay-card">
-                <div className="
-                flex h-[95vh]  2xl:h-[50vw] w-[100vw]  sm:w-[60vw] lg:w-[40vw] rounded-2xl justify-center  bg-white p-2
-                ">
+        <div className="absolute w-full h-[full] flex justify-center">
+            <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-6 ">
+
+                <div className="w-62.5   flex justify-center rounded-3xl ">
                     <div className="
+                flex rounded-2xl justify-center  bg-white p-2
+                ">
+                        <div className="
                     ">
-                        <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
-                            <div className="w-full md:w-[50vw] lg:w-[35vw] 2xl:w-[27vw] flex justify-between items-center rounded-t-3xl p-4 text-white">
+                            <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
+                                <div className="w-full flex justify-between items-center rounded-t-3xl p-4 text-white">
 
-                                <div className="flex flex-col ">
+                                    <div className="flex flex-col ">
 
 
-                                    <p className="text-black text-xl">
-                                        Payment Time Left
-                                    </p>
-                                </div>
-                                <div className="flex-col items-center">
-                                    <div className="relative">
-                                        <svg
-                                            className="progress-circle"
-                                            width="80"
-                                            height="80"
-                                            viewBox="0 0 100 100"
-                                        >
-                                            <circle
-                                                className="progress-background"
-                                                cx="50"
-                                                cy="50"
-                                                r="40" /* Adjusted radius for the new size */
-                                                fill="none"
-                                                stroke="#e5e5e5"
-                                                strokeWidth="8" /* Scaled stroke width */
-                                            />
-                                            <circle
-                                                className="progress-bar"
-                                                cx="50"
-                                                cy="50"
-                                                r="40" /* Adjusted radius for the new size */
-                                                fill="none"
-                                                stroke={calculateColor()}
-                                                strokeWidth="8" /* Scaled stroke width */
-                                                strokeDasharray={2 * Math.PI * 40} /* Circumference based on new radius */
-                                                strokeDashoffset={2 * Math.PI * 40 - (progressPercentage / 100) * 2 * Math.PI * 40}
-                                                strokeLinecap="round"
-                                                transform="rotate(-90 50 50)" /* Adjusted rotation center */
-                                            />
-                                        </svg>
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <p className="text-gradient text-md font-bold">
-                                                {formatTime(remainingTime)}
-                                            </p>
+                                        <p className="text-black text-xl">
+                                            Payment Time Left
+                                        </p>
+                                    </div>
+                                    <div className="flex-col items-center">
+                                        <div className="relative">
+                                            <svg
+                                                className="progress-circle"
+                                                width="80"
+                                                height="80"
+                                                viewBox="0 0 100 100"
+                                            >
+                                                <circle
+                                                    className="progress-background"
+                                                    cx="50"
+                                                    cy="50"
+                                                    r="40" /* Adjusted radius for the new size */
+                                                    fill="none"
+                                                    stroke="#e5e5e5"
+                                                    strokeWidth="8" /* Scaled stroke width */
+                                                />
+                                                <circle
+                                                    className="progress-bar"
+                                                    cx="50"
+                                                    cy="50"
+                                                    r="40" /* Adjusted radius for the new size */
+                                                    fill="none"
+                                                    stroke={calculateColor()}
+                                                    strokeWidth="8" /* Scaled stroke width */
+                                                    strokeDasharray={2 * Math.PI * 40} /* Circumference based on new radius */
+                                                    strokeDashoffset={2 * Math.PI * 40 - (progressPercentage / 100) * 2 * Math.PI * 40}
+                                                    strokeLinecap="round"
+                                                    transform="rotate(-90 50 50)" /* Adjusted rotation center */
+                                                />
+                                            </svg>
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <p className="text-gradient text-md font-bold">
+                                                    {formatTime(remainingTime)}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    </div>  </div>
+                            </div>
+                            <div className="flex justify-center">
+                                <div className="
+                                flex justify-center items-center  w-[90vw] sm:w-[60vw] md:w-[30vw]  items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2
+                                ">
+
+                                    ₹ {amount}
+                                </div></div>
+                            <div className="flex justify-center mt-4 mb-6">
+                                <div className="w-62.5 xl:w-96 h-46 lg:h-48 bg-gradient-to-r  from-blue-500 to-purple-500   rounded-lg shadow-lg p-6 text-white relative">
+                                    <div className="flex flex-row justify-between ">
+                                        <div className="w-12 h-8 bg-yellow-400 mt-3 rounded-lg mb-4"></div>
+                                        <div className="w-12 h-8 ">
+
+                                            {getCardType(cardDetails.acc)}
+                                            {/* <LiaCcVisa size={55} /> */}
+                                        </div></div>
+                                    <div className="mb-6">
+                                        <p className="text-lg font-semibold tracking-widest">{cardDetails.acc}</p>
+                                    </div>
+
+                                    {/* Card Details */}
+                                    <div className="flex justify-between items-center text-sm">
+                                        <div>
+                                            <p className="uppercase text-gray-200">Cardholder</p>
+                                            <p className="font-medium">{cardDetails.name}</p>
+                                        </div>
+                                        <div>
+                                            <p className="uppercase text-gray-200">Expires</p>
+                                            <p className="font-medium">{cardDetails.date}</p>
                                         </div>
                                     </div>
 
-                                </div>  </div>
-                        </div>
-                        <div className="flex justify-center">
-                            <div className="flex 2xl:w-[27vw] justify-center items-center sm:ml-0  w-[90vw] sm:w-[30vw] md:w-[45vw] lg:w-[32vw]  items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
+                                    {/* Visa/MasterCard Logo */}
 
-                                ₹ {amount}
-                            </div></div>
-                        <div className="flex justify-center">
-                            <div className="ml-2 sm:ml-0 w-[90vw] xl:h-[28vh] sm:w-[30vw] md:w-[30vw] lg:w-[20vw] h-46 bg-gradient-to-r lg:w-[32vw] mt-2 mb-2 lg:mt-8 lg:mb-8 from-blue-500 2xl:w-[23vw] 2xl:h-[20vh] to-purple-500 md:w-[45vw]  rounded-lg shadow-lg p-6 text-white relative">
-                                <div className="flex flex-row justify-between ">
-                                    <div className="w-12 h-8 bg-yellow-400 mt-3 rounded-lg mb-4"></div>
-                                    <div className="w-12 h-8 ">
+                                </div></div>
 
-                                        {getCardType(cardDetails.acc)}
-                                        {/* <LiaCcVisa size={55} /> */}
-                                    </div></div>
-                                <div className="mb-6">
-                                    <p className="text-lg font-semibold tracking-widest">{cardDetails.acc}</p>
+                            <div className="w-[90vw] sm:w-full px-2 gap-1 flex justify-between mb-3 mt-5">
+                                <div className="flex flex-col items-center">
+                                    <input
+                                        onChange={handleCred}
+                                        name="acc"
+                                        className="px-2 py-1 text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-green-500 rounded-lg w-full sm:w-[32vw] md:w-[32vw] lg:w-[21vw] xl:w-[21vw] 2xl:w-[19vw]"
+                                        placeholder="Account Number"
+                                    />
                                 </div>
-
-                                {/* Card Details */}
-                                <div className="flex justify-between items-center text-sm">
-                                    <div>
-                                        <p className="uppercase text-gray-200">Cardholder</p>
-                                        <p className="font-medium">{cardDetails.name}</p>
-                                    </div>
-                                    <div>
-                                        <p className="uppercase text-gray-200">Expires</p>
-                                        <p className="font-medium">{cardDetails.date}</p>
-                                    </div>
-                                </div>
-
-                                {/* Visa/MasterCard Logo */}
-
-                            </div></div>
-
-                        <div className="sm:ml-0 md:ml-5 xl:mr-2 2xl:mr-0 2xl:ml-0 w-[80vw] sm:w-[30vw] md:w-[45vw]  lg:w-[20vw] xl:w-[15vw]">
-                            <div className="w-[90vw]  sm:w-full 2xl:ml-4 sm:ml-0 flex justify-between mb-3 mt-5">
-                                <div className="flex flex-colitem-center">
-                                    <input onChange={handleCred} name="acc" className="px-2 py-1 lg:mr-4 text-gray-500  border-2 border-gray-100  focus:outline-none focus:border-green-500 rounded-lg xl:w-[21vw] xl:mr-8 md:w-[32vw] lg:w-[21vw] 2xl:w-[19vw]" placeholder="Account Number" />
-                                </div>
-                                <div className="flex flex-col item-center">
-                                    <input className="px-2 py-1 w-[18vw] sm:w-[10vw]  text-gray-500 borber-2 border-gray-100  focus:outline-none border-2 focus:border-green-500 2xl:w-[5vw] lg:w-[8vw] rounded-lg" placeholder="CVV" />
+                                <div className="flex flex-col items-center">
+                                    <input
+                                        className="px-2 py-1 w-[18vw] sm:w-[10vw] text-gray-500 border-2 border-gray-100 focus:outline-none focus:border-green-500 lg:w-[8vw] 2xl:w-[5vw] rounded-lg"
+                                        placeholder="CVV"
+                                    />
                                 </div>
                             </div>
-                            <div className="w-full 2xl:ml-4  ml-2 sm:ml-0 flex justify-between mb-5 ">
 
-                                <div className="flex flex-col item-center">
-                                    <input onChange={handleCred} name="name" placeholder="Cardholder Name" className=" focus:outline-none w-[47vw] md:w-[22vw]  lg:w-[15vw] lg:mr-5 xl:mr-8 border-3 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" />
+                            <div className="w-full px-2 flex justify-between gap-1 mb-5">
+                                <div className="flex flex-col items-center">
+                                    <input
+                                        onChange={handleCred}
+                                        name="name"
+                                        placeholder="Cardholder Name"
+                                        className="focus:outline-none w-full sm:w-[47vw] md:w-[22vw] lg:w-[15vw] xl:w-[15vw] lg:mr-5 xl:mr-8 border-3 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100"
+                                    />
                                 </div>
-                                <div className="flex flex-col item-center">
-                                    <input onChange={handleCred} name="date" placeholder="Expires on" className="md:w-[22vw] lg:w-[14vw] focus:outline-none border-3 w-[40vw] ml-3 2xl:w-[9vw] sm:ml-0 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100" type="date" />
+                                <div className="flex flex-col items-center">
+                                    <input
+                                        onChange={handleCred}
+                                        name="date"
+                                        placeholder="Expires on"
+                                        className="focus:outline-none w-full sm:w-[40vw] md:w-[22vw] lg:w-[14vw] 2xl:w-[9vw] ml-3 sm:ml-0 focus:border-green-500 rounded-lg px-2 py-1 text-gray-500 border-2 border-gray-100"
+                                        type="date"
+                                    />
                                 </div>
                             </div>
+<div className="flex justify-center">
                             <button className="
-                    bg-gradient-to-r 2xl:w-[27vw] 2xl:ml-0 md:w-[45vw] lg:w-[32vw]  ml-4 sm:ml-0 w-[85vw] sm:mx-0 from-green-400 to-blue-500 sm:w-[40vw] py-4 text-2xl text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-0 mt-4
-                    ">
+                                flex justify-center mb-8 items-center   w-[90vw] sm:w-[60vw] md:w-[30vw] items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2
+                            ">
                                 Submit
-                            </button>
-
+                            </button></div>
                         </div>
                     </div>
                 </div>

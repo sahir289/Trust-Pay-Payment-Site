@@ -29,7 +29,6 @@ function Upi({ amount }) {
         const updateSize = () => {
             if (placeholderRef.current) {
                 const { width, height } = placeholderRef.current.getBoundingClientRect();
-                // Set size as 90% of the smaller dimension
                 const newSize = Math.min(width, height) * 1;
                 setSize(newSize);
             }
@@ -84,11 +83,11 @@ function Upi({ amount }) {
 
     return (
         <div className="flex justify-center">
-            <div className="sm:w-full sm:h-full">
-                {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
-                <div className="upi-container rounded-3xl modal-overlay">
-                    <div className="bg-white sm:w-[95vw] p-3  rounded-3xl shadow-md ">
-                        <div className="mb-5">
+            <div className="w-full sm:h-full">
+                <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-6 ">
+                    {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
+                    <div className="bg-white w-90 p-3  rounded-3xl shadow-md ">
+                        <div className="mb-5 ">
                             <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
                                 <div className="flex flex-col items-center self-center">
                                     <p className="text-black text-xl">
@@ -142,12 +141,15 @@ function Upi({ amount }) {
                             <p className="text-black text-center text-lg sm:text-base mb-2">
                                 Scan QR Code to Pay
                             </p>
-                            <div ref={placeholderRef} className="flex justify-center items-center qr-code-placeholder">
-                                <div className="qr-code" aria-label="QR Code Placeholder">
-                                    <QrGenerator upi_id={"uniqueshoe@psbpay"} amount={900} size={size} />
+                            <div className="flex justify-center">
+                                <div ref={placeholderRef} className="flex justify-center items-center w-[12.5rem] ">
+                                    <div className="qr-code" aria-label="QR Code Placeholder">
+                                        <QrGenerator upi_id={"uniqueshoe@psbpay"} amount={900} size={size} />
+                                    </div>
                                 </div>
                             </div>
-                            <p className="text-red-500 text-center text-lg sm:text-base mb-4">
+
+                            <p className="text-red-500 text-center text-lg sm:text-base mb-4 mt-4">
                                 <b>ATTENTION: </b>Avoid depositing through PhonePe for any inconvenience
                             </p>
 
@@ -158,7 +160,7 @@ function Upi({ amount }) {
                                 </button>
                             </div>
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-5 flex justify-center">
                             <UtrOrScreenShot isUpi={isUpi} />
                         </div>
                         <button

@@ -12,6 +12,7 @@ function BankTransfer({ amount }) {
     const [link, setLink] = useState();
 
     useEffect(() => {
+        
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
             const timer = setInterval(() => {
@@ -53,10 +54,12 @@ function BankTransfer({ amount }) {
     };
 
     return (
-        <div className="bank-container py-2 px-2 rounded-3xl modal-overlay-bank ">
-            <div className="bg-white p-3 rounded-3xl shadow-md bank-body">
+        <div className="flex justify-center mt-3 py-2 px-2 rounded-3xl ">
+                <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-4 ">
+
+            <div className="bg-white p-3 rounded-3xl shadow-md ">
                 <div className="mb-5">
-                    <div className="w-full flex justify-between rounded-t-3xl p-4 text-white bank-header">
+                    <div className="w-full flex justify-between rounded-t-3xl p-4 text-white">
                         <div className="flex flex-col items-center self-center">
                             <p className="text-black text-xl">
                                 Payment Time Left
@@ -175,8 +178,7 @@ function BankTransfer({ amount }) {
                     3. Click on "Submit" to complete the payment.<span className="text-red-500">*</span>
                 </p>
                 <NortonAndVideoLink link={link} />
-            </div>
-        </div>
+            </div></div></div>
     );
 }
 
