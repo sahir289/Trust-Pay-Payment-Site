@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { RiChatAiFill } from "react-icons/ri";
 
-const ChatIcon = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
+const ChatIcon = ({isChatOpen, setIsChatOpen}) => {
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
-
   return (
     <div>
       <div
@@ -18,8 +15,8 @@ const ChatIcon = () => {
       </div>
 
       {isChatOpen && (
-        <div className="fixed border boder-gray-500 bottom-20 right-9 w-60 sm:w-70 bg-slate-100 shadow-lg rounded-lg p-4">
-          <h4 className="text-lg font-semibold mb-3">Chat with us!</h4>
+        <div className="fixed  bottom-20 right-9 w-60 sm:w-70 bg-[#f1f1eb] shadow-lg rounded-lg p-4">
+          <h4 className="text-lg text-gray-500  font-semibold mb-3">Chat with us!</h4>
           <input placeholder="Email here" className="my-1 rounded-md p-1" />
           <textarea
             className="w-full h-20 p-2 rounded-md mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"

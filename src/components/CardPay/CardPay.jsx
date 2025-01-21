@@ -11,7 +11,7 @@ import { FaCcDinersClub } from "react-icons/fa";
 import { PiUnionFill } from "react-icons/pi";
 import { NortonAndVideoLink } from "../nortonAndVideoLink";
 
-function CardPay({ amount }) {
+function CardPay({ amount, closeChat }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -91,7 +91,7 @@ function CardPay({ amount }) {
 
     return (
 
-        <div className="absolute w-full h-[full] flex justify-center">
+        <div className="absolute w-full h-[full] flex justify-center" onClick={closeChat}>
             <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2 mt-6 ">
                 <div className="w-62.5   flex justify-center rounded-3xl">
                     <div className="flex rounded-2xl justify-center  bg-white p-2">

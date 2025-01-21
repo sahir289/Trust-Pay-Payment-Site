@@ -4,7 +4,7 @@ import { Upi } from "../upi";
 import { BankTransfer } from "../bankTransfer";
 import { CardPay } from "../CardPay";
 
-function AmountPage() {
+function AmountPage({popupRef, closeChat}) {
     const [amount, setAmount] = useState("");
     const [selectMethod, setSelectMethod] = useState(false);
     const [click, setClick] = useState(false);
@@ -41,16 +41,17 @@ function AmountPage() {
         }
     };
 
+    
     return (
-        <div className="flex justify-center items-center">
-            <div
-                className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => setClick(false)}
+        <div ref={popupRef}onClick={closeChat} className="flex justify-center items-center">
+            <div 
+                className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => {setClick(false)}}
             >
                 {
                     <div className="flex justify-center">
                         <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem]  lg:shadow-md ${increaseSize ? "h-100  transition-active " : " bg-white "}`}>
                             <div className="flex flex-col px-2 mt-2  flex justify-center">
-                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 hover:scale-105 font-bold bg-white py-2 px-4 ">
+                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 hover:scale-105 font-bold py-2 px-4 ">
                                     Please enter the amount :
                                 </label>
                                 <input
@@ -111,17 +112,17 @@ function AmountPage() {
 
                 <div className="absolute top-0 ">
                     {visible &&
-                        <Upi amount={amount} />
+                        <Upi amount={amount} closeChat={closeChat}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} />
+                        <BankTransfer amount={amount} closeChat={closeChat}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visiblecard &&
-                        <CardPay amount={amount} />
+                        <CardPay amount={amount} closeChat={closeChat}/>
                     }
                 </div>
             </div>
