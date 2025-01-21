@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';  // I
 import './App.css';
 import ErrorBoundary from './components/errorBoundary';
 import React, { Suspense, useEffect, useState } from 'react';
-import { BankTransfer, Upi, AmountPage, CardPay, Chaticon } from './components';
+import { BankTransfer, Upi, CardPay, Chaticon } from './components';
 import { useRef } from 'react';
 
-const Transactions = React.lazy(() => import('./screens/transactions/Transactions.jsx'));
+const AmountPage = React.lazy(() => import('./components/AmountPage/AmountPage'));
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -36,24 +36,26 @@ function App() {
 
   return (
     <>
-      <Router> 
+      <Router>
         <div className='app'>
-          <Suspense fallback={<div>Loading Transaction...</div>}>
-            <ErrorBoundary>
-              <Routes>
-                <Route
-                  path='/transaction'
-                  element={<AmountPage isChatOpen={isChatOpen} popupRef={popupRef} closeChat={closeChat}/>}
-                />
-                <Route path="/upi" element={<Upi closeChat={closeChat}/>} />
-                <Route path="/banktranfer" element={<BankTransfer  closeChat={closeChat}/>} />
-                <Route path='/cardpay' element={<CardPay  closeChat={closeChat}/>} />
-              </Routes>
-            </ErrorBoundary>
-          </Suspense>
+          <Routes>
+            <Route
+              path='/transaction'
+              element={
+                <ErrorBoundary>
+                  <Suspense fallback={<div className=''>Loading...</div>}>
+                    <AmountPage isChatOpen={isChatOpen} popupRef={popupRef} closeChat={closeChat} />
+                  </Suspense>
+                </ErrorBoundary>
+              }
+            />
+            <Route path="/upi" element={<Upi closeChat={closeChat} />} />
+            <Route path="/banktranfer" element={<BankTransfer closeChat={closeChat} />} />
+            <Route path='/cardpay' element={<CardPay closeChat={closeChat} />} />
+          </Routes>
         </div>
-      </Router>
-      <Chaticon isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen}/>
+      </Router >
+      <Chaticon isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
     </>
   );
 }

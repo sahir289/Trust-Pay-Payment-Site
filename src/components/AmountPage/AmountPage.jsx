@@ -41,7 +41,13 @@ function AmountPage({popupRef, closeChat}) {
         }
     };
 
-    
+    const handleChange = () => {
+        setVisible(false);
+        setVisiblecard(false);
+        setVisibleBank(false);
+        setIncreaseSize(false);
+    }
+
     return (
         <div ref={popupRef}onClick={closeChat} className="flex justify-center items-center">
             <div 
@@ -51,12 +57,13 @@ function AmountPage({popupRef, closeChat}) {
                     <div className="flex justify-center">
                         <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem]  lg:shadow-md ${increaseSize ? "h-100  transition-active " : " bg-white "}`}>
                             <div className="flex flex-col px-2 mt-2  flex justify-center">
-                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 hover:scale-105 font-bold py-2 px-4 ">
+                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold py-2 px-4 ">
                                     Please enter the amount :
                                 </label>
                                 <input
                                     type="number"
                                     value={amount}
+                                    disabled={selectMethod}
                                     onClick={(e) => { e.stopPropagation(); setClick(true); }}
                                     onChange={handleAmount}
                                     className="focus:outline-none px-4 py-2 mt-1 mb-2 mx-4 border border-gray-200 rounded-md text-xl"
@@ -112,17 +119,17 @@ function AmountPage({popupRef, closeChat}) {
 
                 <div className="absolute top-0 ">
                     {visible &&
-                        <Upi amount={amount} closeChat={closeChat}/>
+                        <Upi amount={amount} closeChat={closeChat} onBackClicked={handleChange}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} closeChat={closeChat}/>
+                        <BankTransfer amount={amount} closeChat={closeChat} onBackClicked={handleChange}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visiblecard &&
-                        <CardPay amount={amount} closeChat={closeChat}/>
+                        <CardPay amount={amount} closeChat={closeChat} onBackClicked={handleChange}/>
                     }
                 </div>
             </div>

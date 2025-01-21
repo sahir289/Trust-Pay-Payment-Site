@@ -11,7 +11,7 @@ import { FaCcDinersClub } from "react-icons/fa";
 import { PiUnionFill } from "react-icons/pi";
 import { NortonAndVideoLink } from "../nortonAndVideoLink";
 
-function CardPay({ amount, closeChat }) {
+function CardPay({ amount, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -99,9 +99,19 @@ function CardPay({ amount, closeChat }) {
                             <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
                                 <div className="w-full flex justify-between items-center rounded-t-3xl p-4 text-white">
                                     <div className="flex flex-col ">
-                                        <p className="text-black text-xl">
-                                            Payment Time Left
-                                        </p>
+                                        <button
+                                            onClick={() => onBackClicked()}
+                                            className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth="2"
+                                                stroke="currentColor"
+                                                className="w-6 h-6">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                        </button>
                                     </div>
                                     <div className="flex-col items-center">
                                         <div className="relative">

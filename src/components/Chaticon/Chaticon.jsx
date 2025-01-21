@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RiChatAiFill } from "react-icons/ri";
 
-const ChatIcon = ({isChatOpen, setIsChatOpen}) => {
+const ChatIcon = ({ isChatOpen, setIsChatOpen }) => {
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
@@ -16,12 +16,24 @@ const ChatIcon = ({isChatOpen, setIsChatOpen}) => {
 
       {isChatOpen && (
         <div className="fixed  bottom-20 right-9 w-60 sm:w-70 bg-[#f1f1eb] shadow-lg rounded-lg p-4">
-          <h4 className="text-lg text-gray-500  font-semibold mb-3">Chat with us!</h4>
-          <input placeholder="Email here" className="my-1 rounded-md p-1" />
+          <h4 className="text-lg text-gray-500 font-semibold mb-3">Chat with us!</h4>
+          <label className="text-gray-500 text-sm font-bold">
+            Email:
+          </label>
+          <input placeholder="Enter your Email here" className="my-1 w-full rounded-md p-1" />
+          <label className="text-gray-500 text-sm font-bold">
+            Phone Number:
+          </label>
+          <input placeholder="Enter your Phone No. here" className="my-1 w-full rounded-md p-1" />
+          <label className="text-gray-500 text-sm font-bold">
+            Message:
+          </label>
           <textarea
             className="w-full h-20 p-2 rounded-md mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Type your message here..."
-          ></textarea>
+          >
+          </textarea>
+          <p className="text-red-500 mb-4"><span className="font-bold ">Note:</span> Either an Email or Phone Number is required.</p>
           <button className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
             Send
           </button>
