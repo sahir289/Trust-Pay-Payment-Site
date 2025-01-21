@@ -4,7 +4,7 @@ import { Upi } from "../upi";
 import { BankTransfer } from "../bankTransfer";
 import { CardPay } from "../CardPay";
 
-function AmountPage() {
+function AmountPage({popupRef, closeChat}) {
     const [amount, setAmount] = useState("");
     const [selectMethod, setSelectMethod] = useState(false);
     const [click, setClick] = useState(false);
@@ -41,8 +41,9 @@ function AmountPage() {
         }
     };
 
+    
     return (
-        <div className="flex justify-center items-center">
+        <div ref={popupRef} className="flex justify-center items-center">
             <div
                 className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => setClick(false)}
             >
@@ -111,17 +112,17 @@ function AmountPage() {
 
                 <div className="absolute top-0 ">
                     {visible &&
-                        <Upi amount={amount} />
+                        <Upi amount={amount} closeChat={closeChat}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} />
+                        <BankTransfer amount={amount} closeChat={closeChat}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visiblecard &&
-                        <CardPay amount={amount} />
+                        <CardPay amount={amount} closeChat={closeChat}/>
                     }
                 </div>
             </div>

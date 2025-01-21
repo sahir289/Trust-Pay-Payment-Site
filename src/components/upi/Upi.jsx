@@ -6,7 +6,7 @@ import { QrGenerator } from '../qr-generator'
 import { IoCopy } from "react-icons/io5";
 
 
-function Upi({ amount }) {
+function Upi({ amount , closeChat}) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -81,7 +81,7 @@ function Upi({ amount }) {
     };
 
     return (
-        <div className="flex justify-center">
+        <div className="flex justify-center" onClick={closeChat}>
             <div className="w-full sm:h-full">
                 <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-6 ">
                     {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}

@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { RiChatAiFill } from "react-icons/ri";
 
-const ChatIcon = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
+const ChatIcon = ({isChatOpen, setIsChatOpen}) => {
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
-
   return (
     <div>
       <div
