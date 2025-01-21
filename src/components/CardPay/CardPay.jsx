@@ -187,7 +187,7 @@ function CardPay({ amount }) {
 
                                 </div></div>
 
-                            <div className="w-[90vw] sm:w-full px-2 gap-1 flex justify-between mb-3 mt-5">
+                            <div className="w-[90vw] sm:w-full pl-2 gap-1 flex justify-between mb-3 mt-5">
                                 <div className="flex flex-col items-center">
                                     <input
                                         onChange={handleCred}
