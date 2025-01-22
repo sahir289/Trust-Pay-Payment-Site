@@ -10,32 +10,17 @@ const AmountPage = React.lazy(() => import('./components/AmountPage/AmountPage')
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const popupRef = useRef(null);
-
+  const openChat = () => {
+    setIsChatOpen(true);
+  };
 
   const closeChat = () => {
     setIsChatOpen(false);
   };
 
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        closeChat();
-      }
-    };
-
-    if (isChatOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isChatOpen]);
-
-
-  return (
-    <>
+ return (
+    <div >
+      <div className='h-screen' onClick={closeChat}>
       <Router>
         <div className='app'>
           <Routes>
@@ -54,9 +39,9 @@ function App() {
             <Route path='/cardpay' element={<CardPay closeChat={closeChat} />} />
           </Routes>
         </div>
-      </Router >
-      <Chaticon isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
-    </>
+      </Router ></div>
+      <Chaticon openChat={openChat} close={closeChat} isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
+    </div>
   );
 }
 
