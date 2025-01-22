@@ -49,7 +49,7 @@ function AmountPage({popupRef, closeChat}) {
     }
 
     return (
-        <div ref={popupRef}onClick={closeChat} className="flex justify-center items-center">
+        <div onClick={closeChat}  className="flex justify-center items-center">
             <div 
                 className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => {setClick(false)}}
             >
