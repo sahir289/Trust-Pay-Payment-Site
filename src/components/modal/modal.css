@@ -3,34 +3,35 @@
     height: 300px;
     perspective: 1000px;
   }
+
   :root {
-    --color-green: rgb(127, 222, 165);
+    --box-shadow-color-green: rgba(100, 100, 111, 0.2);
+    --background-color-green: rgba(0, 249, 203, 0.2);
+    --color-green: rgb(0, 255, 214);
     --color-green-gradient: rgb(8, 226, 96);
     --color-green-hover: #00894d;
     --color-green-text: rgba(0, 137, 78, 0.7647058824);
 
+    --box-shadow-color-red: rgba(111, 50, 50, 0.2);
+    --background-color-red: rgba(255, 0, 0, 0.2);
     --color-red: rgb(237, 73, 73);
     --color-red-gradient: rgb(255, 50, 50);
     --color-red-hover: #d9534f;
     --color-red-text: rgba(255, 50, 50, 0.7647058824);
 
+    --box-shadow-color-blue: rgba(50, 50, 111, 0.2); 
+    --background-color-blue: rgba(0, 0, 255, 0.2);
     --color-blue: rgb(87, 157, 255);
     --color-blue-gradient: rgb(50, 123, 255);
     --color-blue-hover: #0056d9;
     --color-blue-text: rgba(50, 123, 255, 0.7647058824);
 
-    --color-yellow: rgb(255, 234, 0);
-    --color-yellow-gradient: rgb(255, 200, 0);
-    --color-yellow-hover: #d9a800;
-    --color-yellow-text: rgba(255, 200, 0, 0.7647058824);
-
-    --color-purple: rgb(180, 85, 255);
-    --color-purple-gradient: rgb(140, 50, 255);
-    --color-purple-hover: #7300d9;
-    --color-purple-text: rgba(140, 50, 255, 0.7647058824);
+    
 }
 
 .parent.green-theme {
+  --color-current-box-shadow:var(--box-shadow-color-green);
+  --color-current-background:var(--background-color-green);
     --color-current: var(--color-green);
     --color-current-gradient: var(--color-green-gradient);
     --color-current-hover: var(--color-green-hover);
@@ -38,6 +39,8 @@
 }
 
 .parent.red-theme {
+  --color-current-box-shadow:var(--box-shadow-color-red);
+  --color-current-background:var(--background-color-red);
     --color-current: var(--color-red);
     --color-current-gradient: var(--color-red-gradient);
     --color-current-hover: var(--color-red-hover);
@@ -45,34 +48,16 @@
 }
 
 .parent.blue-theme {
+  --color-current-box-shadow:var(--box-shadow-color-blue);
+  --color-current-background:var(--background-color-blue);
     --color-current: var(--color-blue);
     --color-current-gradient: var(--color-blue-gradient);
     --color-current-hover: var(--color-blue-hover);
     --color-current-text: var(--color-blue-text);
 }
 
-.parent.yellow-theme {
-    --color-current: var(--color-yellow);
-    --color-current-gradient: var(--color-yellow-gradient);
-    --color-current-hover: var(--color-yellow-hover);
-    --color-current-text: var(--color-yellow-text);
-}
 
-.parent.purple-theme {
-    --color-current: var(--color-purple);
-    --color-current-gradient: var(--color-purple-gradient);
-    --color-current-hover: var(--color-purple-hover);
-    --color-current-text: var(--color-purple-text);
-}
 
-.card {
-    height: 100%;
-    border-radius: 50px;
-    background: linear-gradient(135deg, var(--color-current) 0%, var(--color-current-gradient) 100%);
-    transition: all 0.5s ease-in-out;
-    transform-style: preserve-3d;
-    box-shadow: rgba(5, 71, 17, 0) 40px 50px 25px -40px, rgba(5, 71, 17, 0.2) 0px 25px 25px -5px;
-}
 
 /* Use theme colors for hover states */
 .card:hover .content .title {
@@ -89,7 +74,7 @@
   .card {
     height: 100%;
     border-radius: 50px;
-    background: linear-gradient(135deg, rgb(0, 255, 214) 0%, rgb(8, 226, 96) 100%);
+    background: linear-gradient(135deg, var(--color-current) 0%, var(--color-current-gradient) 100%);
     transition: all 0.5s ease-in-out;
     transform-style: preserve-3d;
     box-shadow: rgba(5, 71, 17, 0) 40px 50px 25px -40px, rgba(5, 71, 17, 0.2) 0px 25px 25px -5px;
@@ -234,11 +219,10 @@
     border-radius: 50%;
     top: 0;
     right: 0;
-    box-shadow: rgba(100, 100, 111, 0.2) -10px 10px 20px 0px;
-
+    box-shadow: var(--color-current-box-shadow) -10px 10px 20px 0px;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    background: rgba(0, 249, 203, 0.2);
+    background: var(--color-current-background);
     transition: all 0.5s ease-in-out;
   }
   

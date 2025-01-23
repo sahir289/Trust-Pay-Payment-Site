@@ -17,9 +17,6 @@ function Upi({ amount, closeChat, onBackClicked }) {
         setIsModalOpen(true);
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
     // const [ismodalOpen, setisModalOpen]=useState(false);
     // const [modalDetails,setmodalDetails]=useState({});
     // const openModal=()=>{
@@ -190,7 +187,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             aria-label="Submit payment details" onClick={openModal}>
                             SUBMIT
                         </button>
-                        <Modal isOpen={isModalOpen} closeModal={closeModal} amount={amount} theme="red-theme"></Modal>
+                        <Modal isOpen={isModalOpen}  amount={amount} theme="red-theme"></Modal>
                         <p className="text-black text-start text-lg sm:text-base mb-5">
                             <b>Steps for Payment: </b>
                             <br />

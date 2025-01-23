@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./modal.css"
 import success from "../../assets/icons8-success-64.png"
-const Modal = ({ isOpen, closeModal, amount , theme }) => {
+const Modal = ({ isOpen, amount , theme }) => {
     if (!isOpen) return null; 
     // useEffect(() => {
     //     if (isOpen) {
@@ -16,7 +16,6 @@ const Modal = ({ isOpen, closeModal, amount , theme }) => {
         <>
          <div
             className="fixed top-0  bg-white bg-opacity-20 backdrop-blur-md left-0 w-full h-full bg-black opacity-80"
-                onClick={closeModal} 
             ></div>
             <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-transparent backdrop-blur-sm">
     <div className={`parent ${appliedTheme}`}>
