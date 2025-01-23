@@ -4,7 +4,6 @@ import ErrorBoundary from './components/errorBoundary';
 import React, { Suspense, useEffect, useState } from 'react';
 import { BankTransfer, Upi, CardPay, Chaticon } from './components';
 import { useRef } from 'react';
-
 const AmountPage = React.lazy(() => import('./components/AmountPage/AmountPage'));
 
 function App() {

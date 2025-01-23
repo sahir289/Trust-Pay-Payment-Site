@@ -3,12 +3,18 @@ import "./BankTransfer.css";
 import { UtrOrScreenShot } from '../utrOrScreenShot'
 import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { IoCopy } from "react-icons/io5";
-
+import Modal from "../modal/modal";
 function BankTransfer({ amount, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+  
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
@@ -169,10 +175,11 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                         <UtrOrScreenShot />
                     </div>
                     <button className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"
-                        aria-label="Submit payment details"
+                        aria-label="Submit payment details " onClick={openModal}
                     >
                         SUBMIT
                     </button>
+                    <Modal isOpen={isModalOpen}  amount={amount} theme="blue-theme"></Modal>
                     <p className="text-black text-start text-lg sm:text-base mb-4">
                         <b>Steps for Payment: </b>
                         <br />

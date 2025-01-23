@@ -66,6 +66,11 @@ function AmountPage({popupRef, closeChat}) {
                                     disabled={selectMethod}
                                     onClick={(e) => { e.stopPropagation(); setClick(true); }}
                                     onChange={handleAmount}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" && amount) {
+                        handleAmountSubmit();
+                    }
+                }}
                                     className="focus:outline-none px-4 py-2 mt-1 mb-2 mx-4 border border-gray-200 rounded-md text-xl"
                                     style={{
                                         boxShadow: click ? '0 4px 10px rgba(0,0,0,0.1), 0 0 15px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 0, 255, 0.5)' : "none"
