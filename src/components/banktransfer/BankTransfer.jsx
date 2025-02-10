@@ -14,7 +14,6 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
         setIsModalOpen(true);
     };
 
-  
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
@@ -179,7 +178,7 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                     >
                         SUBMIT
                     </button>
-                    <Modal isOpen={isModalOpen}  amount={amount} theme="blue-theme"></Modal>
+                    <Modal isOpen={isModalOpen} amount={amount} theme="green-theme"></Modal>
                     <p className="text-black text-start text-lg sm:text-base mb-4">
                         <b>Steps for Payment: </b>
                         <br />

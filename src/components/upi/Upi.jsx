@@ -17,14 +17,6 @@ function Upi({ amount, closeChat, onBackClicked }) {
         setIsModalOpen(true);
     };
 
-    // const [ismodalOpen, setisModalOpen]=useState(false);
-    // const [modalDetails,setmodalDetails]=useState({});
-    // const openModal=()=>{
-    //     setisModalOpen(true)
-    //     setmodalDetails({ title: "Item 1", description: "Details about item 1" });
-    //     console.log(modalDetails);
-    //     console.log(ismodalOpen)
-    // }
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
@@ -187,7 +179,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             aria-label="Submit payment details" onClick={openModal}>
                             SUBMIT
                         </button>
-                        <Modal isOpen={isModalOpen}  amount={amount} theme="red-theme"></Modal>
+                        <Modal isOpen={isModalOpen} amount={amount} theme="green-theme"></Modal>
                         <p className="text-black text-start text-lg sm:text-base mb-5">
                             <b>Steps for Payment: </b>
                             <br />
