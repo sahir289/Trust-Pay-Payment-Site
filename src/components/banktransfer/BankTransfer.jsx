@@ -69,25 +69,25 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
 
     const getAssignedBank = async () => {
         try {
-            const res = await assignBankToPayInUrl(merchantOrderId, { 
-                amount: amount, 
-                type: 'upi' 
+            const res = await assignBankToPayInUrl(merchantOrderId, {
+                amount: amount,
+                type: 'upi'
             });
-            
+
             if (res?.data?.data?.bank) {
                 setBankDetails(res.data.data.bank);
                 setRedirectUrl(res.data.data.config?.urls?.return);
             }
         } catch (error) {
-            setIsModalExpireOpen(true); 
+            setIsModalExpireOpen(true);
             return
         }
     };
-    
+
     const handleFormSubmit = async (formData) => {
         const userSubmittedUtr = formData.get('utrNumber');
         const screenShot = formData.get('screenshot');
-    
+
         let res = {};
         try {
             if (userSubmittedUtr) {
@@ -101,7 +101,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                     amount,
                 });
             }
-    
+
             const transactionData = res?.data?.data;
             if (transactionData) {
                 setTransactionDetails(transactionData);
@@ -109,7 +109,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                 openModal();
             }
         } catch (error) {
-            setIsModalExpireOpen(true); 
+            setIsModalExpireOpen(true);
             return
         }
     };
