@@ -123,17 +123,17 @@ function AmountPage({ closeChat }) {
                                         <div className="flex justify-center items-center">
                                             <button
                                                 className="w-64  h-16 lg:h-28 lg:w-32  items-center flex justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold  bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
-                                                onClick={() => handlePayClick("bank")}
+                                                onClick={() => handlePayClick("upi")}
                                             >
-                                                Bank Transfer
+                                                Phone Pe
                                             </button>
                                         </div>
                                         <div className="flex justify-center items-center">
                                             <button
                                                 className=" w-64  h-16 lg:h-28 lg:w-32  items-center  flex justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
-                                                onClick={() => handlePayClick("cardpay")}
+                                                onClick={() => handlePayClick("bank")}
                                             >
-                                                Card Payment
+                                                Bank Transfer
                                             </button>
                                         </div>
                                     </div>
@@ -151,7 +151,7 @@ function AmountPage({ closeChat }) {
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
+                        <BankTransfer amount={amount} code={code}  merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
                     }
                 </div>
                 <div className="absolute top-0 ">

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
@@ -7,8 +8,9 @@ import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { QrGenerator } from '../qr-generator'
 import { IoCopy } from "react-icons/io5";
 import Modal from "../modal/modal";
-import { assignBankToPayInUrl, processTransaction } from "../../services/transaction";
+import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
 import { Status } from "../../constants";
+import ExpireModal from "../modal/expireUrl";
 function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
@@ -16,6 +18,7 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
     const placeholderRef = useRef(null);
     const [size, setSize] = useState(300);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalExpireOpen, setIsModalExpireOpen] = useState(false);
     const [bankDetails, setBankDetails] = useState({});
     const [transactionDetails, setTransactionDetails] = useState({});
     const [transactionStatus, setTransactionStatus] = useState(null);
@@ -93,34 +96,49 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
     };
 
     const getAssignedBank = async () => {
-        await assignBankToPayInUrl(merchantOrderId, { amount: amount, type: 'upi' }).then((res) => {
+        try {
+            const res = await assignBankToPayInUrl(merchantOrderId, { 
+                amount: amount, 
+                type: 'upi' 
+            });
+            
             if (res?.data?.data?.bank) {
-                setBankDetails(res?.data?.data?.bank);
-                setRedirectUrl(res?.data?.data?.config?.urls?.return)
+                setBankDetails(res.data.data.bank);
+                setRedirectUrl(res.data.data.config?.urls?.return);
             }
-        })
-    }
-
+        } catch (error) {
+            setIsModalExpireOpen(true); 
+            return
+        }
+    };
+    
     const handleFormSubmit = async (formData) => {
         const userSubmittedUtr = formData.get('utrNumber');
         const screenShot = formData.get('screenshot');
-
-        let res = {}
-        if (userSubmittedUtr) {
-            res = await processTransaction(merchantOrderId, {
-                userSubmittedUtr,
-                code,
-                amount,
-            });
-        } else if (screenShot) {
-            openModal();
-        }
-
-        const transactionData = res?.data?.data;
-        if (transactionData) {
-            setTransactionDetails(transactionData);
-            setTransactionStatus(getStatusTheme(transactionData.status));
-            openModal();
+    
+        let res = {};
+        try {
+            if (userSubmittedUtr) {
+                res = await processTransaction(merchantOrderId, {
+                    userSubmittedUtr,
+                    code,
+                    amount,
+                });
+            } else if (screenShot) {
+                res = await imageSubmit(merchantOrderId, {
+                    amount,
+                });
+            }
+    
+            const transactionData = res?.data?.data;
+            if (transactionData) {
+                setTransactionDetails(transactionData);
+                setTransactionStatus(getStatusTheme(transactionData.status));
+                openModal();
+            }
+        } catch (error) {
+            setIsModalExpireOpen(true); 
+            return
         }
     };
 
@@ -137,6 +155,14 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
             default:
                 return 'yellow-theme';
         }
+    };
+
+    const handleCopy = (text) => {
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+                console.log("Text copied to clipboard:");
+            })
     };
 
     return (
@@ -223,7 +249,7 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
 
                             <div className="flex items-center justify-center mb-4">
                                 <p className="text-lg mr-2">{bankDetails?.upi_id}</p>
-                                <button aria-label="Copy UPI ID">
+                                <button aria-label="Copy UPI ID" onClick={() => handleCopy(bankDetails?.upi_id)}>
                                     <IoCopy className="h-4 w-4" />
                                 </button>
                             </div>
@@ -232,6 +258,7 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
                             <UtrOrScreenShot onSubmit={handleFormSubmit} />
                         </div>
                         <Modal isOpen={isModalOpen} amount={transactionDetails?.req_amount} orderId={transactionDetails.merchantOrderId} utr={transactionDetails.utr_id} redirectUrl={redirectUrl} theme={transactionStatus}></Modal>
+                        <ExpireModal isOpen={isModalExpireOpen} theme="blue-theme"></ExpireModal>
                         <p className="text-black text-start text-lg sm:text-base mb-5">
                             <b>Steps for Payment: </b>
                             <br />
