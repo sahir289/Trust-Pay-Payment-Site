@@ -1,20 +1,30 @@
-// import { useEffect } from "react";
-import "./modal.css"
-import success from "../../assets/success.png"
-const Modal = ({ isOpen, amount, theme }) => {
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react/prop-types */
+import { useEffect } from "react"; // Import useEffect
+import "./modal.css";
+import success from "../../assets/success.png";
+
+const Modal = ({ isOpen, amount, orderId, utr, redirectUrl, theme }) => {
+  // If modal is not open, return null
   if (!isOpen) return null;
-  // useEffect(() => {
-  //     if (isOpen) {
-  //         const timer = setTimeout(() => {
-  //             window.location.href = "http://localhost:5173/transaction";
-  //         }, 4000);
-  //         return () => clearTimeout(timer);
-  //     }
-  // }, [isOpen]);
+
+  // Set up redirect after 5 seconds
+  useEffect(() => {
+    if (isOpen && redirectUrl) {
+      const timer = setTimeout(() => {
+        window.location.href = redirectUrl; // Redirect to the URL
+      }, 5000); // 5000ms = 5 seconds
+
+      // Cleanup timer on component unmount or if isOpen/redirectUrl changes
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, redirectUrl]); // Dependencies: run when isOpen or redirectUrl changes
+
   const appliedTheme = theme || "green-theme";
+
   return (
     <>
-      <div className="fixed top-0  bg-white bg-opacity-20 backdrop-blur-md left-0 w-full h-full bg-black opacity-80"></div>
+      <div className="fixed top-0 bg-white bg-opacity-20 backdrop-blur-md left-0 w-full h-full opacity-80"></div>
       <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-transparent backdrop-blur-sm">
         <div className={`parent ${appliedTheme}`}>
           <div className="card">
@@ -24,7 +34,7 @@ const Modal = ({ isOpen, amount, theme }) => {
               <span className="circle circle3"></span>
               <span className="circle circle4"></span>
               <span className="circle circle5">
-                <img src={success} />
+                <img src={success} alt="Success" />
               </span>
             </div>
 
@@ -34,6 +44,8 @@ const Modal = ({ isOpen, amount, theme }) => {
               <span className="title">₹ {amount}</span>
               <span className="text">UTR Submitted !!!</span>
               <span className="text">Your points will be credited soon</span>
+              <span className="text">Order ID: {orderId ? orderId : "--"}</span>
+              <span className="text">UTR: {utr ? utr : "--"}</span>
             </div>
           </div>
         </div>

@@ -1,17 +1,39 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import "./AmountPage.css";
 import { Upi } from "../upi";
 import { BankTransfer } from "../bankTransfer";
 import { CardPay } from "../CardPay";
+import { validateToken } from "../../services/transaction";
 
-function AmountPage({popupRef, closeChat}) {
+function AmountPage({ closeChat }) {
     const [amount, setAmount] = useState("");
+    const [code, setCode] = useState("");
+    const [merchantOrderId, setMerchantOrderId] = useState("");
     const [selectMethod, setSelectMethod] = useState(false);
     const [click, setClick] = useState(false);
     const [increaseSize, setIncreaseSize] = useState(false); // New state to manage size change
     const [visible, setVisible] = useState(false)
     const [visibleBank, setVisibleBank] = useState(false)
-    const [visiblecard, setVisiblecard] = useState(false)
+    const [visibleCard, setVisibleCard] = useState(false)
+
+    useEffect(() => {
+        const fetchAndValidate = async () => {
+            const params = new URLSearchParams(window.location.search);
+            setMerchantOrderId(params.get("order"));
+
+            if (merchantOrderId) {
+                const res = await validateToken(merchantOrderId);
+                if (res) {
+                    setCode(res.data.data.code);
+                    setAmount(res.data.data.amount);
+                    setSelectMethod(true);
+                }
+            }
+        };
+
+        fetchAndValidate();
+    }, [merchantOrderId]);
 
     const handleAmount = (e) => {
         setAmount(e.target.value);
@@ -25,17 +47,17 @@ function AmountPage({popupRef, closeChat}) {
 
     const handlePayClick = (a) => {
 
-        if (a === "upi" && (!visibleBank && !visiblecard)) {
+        if (a === "upi" && (!visibleBank && !visibleCard)) {
             setIncreaseSize(true); // Increase size
             setVisible(true)
         }
 
         if (a === "cardpay" && (!visibleBank && !visible)) {
             setIncreaseSize(true); // Increase size
-            setVisiblecard(true)
+            setVisibleCard(true)
         }
 
-        if (a === "bank" && (!visible && !visiblecard)) {
+        if (a === "bank" && (!visible && !visibleCard)) {
             setIncreaseSize(true); // Increase size
             setVisibleBank(true)
         }
@@ -43,21 +65,21 @@ function AmountPage({popupRef, closeChat}) {
 
     const handleChange = () => {
         setVisible(false);
-        setVisiblecard(false);
+        setVisibleCard(false);
         setVisibleBank(false);
         setIncreaseSize(false);
     }
 
     return (
-        <div onClick={closeChat}  className="flex justify-center items-center">
-            <div 
-                className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => {setClick(false)}}
+        <div onClick={closeChat} className="flex justify-center items-center">
+            <div
+                className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => { setClick(false) }}
             >
                 {
                     <div className="flex justify-center">
                         <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem]  lg:shadow-md ${increaseSize ? "h-100  transition-active " : " bg-white "}`}>
-                            <div className="flex flex-col px-2 mt-2  flex justify-center">
-                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold py-2 px-4 ">
+                            {!selectMethod && <div className="flex flex-col px-2 mt-2 justify-center">
+                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
                                     Please enter the amount :
                                 </label>
                                 <input
@@ -66,11 +88,11 @@ function AmountPage({popupRef, closeChat}) {
                                     disabled={selectMethod}
                                     onClick={(e) => { e.stopPropagation(); setClick(true); }}
                                     onChange={handleAmount}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter" && amount) {
-                        handleAmountSubmit();
-                    }
-                }}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" && amount) {
+                                            handleAmountSubmit();
+                                        }
+                                    }}
                                     className="focus:outline-none px-4 py-2 mt-1 mb-2 mx-4 border border-gray-200 rounded-md text-xl"
                                     style={{
                                         boxShadow: click ? '0 4px 10px rgba(0,0,0,0.1), 0 0 15px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 0, 255, 0.5)' : "none"
@@ -84,7 +106,7 @@ function AmountPage({popupRef, closeChat}) {
                                         Submit
                                     </button>
                                 </div>
-                            </div>
+                            </div>}
 
                             {selectMethod &&
                                 <div className="mx-8">
@@ -124,17 +146,17 @@ function AmountPage({popupRef, closeChat}) {
 
                 <div className="absolute top-0 ">
                     {visible &&
-                        <Upi amount={amount} closeChat={closeChat} onBackClicked={handleChange}/>
+                        <Upi amount={amount} code={code} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} closeChat={closeChat} onBackClicked={handleChange}/>
+                        <BankTransfer amount={amount} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
                     }
                 </div>
                 <div className="absolute top-0 ">
-                    {visiblecard &&
-                        <CardPay amount={amount} closeChat={closeChat} onBackClicked={handleChange}/>
+                    {visibleCard &&
+                        <CardPay amount={amount} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
                     }
                 </div>
             </div>

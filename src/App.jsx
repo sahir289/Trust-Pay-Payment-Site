@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';  // Import BrowserRouter
 import './App.css';
 import ErrorBoundary from './components/errorBoundary';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { BankTransfer, Upi, CardPay, Chaticon } from './components';
 import { useRef } from 'react';
 const AmountPage = React.lazy(() => import('./components/AmountPage/AmountPage'));
@@ -24,7 +24,7 @@ function App() {
         <div className='app'>
           <Routes>
             <Route
-              path='/transaction'
+              path='/transaction/:token'
               element={
                 <ErrorBoundary>
                   <Suspense fallback={<div className=''>Loading...</div>}>

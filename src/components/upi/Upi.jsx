@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import "./Upi.css";
 import { UtrOrScreenShot } from '../utrOrScreenShot'
@@ -5,13 +7,19 @@ import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { QrGenerator } from '../qr-generator'
 import { IoCopy } from "react-icons/io5";
 import Modal from "../modal/modal";
-function Upi({ amount, closeChat, onBackClicked }) {
+import { assignBankToPayInUrl, processTransaction } from "../../services/transaction";
+import { Status } from "../../constants";
+function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
     const placeholderRef = useRef(null);
     const [size, setSize] = useState(300);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [bankDetails, setBankDetails] = useState({});
+    const [transactionDetails, setTransactionDetails] = useState({});
+    const [transactionStatus, setTransactionStatus] = useState(null);
+    const [redirectUrl, setRedirectUrl] = useState(null);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -27,6 +35,10 @@ function Upi({ amount, closeChat, onBackClicked }) {
             return () => clearInterval(timer); // Cleanup timer on component unmount
         }
     }, [remainingTime]);
+
+    useEffect(() => {
+        getAssignedBank();
+    }, []);
 
     useEffect(() => {
         const updateSize = () => {
@@ -60,9 +72,6 @@ function Upi({ amount, closeChat, onBackClicked }) {
         return `${mins}:${secs}`;
     };
     const progressPercentage = (remainingTime / totalDuration) * 100;
-    const radius = 50;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (progressPercentage / 100) * circumference;
 
     const calculateColor = () => {
         const greenStart = { r: 76, g: 175, b: 80 }; // RGB for green-400
@@ -80,6 +89,53 @@ function Upi({ amount, closeChat, onBackClicked }) {
                 ((progressPercentage / halfPoint) * greenStart.g)
             );
             return `rgb(${red}, ${green}, 0)`; // Transition to red
+        }
+    };
+
+    const getAssignedBank = async () => {
+        await assignBankToPayInUrl(merchantOrderId, { amount: amount, type: 'upi' }).then((res) => {
+            if (res?.data?.data?.bank) {
+                setBankDetails(res?.data?.data?.bank);
+                setRedirectUrl(res?.data?.data?.config?.urls?.return)
+            }
+        })
+    }
+
+    const handleFormSubmit = async (formData) => {
+        const userSubmittedUtr = formData.get('utrNumber');
+        const screenShot = formData.get('screenshot');
+
+        let res = {}
+        if (userSubmittedUtr) {
+            res = await processTransaction(merchantOrderId, {
+                userSubmittedUtr,
+                code,
+                amount,
+            });
+        } else if (screenShot) {
+            openModal();
+        }
+
+        const transactionData = res?.data?.data;
+        if (transactionData) {
+            setTransactionDetails(transactionData);
+            setTransactionStatus(getStatusTheme(transactionData.status));
+            openModal();
+        }
+    };
+
+    // Helper function to determine theme based on status
+    const getStatusTheme = (status) => {
+        switch (status) {
+            case Status.SUCCESS:
+                return 'green-theme';
+            case Status.FAILED:
+            case Status.DROPPED:
+            case Status.BANK_MISMATCH:
+            case Status.DISPUTE:
+                return 'red-theme';
+            default:
+                return 'yellow-theme';
         }
     };
 
@@ -146,7 +202,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                                 </div>
                             </div>
                             <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
-                                <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
+                                <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2">
                                     ₹ {amount}
                                 </div>
                             </div>
@@ -156,7 +212,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             <div className="flex justify-center">
                                 <div ref={placeholderRef} className="flex justify-center items-center w-[12.5rem] ">
                                     <div className="qr-code" aria-label="QR Code Placeholder">
-                                        <QrGenerator upi_id={"uniqueshoe@psbpay"} amount={900} size={size} />
+                                        <QrGenerator upi_id={bankDetails?.upi_id} amount={amount} size={size} />
                                     </div>
                                 </div>
                             </div>
@@ -166,20 +222,16 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             </p>
 
                             <div className="flex items-center justify-center mb-4">
-                                <p className="text-lg mr-2">uniqueshoe@psbpay</p>
+                                <p className="text-lg mr-2">{bankDetails?.upi_id}</p>
                                 <button aria-label="Copy UPI ID">
                                     <IoCopy className="h-4 w-4" />
                                 </button>
                             </div>
                         </div>
                         <div className="mt-5 flex justify-center">
-                            <UtrOrScreenShot/>
+                            <UtrOrScreenShot onSubmit={handleFormSubmit} />
                         </div>
-                        <button className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"
-                            aria-label="Submit payment details" onClick={openModal}>
-                            SUBMIT
-                        </button>
-                        <Modal isOpen={isModalOpen} amount={amount} theme="green-theme"></Modal>
+                        <Modal isOpen={isModalOpen} amount={transactionDetails?.req_amount} orderId={transactionDetails.merchantOrderId} utr={transactionDetails.utr_id} redirectUrl={redirectUrl} theme={transactionStatus}></Modal>
                         <p className="text-black text-start text-lg sm:text-base mb-5">
                             <b>Steps for Payment: </b>
                             <br />
@@ -190,7 +242,6 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
                         </p>
                         <NortonAndVideoLink link={link} />
-         
                     </div>
                 </div>
             </div>
