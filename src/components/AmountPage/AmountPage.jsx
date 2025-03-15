@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import "./AmountPage.css";
 import { Upi } from "../upi";
-import { BankTransfer } from "../bankTransfer";
+import { BankTransfer } from "../banktransfer";
 import { CardPay } from "../CardPay";
 import { validateToken } from "../../services/transaction";
 
