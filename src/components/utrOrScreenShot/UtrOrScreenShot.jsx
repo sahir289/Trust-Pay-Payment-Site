@@ -37,7 +37,7 @@ function UtrOrScreenShot({ onSubmit }) {
                                     title="Please enter a 12-digit UTR number"
                                 />
                                 <label htmlFor="file-upload"
-                                    className={`absolute cursor-pointer h-[2.5rem] w-[11vw] sm:w-[5vw] from-green-400 to-blue-500 shadow-lg transform transition-transform duration-300 hover:scale-105 text-xl font-bold bg-gradient-to-r text-white py-1 px-1 sm:px-3 rounded-r-md text-sm sm:text-lg`}
+                                    className={`absolute cursor-pointer h-[2.5rem] w-[11vw] sm:w-[5vw] from-green-400 to-blue-500 shadow-lg transform transition-transform duration-300 hover:scale-105 font-bold bg-gradient-to-r text-white py-1 px-1 sm:px-3 rounded-r-md text-sm sm:text-lg`}
                                 >
                                     +
                                 </label>

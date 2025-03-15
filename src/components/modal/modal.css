@@ -1,6 +1,6 @@
 .parent {
-  width: 290px;
-  height: 300px;
+  width: 330px;
+  height: 350px;
   perspective: 1000px;
 }
 
@@ -25,6 +25,13 @@
   --color-blue-gradient: rgb(50, 123, 255);
   --color-blue-hover: #0056d9;
   --color-blue-text: rgba(50, 123, 255, 0.7647058824);
+
+  --box-shadow-color-yellow: rgba(100, 100, 111, 0.2);
+  --background-color-yellow: rgba(255, 235, 59, 0.2);
+  --color-yellow: rgb(255, 245, 157);
+  --color-yellow-gradient: rgb(255, 193, 7);
+  --color-yellow-hover: #ffb300;
+  --color-yellow-text: rgba(204, 147, 0, 0.7647058824);
 }
 
 .parent.green-theme {
@@ -52,6 +59,15 @@
   --color-current-gradient: var(--color-blue-gradient);
   --color-current-hover: var(--color-blue-hover);
   --color-current-text: var(--color-blue-text);
+}
+
+.parent.yellow-theme {
+  --color-current-box-shadow: var(--box-shadow-color-yellow);
+  --color-current-background: var(--background-color-yellow);
+  --color-current: var(--color-yellow);
+  --color-current-gradient: var(--color-yellow-gradient);
+  --color-current-hover: var(--color-yellow-hover);
+  --color-current-text: var(--color-yellow-text);
 }
 
 /* Use theme colors for hover states */

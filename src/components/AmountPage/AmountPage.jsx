@@ -26,8 +26,10 @@ function AmountPage({ closeChat }) {
                 const res = await validateToken(merchantOrderId);
                 if (res) {
                     setCode(res.data.data.code);
-                    setAmount(res.data.data.amount);
-                    setSelectMethod(true);
+                    if (res.data.data.amount > 0) {
+                        setAmount(res.data.data.amount);
+                        setSelectMethod(true);
+                    }
                 }
             }
         };
