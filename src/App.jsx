@@ -17,9 +17,6 @@ function App() {
     setIsChatOpen(false);
   };
 
-  console.log(window.location.pathname), "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
-  console.log(window.location.href, "-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-
  return (
     <div >
       <div className='h-screen' onClick={closeChat}>
