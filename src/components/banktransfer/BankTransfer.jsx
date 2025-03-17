@@ -38,6 +38,10 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
 
             return () => clearInterval(timer); // Cleanup timer on component unmount
         }
+        else {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+        }
     }, [remainingTime]);
 
     const formatTime = (seconds) => {
@@ -79,11 +83,11 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                 setRedirectUrl(res.data.data.config?.urls?.return);
             }
             else {
-                setIsModalExpireOpen(true); 
+                setIsModalExpireOpen(true);
                 setIsModalOpen(false);
             }
         } catch (error) {
-            setIsModalExpireOpen(true); 
+            setIsModalExpireOpen(true);
             setIsModalOpen(false);
         }
     };
@@ -113,11 +117,11 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                 setIsModalOpen(true);
             }
             else {
-                setIsModalExpireOpen(true); 
+                setIsModalExpireOpen(true);
                 setIsModalOpen(false);
             }
         } catch (error) {
-            setIsModalExpireOpen(true); 
+            setIsModalExpireOpen(true);
             setIsModalOpen(false);
         }
     };
@@ -252,14 +256,23 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                                 <p className="text-lg mr-2">IFSC Code</p>
                             </div>
                             <div className="flex flex-col item-center">
-                                <p className="text-sm sm:text-lg  mr-2">{bankDetails.ifsc_code}
-                                    <button aria-label="Copy IFSC Code" onClick={() => handleCopy(bankDetails.ifsc_code)}>
+                                <p className="text-sm sm:text-lg  mr-2">{bankDetails.ifsc}
+                                    <button aria-label="Copy IFSC Code" onClick={() => handleCopy(bankDetails.ifsc)}>
                                         <IoCopy className="h-4 w-4 ml-2" />
                                     </button>
                                 </p>
                             </div>
                         </div>
                     </div>
+
+                    <p className="text-red-500 text-center text-lg sm:text-base mt-4">
+                        <b>ATTENTION: </b>These details are valid for the next 10 minutes.
+                    </p>
+                    <p className="text-red-500 text-left text-lg sm:text-base mb-4">
+                        If payment is made after this period, you will be responsible
+                        <br />
+                        for any potential losses.
+                    </p>
                     <div className="mt-5 flex justify-center">
                         <UtrOrScreenShot onSubmit={handleFormSubmit} />
                     </div>

@@ -33,6 +33,10 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
 
             return () => clearInterval(timer); // Cleanup timer on component unmount
         }
+        else {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+        }
     }, [remainingTime]);
 
     const hasRun = useRef(false);

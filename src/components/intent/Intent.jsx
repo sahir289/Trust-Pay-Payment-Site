@@ -37,9 +37,6 @@ function Intent() {
     };
 
     const progressPercentage = (remainingTime / totalDuration) * 100;
-    const radius = 50;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (progressPercentage / 100) * circumference;
 
     const calculateColor = () => {
         const greenStart = { r: 76, g: 175, b: 80 }; // RGB for green-400

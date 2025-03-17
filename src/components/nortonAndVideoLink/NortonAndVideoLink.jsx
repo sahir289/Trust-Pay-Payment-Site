@@ -1,4 +1,6 @@
 import { useState } from "react";
+import norton from "../../assets/norton.png"
+import pci from "../../assets/pci.png"
 
 function NortonAndVideoLink(linkUrl) {
     const [showVideo, setShowVideo] = useState(false);
@@ -8,12 +10,12 @@ function NortonAndVideoLink(linkUrl) {
             <div className='text-center mb-4 mt-4'>
                 <div className="flex items-center justify-center">
                     <img
-                        src="src/assets/norton.png"
+                        src={norton}
                         alt="Norton Logo"
                         className="h-12 w-auto"
                     />
                     <img
-                        src="src/assets/pci.png"
+                        src={pci}
                         alt="PCI Logo"
                         className="h-12 w-auto ml-4"
                     />

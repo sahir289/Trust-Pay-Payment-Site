@@ -5,6 +5,10 @@ import { Upi } from "../upi";
 import { BankTransfer } from "../banktransfer";
 import { CardPay } from "../CardPay";
 import { validateToken } from "../../services/transaction";
+import googlePay from "../../assets/google-pay.svg"
+import phonePe from "../../assets/phone-pe.svg"
+import bhim from "../../assets/bhim.svg"
+import paytm from "../../assets/paytm.svg"
 
 function AmountPage({ closeChat }) {
     const [amount, setAmount] = useState("");
@@ -117,24 +121,30 @@ function AmountPage({ closeChat }) {
                                     <div className="flex flex-col  relative gap-4 lg:flex-row justify-center mt-5 mb-5 ">
                                         <div className="flex justify-center items-center">
                                             <button
-                                                className="w-64  h-16 lg:h-28 lg:w-32 flex justify-center items-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold  bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                                                className="w-64 h-20 lg:h-28 lg:w-40 flex flex-col justify-center items-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg p-2"
                                                 onClick={() => {
                                                     handlePayClick("upi");
-                                                    setType('upi');
+                                                    setType("upi");
                                                 }}
                                             >
-                                                UPI
+                                                <span className="mb-2">UPI</span>
+                                                <div className="flex gap-2">
+                                                    <img src={paytm} alt="PAYTM" className="w-8 h-8" />
+                                                    <img src={googlePay} alt="Google Pay" className="w-8 h-8" />
+                                                    <img src={bhim} alt="Bhim UPI" className="w-8 h-8" />
+                                                </div>
                                             </button>
                                         </div>
                                         <div className="flex justify-center items-center">
                                             <button
-                                                className="w-64  h-16 lg:h-28 lg:w-32  items-center flex justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold  bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                                                className="w-64 h-16 lg:h-28 lg:w-32 flex items-center justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                                                 onClick={() => {
                                                     handlePayClick("upi");
-                                                    setType('phone_pe');
+                                                    setType("phone_pe");
                                                 }}
                                             >
-                                                Phone Pe
+                                                <img src={phonePe} alt="Phone Pe" className="w-8 h-8" />
+                                                <span>Phone Pe</span>
                                             </button>
                                         </div>
                                         <div className="flex justify-center items-center">
