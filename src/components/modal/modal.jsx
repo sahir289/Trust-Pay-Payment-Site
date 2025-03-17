@@ -10,15 +10,14 @@ const Modal = ({ isOpen, amount, orderId, utr, redirectUrl, theme }) => {
 
   // Set up redirect after 5 seconds
   useEffect(() => {
-    if (isOpen && redirectUrl) {
+    if (redirectUrl) {
       const timer = setTimeout(() => {
-        window.location.href = redirectUrl; // Redirect to the URL
-      }, 5000); // 5000ms = 5 seconds
+        window.location.href = redirectUrl;
+      }, 5000);
 
-      // Cleanup timer on component unmount or if isOpen/redirectUrl changes
       return () => clearTimeout(timer);
     }
-  }, [isOpen, redirectUrl]); // Dependencies: run when isOpen or redirectUrl changes
+  }, [redirectUrl]);
 
   const appliedTheme = theme || "green-theme";
 

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./BankTransfer.css";
 import { UtrOrScreenShot } from '../utrOrScreenShot'
 import { NortonAndVideoLink } from '../nortonAndVideoLink'
@@ -21,11 +21,11 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
     const [transactionStatus, setTransactionStatus] = useState(null);
     const [redirectUrl, setRedirectUrl] = useState(null);
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
+    const hasRun = useRef(false);
 
     useEffect(() => {
+        if (hasRun.current) return; // Skip if already run
+        hasRun.current = true;
         getAssignedBank();
     }, []);
 
@@ -78,9 +78,13 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                 setBankDetails(res.data.data.bank);
                 setRedirectUrl(res.data.data.config?.urls?.return);
             }
+            else {
+                setIsModalExpireOpen(true); 
+                setIsModalOpen(false);
+            }
         } catch (error) {
-            setIsModalExpireOpen(true);
-            return
+            setIsModalExpireOpen(true); 
+            setIsModalOpen(false);
         }
     };
 
@@ -106,11 +110,15 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
             if (transactionData) {
                 setTransactionDetails(transactionData);
                 setTransactionStatus(getStatusTheme(transactionData.status));
-                openModal();
+                setIsModalOpen(true);
+            }
+            else {
+                setIsModalExpireOpen(true); 
+                setIsModalOpen(false);
             }
         } catch (error) {
-            setIsModalExpireOpen(true);
-            return
+            setIsModalExpireOpen(true); 
+            setIsModalOpen(false);
         }
     };
 
@@ -144,7 +152,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                     <div className="mb-5">
                         <div className="w-full flex justify-between rounded-t-3xl p-4 text-white">
                             <div className="flex flex-col items-center self-center">
-                                <button
+                                {/* <button
                                     onClick={() => onBackClicked()}
                                     className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
                                     <svg
@@ -156,7 +164,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                                         className="w-6 h-6">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                     </svg>
-                                </button>
+                                </button> */}
                             </div>
                             <div className="flex-col items-center">
                                 <div className="relative">

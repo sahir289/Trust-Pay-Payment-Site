@@ -24,10 +24,6 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
     const [transactionStatus, setTransactionStatus] = useState(null);
     const [redirectUrl, setRedirectUrl] = useState(null);
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
@@ -39,7 +35,11 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
         }
     }, [remainingTime]);
 
+    const hasRun = useRef(false);
+
     useEffect(() => {
+        if (hasRun.current) return; // Skip if already run
+        hasRun.current = true;
         getAssignedBank();
     }, []);
 
@@ -97,25 +97,29 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
 
     const getAssignedBank = async () => {
         try {
-            const res = await assignBankToPayInUrl(merchantOrderId, { 
-                amount: amount, 
-                type: 'upi' 
+            const res = await assignBankToPayInUrl(merchantOrderId, {
+                amount: amount,
+                type: 'upi'
             });
-            
+
             if (res?.data?.data?.bank) {
                 setBankDetails(res.data.data.bank);
                 setRedirectUrl(res.data.data.config?.urls?.return);
             }
+            else {
+                setIsModalExpireOpen(true);
+                setIsModalOpen(false);
+            }
         } catch (error) {
-            setIsModalExpireOpen(true); 
-            return
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
         }
     };
-    
+
     const handleFormSubmit = async (formData) => {
         const userSubmittedUtr = formData.get('utrNumber');
         const screenShot = formData.get('screenshot');
-    
+
         let res = {};
         try {
             if (userSubmittedUtr) {
@@ -129,16 +133,20 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
                     amount,
                 });
             }
-    
+
             const transactionData = res?.data?.data;
             if (transactionData) {
                 setTransactionDetails(transactionData);
                 setTransactionStatus(getStatusTheme(transactionData.status));
-                openModal();
+                setIsModalOpen(true);
+            }
+            else {
+                setIsModalExpireOpen(true);
+                setIsModalOpen(false);
             }
         } catch (error) {
-            setIsModalExpireOpen(true); 
-            return
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
         }
     };
 
@@ -174,7 +182,7 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
                         <div className="mb-5 ">
                             <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
                                 <div className="flex flex-col items-center self-center">
-                                    <button
+                                    {/* <button
                                         onClick={() => onBackClicked()}
                                         className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
                                         <svg
@@ -186,7 +194,7 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
                                             className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                         </svg>
-                                    </button>
+                                    </button> */}
                                 </div>
                                 <div className="flex-col items-center">
                                     <div className="relative">
