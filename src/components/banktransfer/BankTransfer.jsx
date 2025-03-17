@@ -71,7 +71,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
         try {
             const res = await assignBankToPayInUrl(merchantOrderId, {
                 amount: amount,
-                type: 'upi'
+                type: 'bank_transfer'
             });
 
             if (res?.data?.data?.bank) {

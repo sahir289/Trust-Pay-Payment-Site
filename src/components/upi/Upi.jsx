@@ -11,7 +11,7 @@ import Modal from "../modal/modal";
 import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
 import { Status } from "../../constants";
 import ExpireModal from "../modal/expireUrl";
-function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
+function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -99,7 +99,7 @@ function Upi({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
         try {
             const res = await assignBankToPayInUrl(merchantOrderId, {
                 amount: amount,
-                type: 'upi'
+                type: type
             });
 
             if (res?.data?.data?.bank) {
