@@ -110,6 +110,11 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                 setBankDetails(res.data.data.bank);
                 setRedirectUrl(res.data.data.config?.urls?.return);
             }
+            if (res?.error?.error) {
+                setIsModalExpireOpen(true);
+                setIsModalOpen(false);
+                toast.error(`Error: ${res?.error?.error?.message}`);
+            }
             else {
                 setIsModalExpireOpen(true);
                 setIsModalOpen(false);

@@ -7,6 +7,7 @@ import { UtrOrScreenShot } from '../utrOrScreenShot'
 import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { IoCopy } from "react-icons/io5";
 import Modal from "../modal/modal";
+import { toast, ToastContainer } from "react-toastify";
 import { Status } from "../../constants";
 import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
 import ExpireModal from "../modal/expireUrl";
@@ -72,24 +73,24 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
     };
 
     const getAssignedBank = async () => {
-        try {
-            const res = await assignBankToPayInUrl(merchantOrderId, {
-                amount: amount,
-                type: 'bank_transfer'
-            });
-
-            if (res?.data?.data?.bank) {
-                setBankDetails(res.data.data.bank);
-                setRedirectUrl(res.data.data.config?.urls?.return);
-            }
-            else {
-                setIsModalExpireOpen(true);
-                setIsModalOpen(false);
-            }
-        } catch (error) {
+        const res = await assignBankToPayInUrl(merchantOrderId, {
+            amount: amount,
+            type: 'bank_transfer'
+        });
+        if (res?.data?.data?.bank) {
+            setBankDetails(res.data.data.bank);
+            setRedirectUrl(res.data.data.config?.urls?.return);
+        }
+        if (res?.error?.error) {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+            toast.error(`Error: ${res?.error?.error?.message}`);
+        }
+        else {
             setIsModalExpireOpen(true);
             setIsModalOpen(false);
         }
+
     };
 
     const handleFormSubmit = async (formData) => {
@@ -153,6 +154,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
         <div className="flex justify-center mt-3 py-2 px-2 rounded-3xl " onClick={closeChat}>
             <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-4 ">
                 <div className="bg-white p-3 rounded-3xl shadow-md ">
+                    <ToastContainer />
                     <div className="mb-5">
                         <div className="w-full flex justify-between rounded-t-3xl p-4 text-white">
                             <div className="flex flex-col items-center self-center">
