@@ -81,7 +81,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
             setBankDetails(res.data.data.bank);
             setRedirectUrl(res.data.data.config?.urls?.return);
         }
-        if (res?.error?.error) {
+        else if (res?.error?.error) {
             setIsModalExpireOpen(true);
             setIsModalOpen(false);
             toast.error(`Error: ${res?.error?.error?.message}`);

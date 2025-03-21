@@ -11,6 +11,7 @@ import Modal from "../modal/modal";
 import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
 import { Status } from "../../constants";
 import ExpireModal from "../modal/expireUrl";
+import { toast } from "react-toastify";
 function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
@@ -110,7 +111,7 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                 setBankDetails(res.data.data.bank);
                 setRedirectUrl(res.data.data.config?.urls?.return);
             }
-            if (res?.error?.error) {
+            else if (res?.error?.error) {
                 setIsModalExpireOpen(true);
                 setIsModalOpen(false);
                 toast.error(`Error: ${res?.error?.error?.message}`);
