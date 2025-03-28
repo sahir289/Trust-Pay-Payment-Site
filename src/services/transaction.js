@@ -1,5 +1,6 @@
 import APIParser from "./apiParser"
 import http from "./axios"
+import axios from 'axios';
 
 export const validateToken = async (id) => {
     return await APIParser(http.get(`/payIn/validate-payIn-url/${id}`));
@@ -37,3 +38,23 @@ export const payInOneTimeExpireURL = async (id) => {
 export const generateIntentOrder = async (id, data) => {
     return await APIParser(http.post(`/payIn/generate-intent-order/${id}`, data));
 }
+
+export const generatePayIn = async (userId, code, ot, key, amount) => {
+  try {
+    const params = {
+      user_id: userId,
+      code: code,
+      ot: ot,
+      key: key,
+      ...(amount && { amount: amount })
+    };
+
+    const response = await axios.get(`http://localhost:8090/v1/payIn/generate-payin`, {
+      params: params
+    });
+    return response;
+  } catch (error) {
+    console.error('Error generating pay in:', error);
+    throw error;
+  }
+};
