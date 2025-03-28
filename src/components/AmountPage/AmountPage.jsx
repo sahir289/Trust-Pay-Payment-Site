@@ -29,15 +29,16 @@ function AmountPage({ closeChat }) {
     const key = searchParams.get('key');
     const order = searchParams.get("order");
 
-    // Add a ref to track if API has been called
+    const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
     console.log(userId, code, ot, key)
 
     useEffect(() => {
-        if (order) {
+        if (order && !validateCalledRef.current) {
             const fetchAndValidate = async () => {
-                setMerchantOrderId(order);     
-                if (order) {
+                try {
+                    validateCalledRef.current = true; // Set flag before API call
+                    setMerchantOrderId(order);     
                     const res = await validateToken(order);
                     if (res) {
                         setCode(res.data.data.code);
@@ -46,12 +47,14 @@ function AmountPage({ closeChat }) {
                             setSelectMethod(true);
                         }
                     }
+                } catch (error) {
+                    console.error('Error validating token:', error);
+                    validateCalledRef.current = false; // Reset on error
                 }
             };   
             fetchAndValidate();
         }
     }, [order]);
-
 
     useEffect(() => {
         const initializePayment = async () => {
