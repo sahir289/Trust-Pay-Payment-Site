@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useSearchParams } from 'react-router-dom';
 import "./AmountPage.css";
 import { Upi } from "../upi";
 import { BankTransfer } from "../banktransfer";
 import { CardPay } from "../CardPay";
-import { validateToken } from "../../services/transaction";
+import { validateToken, generatePayIn } from "../../services/transaction";
 import googlePay from "../../assets/google-pay.svg"
 import phonePe from "../../assets/phone-pe.svg"
 import bhim from "../../assets/bhim.svg"
@@ -12,7 +13,6 @@ import paytm from "../../assets/paytm.svg"
 
 function AmountPage({ closeChat }) {
     const [amount, setAmount] = useState("");
-    const [code, setCode] = useState("");
     const [merchantOrderId, setMerchantOrderId] = useState("");
     const [selectMethod, setSelectMethod] = useState(false);
     const [click, setClick] = useState(false);
@@ -20,32 +20,75 @@ function AmountPage({ closeChat }) {
     const [visible, setVisible] = useState(false)
     const [visibleBank, setVisibleBank] = useState(false)
     const [visibleCard, setVisibleCard] = useState(false)
+    const [isCode, setCode] = useState("");
     const [type, setType] = useState('upi')
+    const [searchParams] = useSearchParams();
+    const userId = searchParams.get('user_id');
+    const code = searchParams.get('code');
+    const ot = searchParams.get('ot');
+    const key = searchParams.get('key');
+    const order = searchParams.get("order");
+
+    const validateCalledRef = useRef(false);
+    const apiCalledRef = useRef(false);
+    console.log(userId, code, ot, key)
 
     useEffect(() => {
-        const fetchAndValidate = async () => {
-            const params = new URLSearchParams(window.location.search);
-            setMerchantOrderId(params.get("order"));
+        if (order && !validateCalledRef.current) {
+            const fetchAndValidate = async () => {
+                try {
+                    validateCalledRef.current = true; // Set flag before API call
+                    setMerchantOrderId(order);     
+                    const res = await validateToken(order);
+                    if (res) {
+                        setCode(res.data.data.code);
+                        if (res.data.data.amount > 0) {
+                            setAmount(res.data.data.amount);
+                            setSelectMethod(true);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error validating token:', error);
+                    validateCalledRef.current = false; // Reset on error
+                }
+            };   
+            fetchAndValidate();
+        }
+    }, [order]);
 
-            if (merchantOrderId) {
-                const res = await validateToken(merchantOrderId);
-                if (res) {
-                    setCode(res.data.data.code);
-                    if (res.data.data.amount > 0) {
-                        setAmount(res.data.data.amount);
-                        setSelectMethod(true);
+    useEffect(() => {
+        const initializePayment = async () => {
+            try {
+                // Only call API if it hasn't been called before and we have required params
+                if (!apiCalledRef.current && userId && code && ot && key) {
+                    apiCalledRef.current = true; // Mark API as called
+                    
+                    const merchantOrderData = await generatePayIn(userId, code, ot, key, null);
+                    const merchantOrderId = merchantOrderData.data.data.merchantOrderId;
+                    setMerchantOrderId(merchantOrderId);
+                    
+                    if (merchantOrderId) {
+                        const res = await validateToken(merchantOrderId);
+                        if (res && res.data?.data?.amount > 0) {
+                            setAmount(res.data.data.amount);
+                            setSelectMethod(true);
+                        }
                     }
                 }
+            } catch (error) {
+                console.error('Error initializing payment:', error);
+                apiCalledRef.current = false; // Reset on error
             }
         };
 
-        fetchAndValidate();
-    }, [merchantOrderId]);
+        initializePayment();
+    }, [userId, code, ot, key]);
 
     const handleAmount = (e) => {
         setAmount(e.target.value);
     };
 
+    // Modify handleAmountSubmit to not call generatePayIn again
     const handleAmountSubmit = () => {
         if (amount) {
             setSelectMethod(true);
@@ -165,12 +208,12 @@ function AmountPage({ closeChat }) {
 
                 <div className="absolute top-0 ">
                     {visible &&
-                        <Upi amount={amount} code={code} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} />
+                        <Upi amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} />
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} code={code} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
+                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
                     }
                 </div>
                 <div className="absolute top-0 ">
