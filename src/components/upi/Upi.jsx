@@ -10,9 +10,8 @@ import { IoCopy } from "react-icons/io5";
 import Modal from "../modal/modal";
 import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
 import { Status } from "../../constants";
-import ExpireModal from "../modal/expireUrl";
 import { toast } from "react-toastify";
-function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) {
+function Upi({ amount, code, isRedirectUrl, merchantOrderId, type, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -109,7 +108,7 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
 
             if (res?.data?.data?.bank) {
                 setBankDetails(res.data.data.bank);
-                setRedirectUrl(res.data.data.config?.urls?.return);
+                setRedirectUrl(isRedirectUrl ? isRedirectUrl : res.data.data.config?.urls?.return);
             }
             else if (res?.error?.error) {
                 setIsModalExpireOpen(true);
@@ -170,6 +169,8 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
             case Status.BANK_MISMATCH:
             case Status.DISPUTE:
                 return 'red-theme';
+            case Status.PENDING:
+                return 'yellow-theme';
             default:
                 return 'yellow-theme';
         }
@@ -275,8 +276,26 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                         <div className="mt-5 flex justify-center">
                             <UtrOrScreenShot onSubmit={handleFormSubmit} />
                         </div>
-                        <Modal isOpen={isModalOpen} amount={transactionDetails?.req_amount} orderId={transactionDetails.merchantOrderId} utr={transactionDetails.utr_id} redirectUrl={redirectUrl} theme={transactionStatus}></Modal>
-                        <ExpireModal isOpen={isModalExpireOpen} theme="blue-theme"></ExpireModal>
+                        <Modal 
+                        isOpen={isModalOpen} 
+                        amount={transactionDetails?.req_amount} 
+                        orderId={transactionDetails.merchantOrderId} 
+                        title={transactionDetails?.status} 
+                        redirectUrl={redirectUrl} 
+                        utr={transactionDetails.utr_id} 
+                        theme={transactionStatus} 
+                        type={transactionDetails?.status}
+                        />
+                        <Modal 
+                            isOpen={isModalExpireOpen}
+                            title="Payment URL is Expired"
+                            theme="blue-theme"
+                            type="error"
+                            message="The payment URL has expired. Please try again."
+                            amount={transactionDetails?.req_amount}
+                            orderId={transactionDetails.merchantOrderId}
+                            utr={transactionDetails.utr_id}
+                        />
                         <p className="text-black text-start text-lg sm:text-base mb-5">
                             <b>Steps for Payment: </b>
                             <br />

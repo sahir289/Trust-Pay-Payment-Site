@@ -10,6 +10,7 @@ import googlePay from "../../assets/google-pay.svg"
 import phonePe from "../../assets/phone-pe.svg"
 import bhim from "../../assets/bhim.svg"
 import paytm from "../../assets/paytm.svg"
+import { Modal } from '../modal';
 
 function AmountPage({ closeChat }) {
     const [amount, setAmount] = useState("");
@@ -28,10 +29,21 @@ function AmountPage({ closeChat }) {
     const ot = searchParams.get('ot');
     const key = searchParams.get('key');
     const order = searchParams.get("order");
+    const amountParam = searchParams.get("amount");
+    const redirectUrl = searchParams.get("redirect_url");
+    const [showExpiredModal, setShowExpiredModal] = useState(false);
 
     const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
     console.log(userId, code, ot, key)
+
+    useEffect(() => {
+      if (Number(amountParam)) {
+        setAmount(amountParam)
+        setSelectMethod(true)     
+      }
+    }, [amountParam])
+    
 
     useEffect(() => {
         if (order && !validateCalledRef.current) {
@@ -50,6 +62,8 @@ function AmountPage({ closeChat }) {
                 } catch (error) {
                     console.error('Error validating token:', error);
                     validateCalledRef.current = false; // Reset on error
+                    // Show expired URL modal
+                    setShowExpiredModal(true);
                 }
             };   
             fetchAndValidate();
@@ -63,7 +77,7 @@ function AmountPage({ closeChat }) {
                 if (!apiCalledRef.current && userId && code && ot && key) {
                     apiCalledRef.current = true; // Mark API as called
                     
-                    const merchantOrderData = await generatePayIn(userId, code, ot, key, null);
+                    const merchantOrderData = await generatePayIn(userId, code, ot, key, amountParam ? amountParam : amount);
                     const merchantOrderId = merchantOrderData.data.data.merchantOrderId;
                     setMerchantOrderId(merchantOrderId);
                     
@@ -208,12 +222,12 @@ function AmountPage({ closeChat }) {
 
                 <div className="absolute top-0 ">
                     {visible &&
-                        <Upi amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} />
+                        <Upi amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} isRedirectUrl={redirectUrl}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
+                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange}   isRedirectUrl={redirectUrl}/>
                     }
                 </div>
                 <div className="absolute top-0 ">
@@ -222,6 +236,18 @@ function AmountPage({ closeChat }) {
                     }
                 </div>
             </div>
+            {showExpiredModal && (
+                <Modal 
+                    isOpen={showExpiredModal}
+                    title="Payment URL is Expired"
+                    theme="blue-theme"
+                    message="The payment URL you provided has expired. Please generate a new URL and try again."
+                    onClose={() => setShowExpiredModal(false)}
+                    type="error"
+                    amount={amount}
+                    orderId={merchantOrderId}
+                />
+            )}
         </div>
     );
 }
