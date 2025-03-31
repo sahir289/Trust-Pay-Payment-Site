@@ -32,10 +32,12 @@ function AmountPage({ closeChat }) {
     const amountParam = searchParams.get("amount");
     const redirectUrl = searchParams.get("redirect_url");
     const [showExpiredModal, setShowExpiredModal] = useState(false);
+    // Add this code to get the hash from path
+    const pathname = window.location.pathname;
+    const hashCode = pathname.split('/transaction/')[1];
 
     const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
-    console.log(userId, code, ot, key)
 
     useEffect(() => {
       if (Number(amountParam)) {
@@ -77,7 +79,14 @@ function AmountPage({ closeChat }) {
                 if (!apiCalledRef.current && userId && code && ot && key) {
                     apiCalledRef.current = true; // Mark API as called
                     
-                    const merchantOrderData = await generatePayIn(userId, code, ot, key, amountParam ? amountParam : amount);
+                    const merchantOrderData = await generatePayIn(
+                        userId, 
+                        code, 
+                        ot, 
+                        key, 
+                        amountParam ? amountParam : amount,
+                        encodeURIComponent(hashCode) || hashCode // Pass the hashCode here
+                    );
                     const merchantOrderId = merchantOrderData.data.data.merchantOrderId;
                     setMerchantOrderId(merchantOrderId);
                     
@@ -96,7 +105,7 @@ function AmountPage({ closeChat }) {
         };
 
         initializePayment();
-    }, [userId, code, ot, key]);
+    }, [userId, code, ot, key, hashCode]); // Add hashCode to dependencies
 
     const handleAmount = (e) => {
         setAmount(e.target.value);

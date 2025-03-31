@@ -39,13 +39,14 @@ export const generateIntentOrder = async (id, data) => {
     return await APIParser(http.post(`/payIn/generate-intent-order/${id}`, data));
 }
 
-export const generatePayIn = async (userId, code, ot, key, amount) => {
+export const generatePayIn = async (userId, code, ot, key, amount, hashCode) => {
   try {
     const params = {
       user_id: userId,
       code: code,
       ot: ot,
       key: key,
+      ...(hashCode && { hash_code: encodeURIComponent(hashCode) }),
       ...(amount && { amount: amount })
     };
 
