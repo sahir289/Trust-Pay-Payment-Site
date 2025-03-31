@@ -1,20 +1,35 @@
-import { useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import { useState, useEffect, useRef } from "react";
 import "./BankTransfer.css";
 import { UtrOrScreenShot } from '../utrOrScreenShot'
 import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { IoCopy } from "react-icons/io5";
 import Modal from "../modal/modal";
-function BankTransfer({ amount, closeChat, onBackClicked }) {
+import { toast, ToastContainer } from "react-toastify";
+import { Status } from "../../constants";
+import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
+import ExpireModal from "../modal/expireUrl";
+function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalExpireOpen, setIsModalExpireOpen] = useState(false);
+    const [bankDetails, setBankDetails] = useState({});
+    const [transactionDetails, setTransactionDetails] = useState({});
+    const [transactionStatus, setTransactionStatus] = useState(null);
+    const [redirectUrl, setRedirectUrl] = useState(null);
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
+    const hasRun = useRef(false);
 
-  
+    useEffect(() => {
+        if (hasRun.current) return; // Skip if already run
+        hasRun.current = true;
+        getAssignedBank();
+    }, []);
+
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
@@ -23,6 +38,10 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
             }, 1000);
 
             return () => clearInterval(timer); // Cleanup timer on component unmount
+        }
+        else {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
         }
     }, [remainingTime]);
 
@@ -33,9 +52,6 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
     };
 
     const progressPercentage = (remainingTime / totalDuration) * 100;
-    const radius = 50;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (progressPercentage / 100) * circumference;
 
     const calculateColor = () => {
         const greenStart = { r: 76, g: 175, b: 80 }; // RGB for green-400
@@ -56,14 +72,93 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
         }
     };
 
+    const getAssignedBank = async () => {
+        const res = await assignBankToPayInUrl(merchantOrderId, {
+            amount: amount,
+            type: 'bank_transfer'
+        });
+        if (res?.data?.data?.bank) {
+            setBankDetails(res.data.data.bank);
+            setRedirectUrl(res.data.data.config?.urls?.return);
+        }
+        else if (res?.error?.error) {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+            toast.error(`Error: ${res?.error?.error?.message}`);
+        }
+        else {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+        }
+
+    };
+
+    const handleFormSubmit = async (formData) => {
+        const userSubmittedUtr = formData.get('utrNumber');
+        const screenShot = formData.get('screenshot');
+
+        let res = {};
+        try {
+            if (userSubmittedUtr) {
+                res = await processTransaction(merchantOrderId, {
+                    userSubmittedUtr,
+                    code,
+                    amount,
+                });
+            } else if (screenShot) {
+                res = await imageSubmit(merchantOrderId, {
+                    amount,
+                });
+            }
+
+            const transactionData = res?.data?.data;
+            if (transactionData) {
+                setTransactionDetails(transactionData);
+                setTransactionStatus(getStatusTheme(transactionData.status));
+                setIsModalOpen(true);
+            }
+            else {
+                setIsModalExpireOpen(true);
+                setIsModalOpen(false);
+            }
+        } catch (error) {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+        }
+    };
+
+    // Helper function to determine theme based on status
+    const getStatusTheme = (status) => {
+        switch (status) {
+            case Status.SUCCESS:
+                return 'green-theme';
+            case Status.FAILED:
+            case Status.DROPPED:
+            case Status.BANK_MISMATCH:
+            case Status.DISPUTE:
+                return 'red-theme';
+            default:
+                return 'yellow-theme';
+        }
+    };
+
+    const handleCopy = (text) => {
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+                console.log("Text copied to clipboard:");
+            })
+    };
+
     return (
         <div className="flex justify-center mt-3 py-2 px-2 rounded-3xl " onClick={closeChat}>
             <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-4 ">
                 <div className="bg-white p-3 rounded-3xl shadow-md ">
+                    <ToastContainer />
                     <div className="mb-5">
                         <div className="w-full flex justify-between rounded-t-3xl p-4 text-white">
                             <div className="flex flex-col items-center self-center">
-                                <button
+                                {/* <button
                                     onClick={() => onBackClicked()}
                                     className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
                                     <svg
@@ -75,7 +170,7 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                                         className="w-6 h-6">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                     </svg>
-                                </button>
+                                </button> */}
                             </div>
                             <div className="flex-col items-center">
                                 <div className="relative">
@@ -117,7 +212,7 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                             </div>
                         </div>
                         <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
-                            <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
+                            <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2">
                                 ₹ {amount}
                             </div>
                         </div>
@@ -127,8 +222,8 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                                 <p className="text-md sm:text-lgmr-2">Bank Name</p>
                             </div>
                             <div className="flex flex-col item-center">
-                                <p className="text-sm sm:text-lg mr-2">SAURABH
-                                    <button aria-label="Copy Bank Name">
+                                <p className="text-sm sm:text-lg mr-2">{bankDetails.nick_name}
+                                    <button aria-label="Copy Bank Name" onClick={() => handleCopy(bankDetails.nick_name)}>
                                         <IoCopy className="h-4 w-4 ml-2" />
                                     </button>
                                 </p>
@@ -139,8 +234,8 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                                 <p className="text-lg mr-2">Account Number</p>
                             </div>
                             <div className="flex flex-col item-center">
-                                <p className="text-sm sm:text-lg mt-1 sm:mt-0 mr-2">11451100000447
-                                    <button aria-label="Copy Account Number">
+                                <p className="text-sm sm:text-lg mt-1 sm:mt-0 mr-2">{bankDetails.acc_no}
+                                    <button aria-label="Copy Account Number" onClick={() => handleCopy(bankDetails.acc_no)}>
                                         <IoCopy className="h-4 w-4 ml-2" />
                                     </button>
                                 </p>
@@ -151,8 +246,8 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                                 <p className="text-lg mr-2">Name</p>
                             </div>
                             <div className="flex flex-col item-center">
-                                <p className="text-sm sm:text-lg  mr-2">SAURABH
-                                    <button aria-label="Copy Name">
+                                <p className="text-sm sm:text-lg  mr-2">{bankDetails.acc_holder_name}
+                                    <button aria-label="Copy Name" onClick={() => handleCopy(bankDetails.acc_holder_name)}>
                                         <IoCopy className="h-4 w-4 ml-2" />
                                     </button>
                                 </p>
@@ -163,23 +258,28 @@ function BankTransfer({ amount, closeChat, onBackClicked }) {
                                 <p className="text-lg mr-2">IFSC Code</p>
                             </div>
                             <div className="flex flex-col item-center">
-                                <p className="text-sm sm:text-lg  mr-2">PSIB0021145
-                                    <button aria-label="Copy IFSC Code">
+                                <p className="text-sm sm:text-lg  mr-2">{bankDetails.ifsc}
+                                    <button aria-label="Copy IFSC Code" onClick={() => handleCopy(bankDetails.ifsc)}>
                                         <IoCopy className="h-4 w-4 ml-2" />
                                     </button>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div className="mt-5">
-                        <UtrOrScreenShot />
+
+                    <p className="text-red-500 text-center text-lg sm:text-base mt-4">
+                        <b>ATTENTION: </b>These details are valid for the next 10 minutes.
+                    </p>
+                    <p className="text-red-500 text-left text-lg sm:text-base mb-4">
+                        If payment is made after this period, you will be responsible
+                        <br />
+                        for any potential losses.
+                    </p>
+                    <div className="mt-5 flex justify-center">
+                        <UtrOrScreenShot onSubmit={handleFormSubmit} />
                     </div>
-                    <button className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"
-                        aria-label="Submit payment details " onClick={openModal}
-                    >
-                        SUBMIT
-                    </button>
-                    <Modal isOpen={isModalOpen}  amount={amount} theme="blue-theme"></Modal>
+                    <Modal isOpen={isModalOpen} amount={transactionDetails?.req_amount} orderId={transactionDetails.merchantOrderId} utr={transactionDetails.utr_id} redirectUrl={redirectUrl} theme={transactionStatus}></Modal>
+                    <ExpireModal isOpen={isModalExpireOpen} theme="blue-theme"></ExpireModal>
                     <p className="text-black text-start text-lg sm:text-base mb-4">
                         <b>Steps for Payment: </b>
                         <br />

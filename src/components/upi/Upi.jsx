@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import "./Upi.css";
 import { UtrOrScreenShot } from '../utrOrScreenShot'
@@ -5,26 +8,23 @@ import { NortonAndVideoLink } from '../nortonAndVideoLink'
 import { QrGenerator } from '../qr-generator'
 import { IoCopy } from "react-icons/io5";
 import Modal from "../modal/modal";
-function Upi({ amount, closeChat, onBackClicked }) {
+import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
+import { Status } from "../../constants";
+import ExpireModal from "../modal/expireUrl";
+import { toast } from "react-toastify";
+function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
     const placeholderRef = useRef(null);
     const [size, setSize] = useState(300);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalExpireOpen, setIsModalExpireOpen] = useState(false);
+    const [bankDetails, setBankDetails] = useState({});
+    const [transactionDetails, setTransactionDetails] = useState({});
+    const [transactionStatus, setTransactionStatus] = useState(null);
+    const [redirectUrl, setRedirectUrl] = useState(null);
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    // const [ismodalOpen, setisModalOpen]=useState(false);
-    // const [modalDetails,setmodalDetails]=useState({});
-    // const openModal=()=>{
-    //     setisModalOpen(true)
-    //     setmodalDetails({ title: "Item 1", description: "Details about item 1" });
-    //     console.log(modalDetails);
-    //     console.log(ismodalOpen)
-    // }
     useEffect(() => {
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
@@ -34,7 +34,19 @@ function Upi({ amount, closeChat, onBackClicked }) {
 
             return () => clearInterval(timer); // Cleanup timer on component unmount
         }
+        else {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+        }
     }, [remainingTime]);
+
+    const hasRun = useRef(false);
+
+    useEffect(() => {
+        if (hasRun.current) return; // Skip if already run
+        hasRun.current = true;
+        getAssignedBank();
+    }, []);
 
     useEffect(() => {
         const updateSize = () => {
@@ -68,9 +80,6 @@ function Upi({ amount, closeChat, onBackClicked }) {
         return `${mins}:${secs}`;
     };
     const progressPercentage = (remainingTime / totalDuration) * 100;
-    const radius = 50;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (progressPercentage / 100) * circumference;
 
     const calculateColor = () => {
         const greenStart = { r: 76, g: 175, b: 80 }; // RGB for green-400
@@ -91,6 +100,89 @@ function Upi({ amount, closeChat, onBackClicked }) {
         }
     };
 
+    const getAssignedBank = async () => {
+        try {
+            const res = await assignBankToPayInUrl(merchantOrderId, {
+                amount: amount,
+                type: type
+            });
+
+            if (res?.data?.data?.bank) {
+                setBankDetails(res.data.data.bank);
+                setRedirectUrl(res.data.data.config?.urls?.return);
+            }
+            else if (res?.error?.error) {
+                setIsModalExpireOpen(true);
+                setIsModalOpen(false);
+                toast.error(`Error: ${res?.error?.error?.message}`);
+            }
+            else {
+                setIsModalExpireOpen(true);
+                setIsModalOpen(false);
+            }
+        } catch (error) {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+        }
+    };
+
+    const handleFormSubmit = async (formData) => {
+        const userSubmittedUtr = formData.get('utrNumber');
+        const screenShot = formData.get('screenshot');
+
+        let res = {};
+        try {
+            if (userSubmittedUtr) {
+                res = await processTransaction(merchantOrderId, {
+                    userSubmittedUtr,
+                    code,
+                    amount,
+                });
+            } else if (screenShot) {
+                res = await imageSubmit(merchantOrderId, {
+                    amount,
+                });
+            }
+
+            const transactionData = res?.data?.data;
+            if (transactionData) {
+                setTransactionDetails(transactionData);
+                setTransactionStatus(getStatusTheme(transactionData.status));
+                setIsModalOpen(true);
+            }
+            else {
+                setIsModalExpireOpen(true);
+                setIsModalOpen(false);
+            }
+        } catch (error) {
+            setIsModalExpireOpen(true);
+            setIsModalOpen(false);
+        }
+    };
+
+    // Helper function to determine theme based on status
+    const getStatusTheme = (status) => {
+        switch (status) {
+            case Status.SUCCESS:
+                return 'green-theme';
+            case Status.FAILED:
+            case Status.DROPPED:
+            case Status.BANK_MISMATCH:
+            case Status.DISPUTE:
+                return 'red-theme';
+            default:
+                return 'yellow-theme';
+        }
+    };
+
+    const handleCopy = (text) => {
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+                console.log("Text copied to clipboard:");
+            })
+    };
+
     return (
         <div className="flex justify-center" onClick={closeChat}>
             <div className="w-full sm:h-full">
@@ -100,7 +192,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                         <div className="mb-5 ">
                             <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
                                 <div className="flex flex-col items-center self-center">
-                                    <button
+                                    {/* <button
                                         onClick={() => onBackClicked()}
                                         className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
                                         <svg
@@ -112,7 +204,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                                             className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                         </svg>
-                                    </button>
+                                    </button> */}
                                 </div>
                                 <div className="flex-col items-center">
                                     <div className="relative">
@@ -154,7 +246,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                                 </div>
                             </div>
                             <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
-                                <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2">
+                                <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2">
                                     ₹ {amount}
                                 </div>
                             </div>
@@ -164,7 +256,7 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             <div className="flex justify-center">
                                 <div ref={placeholderRef} className="flex justify-center items-center w-[12.5rem] ">
                                     <div className="qr-code" aria-label="QR Code Placeholder">
-                                        <QrGenerator upi_id={"uniqueshoe@psbpay"} amount={900} size={size} />
+                                        <QrGenerator upi_id={bankDetails?.upi_id} amount={amount} size={size} />
                                     </div>
                                 </div>
                             </div>
@@ -174,20 +266,17 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             </p>
 
                             <div className="flex items-center justify-center mb-4">
-                                <p className="text-lg mr-2">uniqueshoe@psbpay</p>
-                                <button aria-label="Copy UPI ID">
+                                <p className="text-lg mr-2">{bankDetails?.upi_id}</p>
+                                <button aria-label="Copy UPI ID" onClick={() => handleCopy(bankDetails?.upi_id)}>
                                     <IoCopy className="h-4 w-4" />
                                 </button>
                             </div>
                         </div>
                         <div className="mt-5 flex justify-center">
-                            <UtrOrScreenShot/>
+                            <UtrOrScreenShot onSubmit={handleFormSubmit} />
                         </div>
-                        <button className="bg-gradient-to-r from-green-400 to-blue-500 w-full py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-2 mt-4"
-                            aria-label="Submit payment details" onClick={openModal}>
-                            SUBMIT
-                        </button>
-                        <Modal isOpen={isModalOpen}  amount={amount} theme="red-theme"></Modal>
+                        <Modal isOpen={isModalOpen} amount={transactionDetails?.req_amount} orderId={transactionDetails.merchantOrderId} utr={transactionDetails.utr_id} redirectUrl={redirectUrl} theme={transactionStatus}></Modal>
+                        <ExpireModal isOpen={isModalExpireOpen} theme="blue-theme"></ExpireModal>
                         <p className="text-black text-start text-lg sm:text-base mb-5">
                             <b>Steps for Payment: </b>
                             <br />
@@ -198,7 +287,6 @@ function Upi({ amount, closeChat, onBackClicked }) {
                             3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
                         </p>
                         <NortonAndVideoLink link={link} />
-         
                     </div>
                 </div>
             </div>

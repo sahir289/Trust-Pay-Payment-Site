@@ -1,5 +1,5 @@
 export * from "./upi"
-export * from "./bankTransfer"
+export * from "./banktransfer"
 export * from "./intent"
 export * from "./CardPay"
 export * from "./AmountPage"
