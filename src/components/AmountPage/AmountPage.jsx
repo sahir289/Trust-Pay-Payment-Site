@@ -171,11 +171,11 @@ function AmountPage({ closeChat }) {
                                                 }}
                                             >
                                                 <span className="mb-2">UPI</span>
-                                                <div className="flex gap-2">
+                                                {/* <div className="flex gap-2">
                                                     <img src={paytm} alt="PAYTM" className="w-8 h-8" />
                                                     <img src={googlePay} alt="Google Pay" className="w-8 h-8" />
                                                     <img src={bhim} alt="Bhim UPI" className="w-8 h-8" />
-                                                </div>
+                                                </div> */}
                                             </button>
                                         </div>
                                         <div className="flex justify-center items-center">
@@ -186,7 +186,7 @@ function AmountPage({ closeChat }) {
                                                     setType("phone_pe");
                                                 }}
                                             >
-                                                <img src={phonePe} alt="Phone Pe" className="w-8 h-8" />
+                                                {/* <img src={phonePe} alt="Phone Pe" className="w-8 h-8" /> */}
                                                 <span>Phone Pe</span>
                                             </button>
                                         </div>
