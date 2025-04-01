@@ -6,10 +6,10 @@ import { Upi } from "../upi";
 import { BankTransfer } from "../banktransfer";
 import { CardPay } from "../CardPay";
 import { validateToken, generatePayIn } from "../../services/transaction";
-import googlePay from "../../assets/google-pay.svg"
-import phonePe from "../../assets/phone-pe.svg"
-import bhim from "../../assets/bhim.svg"
-import paytm from "../../assets/paytm.svg"
+// import googlePay from "../../assets/google-pay.svg"
+// import phonePe from "../../assets/phone-pe.svg"
+// import bhim from "../../assets/bhim.svg"
+// import paytm from "../../assets/paytm.svg"
 
 function AmountPage({ closeChat }) {
     const [amount, setAmount] = useState("");
@@ -38,7 +38,7 @@ function AmountPage({ closeChat }) {
             const fetchAndValidate = async () => {
                 try {
                     validateCalledRef.current = true; // Set flag before API call
-                    setMerchantOrderId(order);     
+                    setMerchantOrderId(order);
                     const res = await validateToken(order);
                     if (res) {
                         setCode(res.data.data.code);
@@ -51,7 +51,7 @@ function AmountPage({ closeChat }) {
                     console.error('Error validating token:', error);
                     validateCalledRef.current = false; // Reset on error
                 }
-            };   
+            };
             fetchAndValidate();
         }
     }, [order]);
@@ -62,11 +62,11 @@ function AmountPage({ closeChat }) {
                 // Only call API if it hasn't been called before and we have required params
                 if (!apiCalledRef.current && userId && code && ot && key) {
                     apiCalledRef.current = true; // Mark API as called
-                    
+
                     const merchantOrderData = await generatePayIn(userId, code, ot, key, null);
                     const merchantOrderId = merchantOrderData.data.data.merchantOrderId;
                     setMerchantOrderId(merchantOrderId);
-                    
+
                     if (merchantOrderId) {
                         const res = await validateToken(merchantOrderId);
                         if (res && res.data?.data?.amount > 0) {
