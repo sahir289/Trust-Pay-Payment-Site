@@ -52,7 +52,7 @@ function AmountPage({ closeChat }) {
             const fetchAndValidate = async () => {
                 try {
                     validateCalledRef.current = true; // Set flag before API call
-                    setMerchantOrderId(order);     
+                    setMerchantOrderId(order);
                     const res = await validateToken(order);
                     if (res) {
                         setCode(res.data.data.code);
@@ -67,7 +67,7 @@ function AmountPage({ closeChat }) {
                     // Show expired URL modal
                     setShowExpiredModal(true);
                 }
-            };   
+            };
             fetchAndValidate();
         }
     }, [order]);
@@ -77,8 +77,7 @@ function AmountPage({ closeChat }) {
             try {
                 // Only call API if it hasn't been called before and we have required params
                 if (!apiCalledRef.current && userId && code && ot && key) {
-                    apiCalledRef.current = true; // Mark API as called
-                    
+                    apiCalledRef.current = true; // Mark API as called                    
                     const merchantOrderData = await generatePayIn(
                         userId, 
                         code, 
@@ -89,7 +88,7 @@ function AmountPage({ closeChat }) {
                     );
                     const merchantOrderId = merchantOrderData.data.data.merchantOrderId;
                     setMerchantOrderId(merchantOrderId);
-                    
+
                     if (merchantOrderId) {
                         const res = await validateToken(merchantOrderId);
                         if (res && res.data?.data?.amount > 0) {
@@ -194,11 +193,11 @@ function AmountPage({ closeChat }) {
                                                 }}
                                             >
                                                 <span className="mb-2">UPI</span>
-                                                <div className="flex gap-2">
+                                                {/* <div className="flex gap-2">
                                                     <img src={paytm} alt="PAYTM" className="w-8 h-8" />
                                                     <img src={googlePay} alt="Google Pay" className="w-8 h-8" />
                                                     <img src={bhim} alt="Bhim UPI" className="w-8 h-8" />
-                                                </div>
+                                                </div> */}
                                             </button>
                                         </div>
                                         <div className="flex justify-center items-center">
@@ -209,7 +208,7 @@ function AmountPage({ closeChat }) {
                                                     setType("phone_pe");
                                                 }}
                                             >
-                                                <img src={phonePe} alt="Phone Pe" className="w-8 h-8" />
+                                                {/* <img src={phonePe} alt="Phone Pe" className="w-8 h-8" /> */}
                                                 <span>Phone Pe</span>
                                             </button>
                                         </div>
