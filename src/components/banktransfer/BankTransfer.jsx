@@ -279,26 +279,22 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                     <div className="mt-5 flex justify-center">
                         <UtrOrScreenShot onSubmit={handleFormSubmit} />
                     </div>
-                    <Modal 
-                    isOpen={isModalOpen} 
-                    amount={transactionDetails?.req_amount} 
-                    orderId={transactionDetails.merchantOrderId} 
-                    title={transactionDetails?.status} 
-                    utr={transactionDetails.utr_id} 
-                    redirectUrl={redirectUrl} 
-                    theme={transactionStatus} 
-                    type={transactionDetails?.status} 
-                    message={transactionDetails?.status === "SUCCESS" ? "Payment has been made successfully" : "Your points will be credited soon in your account"}
-                    />
-                    <Modal 
-                        isOpen={isModalExpireOpen}
-                        title="Payment URL is Expired"
-                        theme="blue-theme"
-                        type="error"
-                        message="The payment URL has expired. Please try again."
+                    <Modal
+                        isOpen={isModalOpen}
                         amount={transactionDetails?.req_amount}
                         orderId={transactionDetails.merchantOrderId}
+                        title={transactionDetails?.status}
                         utr={transactionDetails.utr_id}
+                        redirectUrl={redirectUrl}
+                        theme={transactionStatus}
+                        type={transactionDetails?.status}
+                        message={transactionDetails?.status === "SUCCESS" ? "Payment has been made successfully" : "Your points will be credited soon in your account"}
+                    />
+                    <Modal
+                        isOpen={isModalExpireOpen}
+                        title="Payment URL is Expired"
+                        type="EXPIRED"
+                        message="The payment URL has expired. Please try again."
                     />
                     <p className="text-black text-start text-lg sm:text-base mb-4">
                         <b>Steps for Payment: </b>

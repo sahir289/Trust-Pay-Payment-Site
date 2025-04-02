@@ -6,10 +6,10 @@ import { Upi } from "../upi";
 import { BankTransfer } from "../banktransfer";
 import { CardPay } from "../CardPay";
 import { validateToken, generatePayIn } from "../../services/transaction";
-import googlePay from "../../assets/google-pay.svg"
-import phonePe from "../../assets/phone-pe.svg"
-import bhim from "../../assets/bhim.svg"
-import paytm from "../../assets/paytm.svg"
+// import googlePay from "../../assets/google-pay.svg"
+// import phonePe from "../../assets/phone-pe.svg"
+// import bhim from "../../assets/bhim.svg"
+// import paytm from "../../assets/paytm.svg"
 import { Modal } from '../modal';
 
 function AmountPage({ closeChat }) {
@@ -40,12 +40,12 @@ function AmountPage({ closeChat }) {
     const apiCalledRef = useRef(false);
 
     useEffect(() => {
-      if (Number(amountParam)) {
-        setAmount(amountParam)
-        setSelectMethod(true)     
-      }
+        if (Number(amountParam)) {
+            setAmount(amountParam)
+            setSelectMethod(true)
+        }
     }, [amountParam])
-    
+
 
     useEffect(() => {
         if (order && !validateCalledRef.current) {
@@ -79,10 +79,10 @@ function AmountPage({ closeChat }) {
                 if (!apiCalledRef.current && userId && code && ot && key) {
                     apiCalledRef.current = true; // Mark API as called                    
                     const merchantOrderData = await generatePayIn(
-                        userId, 
-                        code, 
-                        ot, 
-                        key, 
+                        userId,
+                        code,
+                        ot,
+                        key,
                         amountParam ? amountParam : amount,
                         encodeURIComponent(hashCode) || hashCode // Pass the hashCode here
                     );
@@ -230,12 +230,12 @@ function AmountPage({ closeChat }) {
 
                 <div className="absolute top-0 ">
                     {visible &&
-                        <Upi amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} isRedirectUrl={redirectUrl}/>
+                        <Upi amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} isRedirectUrl={redirectUrl} />
                     }
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange}   isRedirectUrl={redirectUrl}/>
+                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} isRedirectUrl={redirectUrl} />
                     }
                 </div>
                 <div className="absolute top-0 ">
@@ -245,15 +245,12 @@ function AmountPage({ closeChat }) {
                 </div>
             </div>
             {showExpiredModal && (
-                <Modal 
+                <Modal
                     isOpen={showExpiredModal}
                     title="Payment URL is Expired"
-                    theme="blue-theme"
                     message="The payment URL you provided has expired. Please generate a new URL and try again."
                     onClose={() => setShowExpiredModal(false)}
-                    type="error"
-                    amount={amount}
-                    orderId={merchantOrderId}
+                    type="EXPIRED"
                 />
             )}
         </div>

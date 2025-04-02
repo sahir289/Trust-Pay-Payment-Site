@@ -276,25 +276,21 @@ function Upi({ amount, code, isRedirectUrl, merchantOrderId, type, closeChat, on
                         <div className="mt-5 flex justify-center">
                             <UtrOrScreenShot onSubmit={handleFormSubmit} />
                         </div>
-                        <Modal 
-                        isOpen={isModalOpen} 
-                        amount={transactionDetails?.req_amount} 
-                        orderId={transactionDetails.merchantOrderId} 
-                        title={transactionDetails?.status} 
-                        redirectUrl={redirectUrl} 
-                        utr={transactionDetails.utr_id} 
-                        theme={transactionStatus} 
-                        type={transactionDetails?.status}
-                        />
-                        <Modal 
-                            isOpen={isModalExpireOpen}
-                            title="Payment URL is Expired"
-                            theme="blue-theme"
-                            type="error"
-                            message="The payment URL has expired. Please try again."
+                        <Modal
+                            isOpen={isModalOpen}
                             amount={transactionDetails?.req_amount}
                             orderId={transactionDetails.merchantOrderId}
+                            title={transactionDetails?.status}
+                            redirectUrl={redirectUrl}
                             utr={transactionDetails.utr_id}
+                            theme={transactionStatus}
+                            type={transactionDetails?.status}
+                        />
+                        <Modal
+                            isOpen={isModalExpireOpen}
+                            title="Payment URL is Expired"
+                            type="EXPIRED"
+                            message="The payment URL has expired. Please try again."
                         />
                         <p className="text-black text-start text-lg sm:text-base mb-5">
                             <b>Steps for Payment: </b>

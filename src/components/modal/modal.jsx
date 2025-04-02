@@ -2,94 +2,135 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import "./modal.css";
-import success from "../../assets/success.png";
-import error from "../../assets/success.png";
-import pending from "../../assets/success.png"; // Add pending icon
+import successIcon from "../../assets/success.svg";
+import errorIcon from "../../assets/error.svg";
+import pendingIcon from "../../assets/pending.svg";
+import expiredIcon from "../../assets/expired.svg"; // Add an icon for the "expired" state
 
-const Modal = ({ 
-  isOpen, 
-  title, 
+const Modal = ({
+  isOpen,
+  title,
   message,
-  amount, 
-  orderId, 
-  utr, 
-  redirectUrl, 
-  theme = "green-theme",
-  type = "success" // success, error, or pending
+  amount,
+  orderId,
+  utr,
+  redirectUrl,
+  type = "SUCCESS",
+  onClose,
 }) => {
   if (!isOpen) return null;
 
   useEffect(() => {
+    let timer;
     if (redirectUrl) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         window.location.href = redirectUrl;
       }, 5000);
-      return () => clearTimeout(timer);
     }
+    return () => clearTimeout(timer);
   }, [redirectUrl]);
 
-  const getIcon = (type) => {
-    switch(type) {
-      case 'SUCCESS':
-        return success;
-      case 'PENDING':
-        return pending;
-      case 'FAILED':
-        return error;
-      default:
-        return success;
-    }
+  const defaultMessages = {
+    processing: "Your payment is being processed. Please wait while we verify the transaction.",
+    dispute: "There is a dispute in the payment. Please wait while we verify the transaction.",
+    duplicate: "Duplicate payment found. Please wait while we verify the transaction.",
+    failed: "Payment failed. Please try again with correct details.",
+    expired: "The payment URL has expired. Please try again.",
+    success: "Your payment has been successfully processed. Points will be credited shortly.",
   };
+  
+  const statusConfig = {
+    SUCCESS: {
+      icon: successIcon,
+      defaultMessage: defaultMessages.success,
+      themeClass: "success-theme",
+    },
+    PENDING: {
+      icon: pendingIcon,
+      defaultMessage: defaultMessages.processing,
+      themeClass: "pending-theme",
+    },
+    IMAGE_PENDING: {
+      icon: pendingIcon,
+      defaultMessage: defaultMessages.processing,
+      themeClass: "pending-theme",
+    },
+    DUPLICATE: {
+      icon: pendingIcon,
+      defaultMessage: defaultMessages.processing,
+      themeClass: "pending-theme",
+    },
+    DISPUTE: {
+      icon: errorIcon,
+      defaultMessage: defaultMessages.dispute,
+      themeClass: "error-theme",
+    },
+    BANK_MISMATCH: {
+      icon: errorIcon,
+      defaultMessage: defaultMessages.processing,
+      themeClass: "error-theme",
+    },
+    FAILED: {
+      icon: errorIcon,
+      defaultMessage: defaultMessages.failed,
+      themeClass: "error-theme",
+    },
+    EXPIRED: {
+      icon: expiredIcon,
+      defaultMessage: defaultMessages.expired,
+      themeClass: "expired-theme",
+    },
+  };  
 
-  const getDefaultMessage = (type) => {
-    switch(type) {
-      case 'SUCCESS':
-        return 'Your payment has been successfully processed. Points will be credited shortly.';
-      case 'PENDING':
-        return 'Your payment is being processed. Please wait while we verify the transaction.';
-      case 'FAILED':
-        return 'Payment failed. Please try again with correct details.';
-      case 'DROPPED':
-        return 'Payment was dropped. Please try initiating a new transaction.';
-      case 'BANK_MISMATCH':
-        return 'Bank account details do not match. Please verify and try again.';
-      case 'DISPUTE':
-        return 'Transaction is under dispute. Our team will contact you shortly.';
-      case 'DUPLICATE':
-        return 'Transaction is a duplicate. Please try again.';
-      default:
-        return message || 'Something went wrong. Please try again.';
-    }
-  };
+  const currentStatus = statusConfig[type] || statusConfig.SUCCESS;
+  const displayMessage = message || currentStatus.defaultMessage;
 
   return (
-    <>
-      <div className="fixed top-0 bg-white bg-opacity-20 backdrop-blur-md left-0 w-full h-full opacity-80"></div>
-      <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-transparent backdrop-blur-sm">
-        <div className={`parent ${theme}`}>
-          <div className="card">
-            <div className="logo">
-              <span className="circle circle1"></span>
-              <span className="circle circle2"></span>
-              <span className="circle circle3"></span>
-              <span className="circle circle4"></span>
-              <span className="circle circle5">
-                <img src={getIcon(type)} alt={type} />
-              </span>
+    <div className="modal-overlay" data-testid="modal-overlay">
+      <div className={`modal-container ${currentStatus.themeClass}`} data-testid="modal-container">
+        <div className="modal-card">
+          <div className="modal-header">
+            <div className="status-icon">
+              <img src={currentStatus.icon} alt={type} className="status-image" />
             </div>
-
-            <div className="glass"></div>
-            <div className="content">
-              <span className="title">{title || type.toUpperCase()}</span>
-              {amount && <span className="title">₹ {amount}</span>}
-              <span className="text">{getDefaultMessage(type)}</span>
-              {orderId && <span className="text">Order ID: {orderId}</span>}
-              {utr && <span className="text">UTR: {utr}</span>}
-            </div>
+            <h2 className="modal-title">{title || type}</h2>
+            {onClose && (
+              <button className="close-button" onClick={onClose}>
+                ×
+              </button>
+            )}
+          </div>
+          <div className="modal-content">
+            {amount && (
+              <div className="amount-display">
+                <span className="amount-label">Amount:</span>
+                <span className="amount-value">₹{amount}</span>
+              </div>
+            )}
+            <p className="modal-message">{displayMessage}</p>
+            {(orderId || utr) && (
+              <div className="transaction-details">
+                {orderId && (
+                  <div className="detail-item">
+                    <span className="detail-label">Order ID:</span>
+                    <span className="detail-value">{orderId}</span>
+                  </div>
+                )}
+                {utr && (
+                  <div className="detail-item">
+                    <span className="detail-label">UTR:</span>
+                    <span className="detail-value">{utr}</span>
+                  </div>
+                )}
+              </div>
+            )}
+            {redirectUrl && (
+              <p className="redirect-notice">Redirecting in 5 seconds...</p>
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
