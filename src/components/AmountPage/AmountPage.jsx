@@ -11,9 +11,12 @@ import { validateToken, generatePayIn } from "../../services/transaction";
 // import bhim from "../../assets/bhim.svg"
 // import paytm from "../../assets/paytm.svg"
 import { Modal } from '../modal';
+import { ToastContainer, toast } from "react-toastify";
 
 function AmountPage({ closeChat }) {
     const [amount, setAmount] = useState("");
+    const [minAmount, setMinAmount] = useState("");
+    const [maxAmount, setMaxAmount] = useState("");
     const [merchantOrderId, setMerchantOrderId] = useState("");
     const [selectMethod, setSelectMethod] = useState(false);
     const [click, setClick] = useState(false);
@@ -56,6 +59,8 @@ function AmountPage({ closeChat }) {
                     const res = await validateToken(order);
                     if (res) {
                         setCode(res.data.data.code);
+                        setMinAmount(res.data.data.min_amount);
+                        setMaxAmount(res.data.data.max_amount);
                         if (res.data.data.amount > 0) {
                             setAmount(res.data.data.amount);
                             setSelectMethod(true);
@@ -91,6 +96,8 @@ function AmountPage({ closeChat }) {
 
                     if (merchantOrderId) {
                         const res = await validateToken(merchantOrderId);
+                        setMinAmount(res.data.data.min_amount);
+                        setMaxAmount(res.data.data.max_amount);
                         if (res && res.data?.data?.amount > 0) {
                             setAmount(res.data.data.amount);
                             setSelectMethod(true);
@@ -113,6 +120,14 @@ function AmountPage({ closeChat }) {
     // Modify handleAmountSubmit to not call generatePayIn again
     const handleAmountSubmit = () => {
         if (amount) {
+            const numericAmount = Number(amount);
+            const numericMinAmount = Number(minAmount);
+            const numericMaxAmount = Number(maxAmount);
+
+            if (numericAmount < numericMinAmount || numericAmount > numericMaxAmount) {
+                toast.error(`Error: Amount must be between ${numericMinAmount} and ${numericMaxAmount}`);
+                return;
+            }
             setSelectMethod(true);
         }
     };
@@ -177,6 +192,7 @@ function AmountPage({ closeChat }) {
                                     >
                                         Submit
                                     </button>
+                                    <ToastContainer />
                                 </div>
                             </div>}
 
