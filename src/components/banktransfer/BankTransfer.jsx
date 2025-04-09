@@ -78,7 +78,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
         });
         if (res?.data?.data?.bank) {
             setBankDetails(res.data.data.bank);
-            setRedirectUrl(isRedirectUrl ? isRedirectUrl : res.data.data.config?.urls?.return);
+            setRedirectUrl(isRedirectUrl ? isRedirectUrl : res.data.data.return);
         }
         else if (res?.error?.error) {
             setIsModalExpireOpen(true);
