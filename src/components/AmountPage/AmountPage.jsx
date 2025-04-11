@@ -91,7 +91,14 @@ function AmountPage({ closeChat }) {
                         amountParam ? amountParam : amount,
                         encodeURIComponent(hashCode) || hashCode // Pass the hashCode here
                     );
-                    const merchantOrderId = merchantOrderData.data.data.merchantOrderId;
+                    if (merchantOrderData?.error?.error?.message) {
+                        toast.error(merchantOrderData?.error?.error?.message);
+                        setTimeout(() => {
+                            setShowExpiredModal(true)
+                        }, 5000);
+                    }
+                    else{
+                    const merchantOrderId = merchantOrderData?.data?.data?.merchantOrderId;
                     setMerchantOrderId(merchantOrderId);
 
                     if (merchantOrderId) {
@@ -102,7 +109,7 @@ function AmountPage({ closeChat }) {
                             setAmount(res.data.data.amount);
                             setSelectMethod(true);
                         }
-                    }
+                    }}
                 }
             } catch (error) {
                 console.error('Error initializing payment:', error);
@@ -164,6 +171,7 @@ function AmountPage({ closeChat }) {
             >
                 {
                     <div className="flex justify-center">
+                        <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
                         <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem]  lg:shadow-md ${increaseSize ? "h-100  transition-active " : " bg-white "}`}>
                             {!selectMethod && <div className="flex flex-col px-2 mt-2 justify-center">
                                 <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
@@ -198,6 +206,7 @@ function AmountPage({ closeChat }) {
 
                             {selectMethod &&
                                 <div className="mx-8">
+                                    <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
                                     <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method:</h1>
                                     <div className="flex flex-col  relative gap-4 lg:flex-row justify-center mt-5 mb-5 ">
                                         <div className="flex justify-center items-center">
