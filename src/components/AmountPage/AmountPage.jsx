@@ -265,7 +265,7 @@ function AmountPage({ closeChat }) {
                     isOpen={showExpiredModal}
                     title="Payment URL is Expired"
                     message="The payment URL you provided has expired. Please generate a new URL and try again."
-                    onClose={() => setShowExpiredModal(false)}
+                    // onClose={() => setShowExpiredModal(false)}
                     type="EXPIRED"
                 />
             )}
