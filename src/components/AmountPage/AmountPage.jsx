@@ -6,10 +6,6 @@ import { Upi } from "../upi";
 import { BankTransfer } from "../banktransfer";
 import { CardPay } from "../CardPay";
 import { validateToken, generatePayIn } from "../../services/transaction";
-// import googlePay from "../../assets/google-pay.svg"
-// import phonePe from "../../assets/phone-pe.svg"
-// import bhim from "../../assets/bhim.svg"
-// import paytm from "../../assets/paytm.svg"
 import { Modal } from '../modal';
 import { ToastContainer, toast } from "react-toastify";
 
@@ -25,7 +21,8 @@ function AmountPage({ closeChat }) {
     const [visibleBank, setVisibleBank] = useState(false)
     const [visibleCard, setVisibleCard] = useState(false)
     const [isCode, setCode] = useState("");
-    const [type, setType] = useState('upi')
+    const [type, setType] = useState('upi');
+    const [isValidated, setIsValidated] = useState(false); 
     const [searchParams] = useSearchParams();
     const userId = searchParams.get('user_id');
     const code = searchParams.get('code');
@@ -35,7 +32,10 @@ function AmountPage({ closeChat }) {
     const amountParam = searchParams.get("amount");
     const redirectUrl = searchParams.get("redirect_url");
     const [showExpiredModal, setShowExpiredModal] = useState(false);
-    // Add this code to get the hash from path
+    const [upi, setUpi] = useState(false);
+    const [phonePay, setPhonePay] = useState(false);
+    const [bank, setBank] = useState(false);
+
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
 
@@ -65,12 +65,14 @@ function AmountPage({ closeChat }) {
                             setAmount(res.data.data.amount);
                             setSelectMethod(true);
                         }
+                        setIsValidated(true); // Validation complete
                     }
                 } catch (error) {
                     console.error('Error validating token:', error);
                     validateCalledRef.current = false; // Reset on error
                     // Show expired URL modal
                     setShowExpiredModal(true);
+                    setIsValidated(true); // Allow rendering to show error modal
                 }
             };
             fetchAndValidate();
@@ -96,35 +98,48 @@ function AmountPage({ closeChat }) {
                         setTimeout(() => {
                             setShowExpiredModal(true)
                         }, 5000);
-                    }
-                    else{
-                    const merchantOrderId = merchantOrderData?.data?.data?.merchantOrderId;
-                    setMerchantOrderId(merchantOrderId);
+                        setIsValidated(true); // Allow rendering to show error
+                    } else {
+                        const merchantOrderId = merchantOrderData?.data?.data?.merchantOrderId;
+                        setMerchantOrderId(merchantOrderId);
 
-                    if (merchantOrderId) {
-                        const res = await validateToken(merchantOrderId);
-                        setMinAmount(res.data.data.min_amount);
-                        setMaxAmount(res.data.data.max_amount);
-                        if (res && res.data?.data?.amount > 0) {
-                            setAmount(res.data.data.amount);
-                            setSelectMethod(true);
+                        if (merchantOrderId) {
+                            const res = await validateToken(merchantOrderId);
+                            setUpi(res.data.data.is_qr);
+                            setPhonePay(res.data.data.is_phonepay);
+                            setBank(res.data.data.is_bank);
+                            setMinAmount(res.data.data.min_amount);
+                            setMaxAmount(res.data.data.max_amount);
+                            if (res && res.data?.data?.amount > 0) {
+                                setAmount(res.data.data.amount);
+                                setSelectMethod(true);
+                            }
+                            setIsValidated(true); // Validation complete
                         }
-                    }}
+                    }
                 }
             } catch (error) {
                 console.error('Error initializing payment:', error);
-                apiCalledRef.current = false; // Reset on error
+                apiCalledRef.current = false;
+                setShowExpiredModal(true);
+                setIsValidated(true); // Allow rendering to show error
             }
         };
 
-        initializePayment();
-    }, [userId, code, ot, key, hashCode]); // Add hashCode to dependencies
+        if (!order) {
+            initializePayment();
+        } else {
+            // Ensure rendering after validateToken completes
+            if (validateCalledRef.current) {
+                setIsValidated(true);
+            }
+        }
+    }, [userId, code, ot, key, hashCode, amountParam, amount, order]);
 
     const handleAmount = (e) => {
         setAmount(e.target.value);
     };
 
-    // Modify handleAmountSubmit to not call generatePayIn again
     const handleAmountSubmit = () => {
         if (amount) {
             const numericAmount = Number(amount);
@@ -162,6 +177,10 @@ function AmountPage({ closeChat }) {
         setVisibleCard(false);
         setVisibleBank(false);
         setIncreaseSize(false);
+    };
+
+    if (!isValidated) {
+        return null;
     }
 
     return (
@@ -169,11 +188,11 @@ function AmountPage({ closeChat }) {
             <div
                 className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => { setClick(false) }}
             >
-                {
-                    <div className="flex justify-center">
-                        <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
-                        <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem]  lg:shadow-md ${increaseSize ? "h-100  transition-active " : " bg-white "}`}>
-                            {!selectMethod && <div className="flex flex-col px-2 mt-2 justify-center">
+                <div className="flex justify-center">
+                    <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
+                    <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem] lg:shadow-md ${increaseSize ? "h-100 transition-active " : " bg-white "}`}>
+                        {!selectMethod && (
+                            <div className="flex flex-col px-2 mt-2 justify-center">
                                 <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
                                     Please enter the amount :
                                 </label>
@@ -202,13 +221,15 @@ function AmountPage({ closeChat }) {
                                     </button>
                                     <ToastContainer />
                                 </div>
-                            </div>}
+                            </div>
+                        )}
 
-                            {selectMethod &&
-                                <div className="mx-8">
-                                    <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
-                                    <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method:</h1>
-                                    <div className="flex flex-col  relative gap-4 lg:flex-row justify-center mt-5 mb-5 ">
+                        {selectMethod && (
+                            <div className="mx-8">
+                                <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
+                                <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method:</h1>
+                                <div className="flex flex-col relative gap-4 lg:flex-row justify-center mt-5 mb-5">
+                                    {upi && (
                                         <div className="flex justify-center items-center">
                                             <button
                                                 className="w-64 h-20 lg:h-28 lg:w-40 flex flex-col justify-center items-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg p-2"
@@ -225,6 +246,8 @@ function AmountPage({ closeChat }) {
                                                 </div> */}
                                             </button>
                                         </div>
+                                    )}
+                                    {phonePay && (
                                         <div className="flex justify-center items-center">
                                             <button
                                                 className="w-64 h-16 lg:h-28 lg:w-32 flex items-center justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
@@ -237,26 +260,35 @@ function AmountPage({ closeChat }) {
                                                 <span>Phone Pe</span>
                                             </button>
                                         </div>
+                                    )}
+                                    {bank && (
                                         <div className="flex justify-center items-center">
                                             <button
-                                                className=" w-64  h-16 lg:h-28 lg:w-32  items-center  flex justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                                                className="w-64 h-16 lg:h-28 lg:w-32 items-center flex justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                                                 onClick={() => handlePayClick("bank")}
                                             >
                                                 Bank Transfer
                                             </button>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        )}
                     </div>
+                </div>
 
-                }
-
-                <div className="absolute top-0 ">
-                    {visible &&
-                        <Upi amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} isRedirectUrl={redirectUrl} />
-                    }
+                <div className="absolute top-0">
+                    {visible && (
+                        <Upi
+                            amount={amount}
+                            code={code ? code : isCode}
+                            merchantOrderId={merchantOrderId}
+                            type={type}
+                            closeChat={closeChat}
+                            onBackClicked={handleChange}
+                            isRedirectUrl={redirectUrl}
+                        />
+                    )}
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
