@@ -58,6 +58,9 @@ function AmountPage({ closeChat }) {
                     setMerchantOrderId(order);
                     const res = await validateToken(order);
                     if (res) {
+                        setUpi(res.data.data.is_qr);
+                        setPhonePay(res.data.data.is_phonepay);
+                        setBank(res.data.data.is_bank);
                         setCode(res.data.data.code);
                         setMinAmount(res.data.data.min_amount);
                         setMaxAmount(res.data.data.max_amount);
