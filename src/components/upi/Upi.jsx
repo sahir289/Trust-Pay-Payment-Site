@@ -138,9 +138,10 @@ function Upi({ amount, code, isRedirectUrl, merchantOrderId, type, closeChat, on
                     amount,
                 });
             } else if (screenShot) {
-                res = await imageSubmit(merchantOrderId, {
-                    amount,
-                });
+                const formData = new FormData();
+                formData.append('amount', amount);
+                formData.append('file', screenShot);
+                res = await imageSubmit(merchantOrderId, formData);
             }
 
             const transactionData = res?.data?.data;

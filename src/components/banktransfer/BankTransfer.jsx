@@ -105,9 +105,10 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                     amount,
                 });
             } else if (screenShot) {
-                res = await imageSubmit(merchantOrderId, {
-                    amount,
-                });
+                const formData = new FormData();
+                formData.append('amount', amount);
+                formData.append('file', screenShot);
+                res = await imageSubmit(merchantOrderId, formData);
             }
 
             const transactionData = res?.data?.data;
