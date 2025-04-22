@@ -30,11 +30,12 @@ function AmountPage({ closeChat }) {
     const key = searchParams.get('key');
     const order = searchParams.get("order");
     const amountParam = searchParams.get("amount");
-    const redirectUrl = searchParams.get("redirect_url");
+    // const redirectUrl = searchParams.get("redirect_url");
     const [showExpiredModal, setShowExpiredModal] = useState(false);
     const [upi, setUpi] = useState(false);
     const [phonePay, setPhonePay] = useState(false);
     const [bank, setBank] = useState(false);
+    const [redirectUrl, setRedirectUrl] = useState(null);
 
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
@@ -57,13 +58,19 @@ function AmountPage({ closeChat }) {
                     validateCalledRef.current = true; // Set flag before API call
                     setMerchantOrderId(order);
                     const res = await validateToken(order);
-                    if (res) {
+                    if (res.data.data.error) {
+                        setRedirectUrl(res.data.data.result.redirect_url);
+                        setShowExpiredModal(true);
+                        setIsValidated(true); // Allow rendering to show error modal
+                    }
+                    else if (res.data.data) {
                         setUpi(res.data.data.is_qr);
                         setPhonePay(res.data.data.is_phonepay);
                         setBank(res.data.data.is_bank);
                         setCode(res.data.data.code);
                         setMinAmount(res.data.data.min_amount);
                         setMaxAmount(res.data.data.max_amount);
+                        setRedirectUrl(res.data.data.redirect_url);
                         if (res.data.data.amount > 0) {
                             setAmount(res.data.data.amount);
                             setSelectMethod(true);
@@ -308,6 +315,7 @@ function AmountPage({ closeChat }) {
                 <Modal
                     isOpen={showExpiredModal}
                     title="Payment URL is Expired"
+                    redirectUrl={redirectUrl}
                     message="The payment URL you provided has expired. Please generate a new URL and try again."
                     // onClose={() => setShowExpiredModal(false)}
                     type="EXPIRED"
