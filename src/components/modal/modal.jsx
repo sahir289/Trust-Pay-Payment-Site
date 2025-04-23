@@ -50,7 +50,7 @@ const Modal = ({
       defaultMessage: defaultMessages.processing,
       themeClass: "pending-theme",
     },
-    IMAGE_PENDING: {
+    IMG_PENDING: {
       icon: pendingIcon,
       defaultMessage: defaultMessages.processing,
       themeClass: "pending-theme",
