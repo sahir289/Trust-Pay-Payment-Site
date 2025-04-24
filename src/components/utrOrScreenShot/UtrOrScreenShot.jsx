@@ -6,10 +6,18 @@ function UtrOrScreenShot({ onSubmit }) {
     const [file, setFile] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (isSubmitted || isLoading) return;
+        // Check if both UTR number and file are empty
+        if (!utrNumber.trim() && !file) {
+            setError('Please provide either a UTR number or a screenshot.');
+            return;
+        }
+        
+        setError(''); // Clear error if validation passes
         setIsLoading(true);
         setIsSubmitted(true);
         const formData = new FormData();
@@ -23,6 +31,14 @@ function UtrOrScreenShot({ onSubmit }) {
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
+            setError(''); // Clear error when a file is selected
+        }
+    };
+
+    const handleUtrChange = (e) => {
+        setUtrNumber(e.target.value);
+        if (e.target.value.trim() || file) {
+            setError(''); // Clear error when UTR is entered or file exists
         }
     };
 
@@ -37,7 +53,7 @@ function UtrOrScreenShot({ onSubmit }) {
                                 className="bg-slate-100 border-2 border-gray-300 rounded-md w-[90vw] sm:w-[40vw] md:w-[52vw] lg:w-[40vw] xl:w-[30vw] 2xl:w-[30vw] p-2 text-sm"
                                 aria-label="Enter UTR Number"
                                 value={utrNumber}
-                                onChange={(e) => setUtrNumber(e.target.value)}
+                                onChange={handleUtrChange}
                                 title="Please enter a UTR number"
                                 disabled={isSubmitted || isLoading}
                             />
@@ -65,6 +81,12 @@ function UtrOrScreenShot({ onSubmit }) {
                         {!file && isSubmitted && (
                             <p className="text-sm text-gray-600 mt-2">
                                 No file uploaded
+                            </p>
+                        )}
+                        {/* Error message */}
+                        {error && (
+                            <p className="text-sm text-red-600 mt-2">
+                                {error}
                             </p>
                         )}
                     </div>
