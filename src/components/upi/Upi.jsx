@@ -126,7 +126,6 @@ function Upi({ amount, code, isRedirectUrl, merchantOrderId, type, closeChat, on
     };
 
     const handleFormSubmit = async (formData) => {
-        console.log(formData);
         const userSubmittedUtr = formData.get('utrNumber');
         const screenShot = formData.get('screenshot');
 
