@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from "react";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import "./AmountPage.css";
 import { Upi } from "../upi";
 import { BankTransfer } from "../banktransfer";
@@ -42,6 +42,7 @@ function AmountPage({ closeChat }) {
 
     const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (Number(amountParam)) {
@@ -114,17 +115,13 @@ function AmountPage({ closeChat }) {
                         setMerchantOrderId(merchantOrderId);
 
                         if (merchantOrderId) {
-                            const res = await validateToken(merchantOrderId);
-                            setUpi(res.data.data.is_qr);
-                            setPhonePay(res.data.data.is_phonepay);
-                            setBank(res.data.data.is_bank);
-                            setMinAmount(res.data.data.min_amount);
-                            setMaxAmount(res.data.data.max_amount);
-                            if (res && res.data?.data?.amount > 0) {
-                                setAmount(res.data.data.amount);
-                                setSelectMethod(true);
-                            }
-                            setIsValidated(true); // Validation complete
+                            // Update URL parameters
+                            const newSearchParams = new URLSearchParams();
+                            newSearchParams.set('order', merchantOrderId);
+                            if (amount) newSearchParams.set('amount', amount);
+                          
+                            // Update the URL without refreshing the page
+                            navigate(`?${newSearchParams.toString()}`, { replace: true });
                         }
                     }
                 }
@@ -144,7 +141,7 @@ function AmountPage({ closeChat }) {
                 setIsValidated(true);
             }
         }
-    }, [userId, code, ot, key, hashCode, amountParam, amount, order]);
+    }, [userId, code, ot, key, hashCode, amountParam, amount, order, navigate]);
 
     const handleAmount = (e) => {
         setAmount(e.target.value);
