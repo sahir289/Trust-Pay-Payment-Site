@@ -302,7 +302,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                         <br />
                         1. Transfer the displayed Amount using the Bank Transfer.<span className="text-red-500">*</span>
                         <br />
-                        2. Enter UTR number or upload screen shot.<span className="text-red-500">*</span>
+                        2. Enter Either UTR number or upload screen shot.<span className="text-red-500">*</span>
                         <br />
                         3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
                     </p>
