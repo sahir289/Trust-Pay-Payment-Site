@@ -298,7 +298,7 @@ function Upi({ amount, code, isRedirectUrl, merchantOrderId, type, closeChat, on
                             <br />
                             1. Scan the QR code displayed above.<span className="text-red-500">*</span>
                             <br />
-                            2. Enter UTR number or upload screen shot.<span className="text-red-500">*</span>
+                            2. Enter either UTR number or upload screen shot.<span className="text-red-500">*</span>
                             <br />
                             3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
                         </p>
