@@ -46,18 +46,18 @@ function UtrOrScreenShot({ onSubmit }) {
     }
   };
 
+  // Function to handle file removal
+  const handleRemoveFile = () => {
+    setFile(null);
+    setError('');
+    // Reset the file input
+    const fileInput = document.getElementById('file-upload');
+    if (fileInput) fileInput.value = '';
+  };
+
   // Show conflict message when hovering over a disabled input
   const showConflictMessage =
     (file && isUtrHovered) || (utrNumber.trim() && isFileHovered);
-
-  // Debugging logs to track hover events and state
-//   console.log({
-//     utrNumber: utrNumber.trim(),
-//     file: !!file,
-//     isUtrHovered,
-//     isFileHovered,
-//     showConflictMessage,
-//   });
 
   return (
     <div className="text-center mb-4 mt-4">
@@ -76,14 +76,8 @@ function UtrOrScreenShot({ onSubmit }) {
                   aria-label="Enter UTR Number"
                   value={utrNumber}
                   onChange={handleUtrChange}
-                  onMouseEnter={() => {
-                    setIsUtrHovered(true);
-                    // console.log('UTR input hovered');
-                  }}
-                  onMouseLeave={() => {
-                    setIsUtrHovered(false);
-                    // console.log('UTR input left');
-                  }}
+                  onMouseEnter={() => setIsUtrHovered(true)}
+                  onMouseLeave={() => setIsUtrHovered(false)}
                   disabled={isSubmitted || isLoading || file}
                 />
                 {showConflictMessage && (
@@ -99,14 +93,8 @@ function UtrOrScreenShot({ onSubmit }) {
                     ? 'opacity-75 cursor-not-allowed'
                     : 'cursor-pointer'
                 }`}
-                onMouseEnter={() => {
-                  setIsFileHovered(true);
-                  // console.log('File label hovered');
-                }}
-                onMouseLeave={() => {
-                  setIsFileHovered(false);
-                  // console.log('File label left');
-                }}
+                onMouseEnter={() => setIsFileHovered(true)}
+                onMouseLeave={() => setIsFileHovered(false)}
               >
                 +
                 <input
@@ -120,9 +108,19 @@ function UtrOrScreenShot({ onSubmit }) {
               </label>
             </div>
 
-            {/* File uploaded info */}
+            {/* File uploaded info with remove option */}
             {file && !error && (
-              <p className="text-sm text-green-600 mt-2">File uploaded: {file.name}</p>
+              <div className="flex items-center justify-end mt-2">
+                <p className="text-sm text-green-600">File uploaded: {file.name}</p>
+                <button
+                  type="button"
+                  onClick={handleRemoveFile}
+                  className="ml-2 text-sm text-red-600 hover:underline"
+                  aria-label="Remove uploaded file"
+                >
+                  Remove
+                </button>
+              </div>
             )}
 
             {/* No file, but form submitted */}
