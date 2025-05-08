@@ -217,7 +217,6 @@ function Upi({
         if (!response) {
           throw new Error('Failed to generate UPI URLs');
         }
-
         setUpiUrls(response.data.data);
         setLoading(false);
       } catch (err) {
@@ -230,16 +229,31 @@ function Upi({
   }, []);
 
 
-  const openUpiLink = (upiUrl, fallbackUrl) => {
-    window.location = upiUrl;
-    setTimeout(() => {
-      if (document.hidden) return; // it will app opened successfully
+  const openUpiLink = (upiUrl, fallbackUrl, appName) => {
+    console.log(`Attempting to open ${appName} with URL: ${upiUrl}`);
+    try {
+      window.location = upiUrl;
+    } catch (err) {
+      console.error(`Error opening ${appName}: ${err.message}`);
       if (fallbackUrl) {
-        window.location = fallbackUrl; // it will redirect to app store
+        window.location = fallbackUrl;
       } else {
-        toast.error(`Error: Please install a UPI app to proceed.`);
+        toast.error(`Please install ${appName} to proceed.`);
       }
-    }, 1000);
+      return;
+    }
+    setTimeout(() => {
+      if (document.hidden || document.visibilityState === 'hidden') {
+        console.log(`${appName} app opened successfully`);
+        return;
+      }
+      console.warn(`${appName} app did not open, redirecting to fallback: ${fallbackUrl || 'none'}`);
+      if (fallbackUrl) {
+        window.location = fallbackUrl;
+      } else {
+        toast.error(`Please install a UPI app to proceed.`);
+      }
+    }, 2000);
   };
 
   if (loading) {
@@ -363,6 +377,7 @@ function Upi({
                         openUpiLink(
                           upiUrls.phonepeUrl,
                           'https://play.google.com/store/apps/details?id=com.phonepe.app',
+                          'PhonePe'
                         )
                       }
                       className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
@@ -377,6 +392,7 @@ function Upi({
                         openUpiLink(
                           upiUrls.gpayUrl,
                           'https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user',
+                          'Google Pay',
                         )
                       }
                       className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
@@ -391,6 +407,7 @@ function Upi({
                         openUpiLink(
                           upiUrls.paytmUrl,
                           'https://play.google.com/store/apps/details?id=net.one97.paytm',
+                          'Paytm',
                         )
                       }
                       className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
@@ -401,7 +418,7 @@ function Upi({
                       </span>
                     </button>
                     <button
-                      onClick={() => openUpiLink(upiUrls.genericUpiUrl, '')}
+                      onClick={() => openUpiLink(upiUrls.genericUpiUrl, '', 'Other UPI Apps')}
                       className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
                     >
                       {/* <TbAppsFilled /> */}
