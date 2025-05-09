@@ -209,7 +209,7 @@ function Upi({
             amount,
             payeeVPA: '919797955998@ybl',
             // bankDetails?.upi_id,
-            payeeName: 'Trust-Pay',
+            payeeName: 'Vishal Rajput',
             transactionNote: code,
             businessName: 'Trust-Pay',
           };
@@ -392,7 +392,7 @@ function Upi({
                     <button
                       onClick={() =>
                         openUpiLink(
-                          upiUrls.upiUrl,
+                          "upi://pay?pa=919797955998@ybl&pn=TrustPay&am=100.00&cu=INR&tn=Thanks",
                           'https://play.google.com/store/apps/details?id=com.phonepe.app',
                           'PhonePe'
                         )
@@ -407,7 +407,7 @@ function Upi({
                     <button
                       onClick={() =>
                         openUpiLink(
-                          upiUrls.upiUrl,
+                          "upi://pay?pa=919797955998@ybl&pn=TrustPay&am=100.00&cu=INR&tn=Thanks",
                           'https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user',
                           'Google Pay',
                         )
