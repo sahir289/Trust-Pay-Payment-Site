@@ -375,7 +375,7 @@ function Upi({
                     <button
                       onClick={() =>
                         openUpiLink(
-                          upiUrls.phonepeUrl,
+                          upiUrls.upiUrl,
                           'https://play.google.com/store/apps/details?id=com.phonepe.app',
                           'PhonePe'
                         )
@@ -390,7 +390,7 @@ function Upi({
                     <button
                       onClick={() =>
                         openUpiLink(
-                          upiUrls.gpayUrl,
+                          upiUrls.upiUrl,
                           'https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user',
                           'Google Pay',
                         )
@@ -405,7 +405,7 @@ function Upi({
                     <button
                       onClick={() =>
                         openUpiLink(
-                          upiUrls.paytmUrl,
+                          upiUrls.upiUrl,
                           'https://play.google.com/store/apps/details?id=net.one97.paytm',
                           'Paytm',
                         )
@@ -418,7 +418,7 @@ function Upi({
                       </span>
                     </button>
                     <button
-                      onClick={() => openUpiLink(upiUrls.genericUpiUrl, '', 'Other UPI Apps')}
+                      onClick={() => openUpiLink(upiUrls.upiUrl, '', 'Other UPI Apps')}
                       className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
                     >
                       {/* <TbAppsFilled /> */}
