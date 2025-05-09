@@ -205,14 +205,15 @@ function Upi({
   useEffect(() => {
     const fetchUpiUrls = async () => {
       try {
-        const payload =  JSON.stringify({
-            amount: amount,
+        const payload = {
+            amount,
             payeeVPA: bankDetails?.upi_id,
             payeeName: 'Trust-Pay',
             transactionNote: code,
             businessName: 'Trust-Pay',
-          })
-        const response = await generateUpiUrls(payload)
+          };
+    
+          const response = await generateUpiUrls(payload);
 
         if (!response) {
           throw new Error('Failed to generate UPI URLs');
@@ -231,30 +232,45 @@ function Upi({
 
   const openUpiLink = (upiUrl, fallbackUrl, appName) => {
     console.log(`Attempting to open ${appName} with URL: ${upiUrl}`);
-    try {
-      window.location = upiUrl;
-    } catch (err) {
-      console.error(`Error opening ${appName}: ${err.message}`);
-      if (fallbackUrl) {
-        window.location = fallbackUrl;
-      } else {
-        toast.error(`Please install ${appName} to proceed.`);
-      }
+  
+    const packageMap = {
+      'PhonePe': 'com.phonepe.app',
+      'Google Pay': 'com.google.android.apps.nbu.paisa.user',
+      'Paytm': 'net.one97.paytm',
+    };
+  
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  
+    let opened = false;
+  
+    if (isAndroid && packageMap[appName]) {
+      const intentUrl = `intent://pay?${upiUrl.split('?')[1]}#Intent;scheme=upi;package=${packageMap[appName]};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end;`;
+  
+      window.location.href = intentUrl;
+    } else if (isIOS) {
+      // iOS doesn't support UPI deep links, show QR or fallback
+      toast.error(`Opening ${appName} is not supported on iOS. Please use the QR code.`);
       return;
+    } else {
+      window.location.href = upiUrl;
     }
+  
+    // Fallback check after delay
     setTimeout(() => {
-      if (document.hidden || document.visibilityState === 'hidden') {
-        console.log(`${appName} app opened successfully`);
-        return;
-      }
-      console.warn(`${appName} app did not open, redirecting to fallback: ${fallbackUrl || 'none'}`);
-      if (fallbackUrl) {
-        window.location = fallbackUrl;
+      if (!document.hidden && !document.visibilityState?.includes('hidden')) {
+        console.warn(`${appName} app did not open, redirecting to fallback`);
+        if (fallbackUrl) {
+          window.location.href = fallbackUrl;
+        } else {
+          toast.error(`Please install ${appName} to proceed.`);
+        }
       } else {
-        toast.error(`Please install a UPI app to proceed.`);
+        console.log(`${appName} app opened successfully`);
       }
     }, 2000);
   };
+  
 
   if (loading) {
     return (
