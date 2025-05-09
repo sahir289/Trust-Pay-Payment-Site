@@ -214,7 +214,8 @@ function Upi({
             businessName: 'Trust-Pay',
           };
     
-          const response = await generateUpiUrls(payload);
+        const response = await generateUpiUrls(payload);
+        console.log(response, "respooo")
 
         if (!response) {
           throw new Error('Failed to generate UPI URLs');
@@ -250,7 +251,6 @@ function Upi({
   
       window.location.href = intentUrl;
     } else if (isIOS) {
-      // iOS doesn't support UPI deep links, show QR or fallback
       toast.error(`Opening ${appName} is not supported on iOS. Please use the QR code.`);
       return;
     } else {
