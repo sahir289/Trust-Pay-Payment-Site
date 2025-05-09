@@ -207,7 +207,8 @@ function Upi({
       try {
         const payload = {
             amount,
-            payeeVPA: bankDetails?.upi_id,
+            payeeVPA: '919797955998@ybl',
+            // bankDetails?.upi_id,
             payeeName: 'Trust-Pay',
             transactionNote: code,
             businessName: 'Trust-Pay',
