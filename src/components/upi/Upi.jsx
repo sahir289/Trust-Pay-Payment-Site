@@ -199,7 +199,7 @@ function Upi({
     generic: '',
     transactionId: ''
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState();
   const [error, setError] = useState('');
 
 //   useEffect(() => {
