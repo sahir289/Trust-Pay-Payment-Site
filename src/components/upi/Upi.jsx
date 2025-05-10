@@ -202,34 +202,33 @@ function Upi({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchUpiUrls = async () => {
-      try {
-        const payload = {
-            amount,
-            payeeVPA: '919797955998@ybl',
-            // bankDetails?.upi_id,
-            payeeName: 'Vishal Rajput',
-            transactionNote: code,
-            businessName: 'Trust-Pay',
-          };
+//   useEffect(() => {
+//     const fetchUpiUrls = async () => {
+//       try {
+//         const payload = {
+//             amount,
+//             payeeVPA: bankDetails?.upi_id,
+//             payeeName: 'Trust Pay',
+//             transactionNote: code,
+//             businessName: 'Trust-Pay',
+//           };
     
-        const response = await generateUpiUrls(payload);
-        console.log(response, "respooo")
+//         const response = await generateUpiUrls(payload);
+//         console.log(response, "respooo")
 
-        if (!response) {
-          throw new Error('Failed to generate UPI URLs');
-        }
-        setUpiUrls(response.data.data);
-        setLoading(false);
-      } catch (err) {
-        setError('Error generating payment links. Please try again.');
-        setLoading(false);
-      }
-    };
+//         if (!response) {
+//           throw new Error('Failed to generate UPI URLs');
+//         }
+//         setUpiUrls(response.data.data);
+//         setLoading(false);
+//       } catch (err) {
+//         setError('Error generating payment links. Please try again.');
+//         setLoading(false);
+//       }
+//     };
 
-    fetchUpiUrls();
-  }, []);
+//     fetchUpiUrls();
+//   }, []);
 
 
   const openUpiLink = (upiUrl, fallbackUrl, appName) => {
@@ -384,7 +383,7 @@ function Upi({
                 inconvenience
               </p>
 
-                <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-6">
+                {/* <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-6">
                   <h1 className="text-xl font-semibold text-gray-800 mb-4 text-center">
                     Pay {amount} to {bankDetails?.upi_id}
                   </h1>
@@ -438,7 +437,7 @@ function Upi({
                       onClick={() => openUpiLink(upiUrls.upiUrl, '', 'Other UPI Apps')}
                       className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
                     >
-                      {/* <TbAppsFilled /> */}
+
                       <span className="text-sm font-medium text-gray-700">
                         Other UPI Apps
                       </span>
@@ -467,7 +466,7 @@ function Upi({
                       Paytm
                     </a>
                   </p>
-                </div>
+                </div> */}
 
               <div className="flex items-center justify-center mb-4">
                 <p className="text-lg mr-2">{bankDetails?.upi_id}</p>
