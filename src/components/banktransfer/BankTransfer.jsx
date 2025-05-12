@@ -300,11 +300,15 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                     <p className="text-black text-start text-lg sm:text-base mb-4">
                         <b>Steps for Payment: </b>
                         <br />
-                        1. Transfer the displayed Amount using the Bank Transfer.<span className="text-red-500">*</span>
+                        1. Transfer the displayed Amount using the above details (eg: IMPS)<span className="text-red-500">*</span>
                         <br />
-                        2. Enter Either UTR number or upload screen shot.<span className="text-red-500">*</span>
+                        2. Verify the payment amount<span className="text-red-500">*</span>
                         <br />
-                        3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
+                        3. Take a screenshot of your payment and upload or copy 12 digit UTR number and paste in the blank space provided.<span className="text-red-500">*</span>
+                        <br />
+                        4. Click on <b>Submit</b> to complete the process.<span className="text-red-500">*</span>
+                        <br />
+                        5. Wait for confirmation — your transaction will be verified shortly.<span className="text-red-500">*</span>
                     </p>
                     <NortonAndVideoLink link={link} />
                 </div>
