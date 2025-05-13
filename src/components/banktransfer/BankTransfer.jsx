@@ -272,10 +272,10 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                     <p className="text-red-500 text-center text-lg sm:text-base mt-4">
                         <b>ATTENTION: </b>These details are valid for the next 10 minutes.
                     </p>
-                    <p className="text-red-500 text-left text-lg sm:text-base mb-4">
-                        If payment is made after this period, you will be responsible
+                    <p className="text-red-500 text-center text-lg sm:text-base mb-4">
+                        If payment is made after this period, you will be responsible for any 
                         <br />
-                        for any potential losses.
+                        potential losses.
                     </p>
                     <div className="mt-5 flex justify-center">
                         <UtrOrScreenShot onSubmit={handleFormSubmit} />
@@ -298,17 +298,24 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                         message="The payment URL has expired. Please try again."
                     />
                     <p className="text-black text-start text-lg sm:text-base mb-4">
-                        <b>Steps for Payment: </b>
+                        <b>Steps for Payment:</b>
                         <br />
-                        1. Transfer the displayed Amount using the above details (eg: IMPS)<span className="text-red-500">*</span>
+                        1. Transfer the displayed Amount using the above details (e.g., IMPS)
+                        <span className="text-red-500">*</span>
                         <br />
-                        2. Verify the payment amount<span className="text-red-500">*</span>
+                        2. Verify the payment amount
+                        <span className="text-red-500">*</span>
                         <br />
-                        3. Take a screenshot of your payment and upload or copy 12 digit UTR number and paste in the blank space provided.<span className="text-red-500">*</span>
+                        3. Take a screenshot of your payment and upload or
                         <br />
-                        4. Click on <b>Submit</b> to complete the process.<span className="text-red-500">*</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;copy 12-digit UTR number and paste in the blank space provided.
+                        <span className="text-red-500">*</span>
                         <br />
-                        5. Wait for confirmation — your transaction will be verified shortly.<span className="text-red-500">*</span>
+                        4. Click on <b>Submit</b> to complete the process.
+                        <span className="text-red-500">*</span>
+                        <br />
+                        5. Wait for confirmation — your transaction will be verified shortly.
+                        <span className="text-red-500">*</span>
                     </p>
                     <NortonAndVideoLink link={link} />
                 </div>
