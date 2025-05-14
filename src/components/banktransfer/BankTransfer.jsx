@@ -153,6 +153,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
     };
 
     return (
+        <div>
         <div className="flex justify-center mt-3 py-2 px-2 rounded-3xl " onClick={closeChat}>
             <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-4 ">
                 <div className="bg-white p-3 rounded-3xl shadow-md ">
@@ -320,7 +321,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                     <NortonAndVideoLink link={link} />
                 </div>
             </div>
-        </div>
+        </div></div>
     );
 }
 

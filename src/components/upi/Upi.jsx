@@ -287,17 +287,15 @@ function Upi({
             </div>
         );
     }
-
-    return (
-        <div className="flex justify-center" onClick={closeChat}>
-            <div className="w-full sm:h-full">
-                <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-6 ">
-                    {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
-                    <div className="bg-white w-90 p-3  rounded-3xl shadow-md ">
-                        <div className="mb-5 ">
-                            <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
-                                <div className="flex flex-col items-center self-center">
-                                    {/* <button
+return (
+  <div className="flex justify-center items-center min-h-full sm:min-h-screen bg-gray-50">
+    <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+      <div className="bg-[#f1f1eb] rounded-3xl shadow-md py-4 px-4 mt-6">
+        <div className="bg-white p-4 rounded-3xl shadow-md">
+          <div className="mb-5">
+            <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header mx-auto">
+              <div className="flex flex-col items-center self-center">
+                                {/* <button
                                         onClick={() => onBackClicked()}
                                         className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
                                         <svg
@@ -312,8 +310,8 @@ function Upi({
                                     </button> */}
                                 </div>
                                 <div className="flex-col items-center">
-                                    <div className="relative">
-                                        <svg
+                                <div className="relative mx-auto">
+                                            <svg
                                             className="progress-circle"
                                             width="80"
                                             height="80"
@@ -355,14 +353,14 @@ function Upi({
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
-                                <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2">
-                                    ₹ {amount}
-                                </div>
+                        <div className="flex flex-col items-center mb-2">
+                            <div className="flex justify-center items-center w-full max-w-[12rem] h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2 mx-auto">
+                                ₹ {amount}
                             </div>
-                            <p className="text-black text-center text-lg sm:text-base mb-2">
-                                Scan QR Code to Pay
-                            </p>
+                        </div>
+                        <p className="text-black text-center text-lg mb-2">
+                            Scan QR Code to Pay
+                        </p>
                             <div className="flex justify-center">
                                 <div
                                     ref={placeholderRef}
@@ -378,7 +376,7 @@ function Upi({
                                 </div>
                             </div>
 
-                            <p className="text-red-500 text-center text-lg sm:text-base mb-4 mt-4">
+                 <p className="text-red-500 text-center text-lg sm:text-base mb-4 mt-4">
                                 <b>ATTENTION: </b>Avoid depositing through PhonePe for any
                                 inconvenience
                             </p>
@@ -497,8 +495,8 @@ function Upi({
                             type="EXPIRED"
                             message="The payment URL has expired. Please try again."
                         />
-                        <p className="text-black text-start text-lg sm:text-base mb-5">
-                            <b>Steps for Payment: </b>
+                        <p className="text-black text-start text-lg mb-5">
+                        <b>Steps for Payment: </b>
                             <br />
                             1. Scan the QR code using any UPI app (eg: GPay)<span className="text-red-500">*</span>
                             <br />
