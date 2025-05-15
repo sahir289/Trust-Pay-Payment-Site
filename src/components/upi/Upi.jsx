@@ -288,8 +288,8 @@ function Upi({
         );
     }
 return (
-  <div className="flex justify-center items-center min-h-full sm:min-h-screen bg-gray-50">
-    <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+  <div className="flex justify-center items-center min-h-full sm:min-h-screen 2xl:min-h-full">
+    <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:w-screen h-full 2xl:h-screen mx-auto">
       <div className="bg-[#f1f1eb] rounded-3xl shadow-md py-4 px-4 mt-6">
         <div className="bg-white p-4 rounded-3xl shadow-md">
           <div className="mb-5">
@@ -354,7 +354,7 @@ return (
                                 </div>
                             </div>
                         <div className="flex flex-col items-center mb-2">
-                            <div className="flex justify-center items-center w-full max-w-[12rem] h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2 mx-auto">
+                            <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2 mx-auto">
                                 ₹ {amount}
                             </div>
                         </div>
