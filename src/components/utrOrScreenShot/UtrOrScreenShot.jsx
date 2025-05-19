@@ -40,11 +40,18 @@ function UtrOrScreenShot({ onSubmit }) {
   };
 
   const handleUtrChange = (e) => {
-    setUtrNumber(e.target.value);
-    if (e.target.value.trim() || file) {
-      setError('');
-    }
-  };
+  const value = e.target.value;
+  const isAlphaNumeric = /^[a-zA-Z0-9./|]*$/.test(value); 
+
+  if (isAlphaNumeric) {
+    setUtrNumber(value);
+  }
+
+  if (value.trim() || file) {
+    setError('');
+  }
+};
+
 
   // Function to handle file removal
   const handleRemoveFile = () => {
