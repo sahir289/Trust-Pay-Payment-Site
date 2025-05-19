@@ -10,19 +10,20 @@ import { Modal } from '../modal';
 import { ToastContainer, toast } from "react-toastify";
 
 function AmountPage({ closeChat }) {
+    const totalDuration = 1 * 60; // Total duration in seconds (10 minutes)
     const [amount, setAmount] = useState("");
     const [minAmount, setMinAmount] = useState("");
     const [maxAmount, setMaxAmount] = useState("");
     const [merchantOrderId, setMerchantOrderId] = useState("");
     const [selectMethod, setSelectMethod] = useState(false);
     const [click, setClick] = useState(false);
-    const [increaseSize, setIncreaseSize] = useState(false); // New state to manage size change
-    const [visible, setVisible] = useState(false)
-    const [visibleBank, setVisibleBank] = useState(false)
-    const [visibleCard, setVisibleCard] = useState(false)
+    const [increaseSize, setIncreaseSize] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [visibleBank, setVisibleBank] = useState(false);
+    const [visibleCard, setVisibleCard] = useState(false);
     const [isCode, setCode] = useState("");
     const [type, setType] = useState('upi');
-    const [isValidated, setIsValidated] = useState(false); 
+    const [isValidated, setIsValidated] = useState(false);
     const [searchParams] = useSearchParams();
     const userId = searchParams.get('user_id');
     const code = searchParams.get('code');
@@ -30,12 +31,13 @@ function AmountPage({ closeChat }) {
     const key = searchParams.get('key');
     const order = searchParams.get("order");
     const amountParam = searchParams.get("amount");
-    // const redirectUrl = searchParams.get("redirect_url");
     const [showExpiredModal, setShowExpiredModal] = useState(false);
     const [upi, setUpi] = useState(false);
     const [phonePay, setPhonePay] = useState(false);
     const [bank, setBank] = useState(false);
     const [redirectUrl, setRedirectUrl] = useState(null);
+    // Timer state
+    const [remainingTime, setRemainingTime] = useState(totalDuration);
 
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
@@ -44,27 +46,69 @@ function AmountPage({ closeChat }) {
     const apiCalledRef = useRef(false);
     const navigate = useNavigate();
 
+    // Timer logic
+    useEffect(() => {
+        if (showExpiredModal) return; 
+
+        if (remainingTime > 0) {
+            const timer = setInterval(() => {
+                setRemainingTime((prevTime) => {
+                    if (prevTime <= 1) {
+                        setShowExpiredModal(true);
+                        clearInterval(timer);
+                        return 0;
+                    }
+                    return prevTime - 1;
+                });
+            }, 1000);
+            return () => clearInterval(timer);
+        } else {
+            setShowExpiredModal(true);
+        }
+    }, [remainingTime, showExpiredModal]);
+
+    const formatTime = (seconds) => {
+        const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const secs = String(seconds % 60).padStart(2, "0");
+        return `${mins}:${secs}`;
+    };
+
+    const progressPercentage = (remainingTime / totalDuration) * 100;
+
+    const calculateColor = () => {
+        const greenStart = { r: 76, g: 175, b: 80 }; 
+        const halfPoint = 50; 
+
+        if (progressPercentage > halfPoint) {
+            const green = greenStart.g;
+            const red = Math.floor(((100 - progressPercentage) / halfPoint) * 255);
+            return `rgb(${red}, ${green}, 0)`;
+        } else {
+            const red = 255;
+            const green = Math.floor((progressPercentage / halfPoint) * greenStart.g);
+            return `rgb(${red}, ${green}, 0)`;
+        }
+    };
+
     useEffect(() => {
         if (Number(amountParam)) {
-            setAmount(amountParam)
-            setSelectMethod(true)
+            setAmount(amountParam);
+            setSelectMethod(true);
         }
-    }, [amountParam])
-
+    }, [amountParam]);
 
     useEffect(() => {
         if (order && !validateCalledRef.current) {
             const fetchAndValidate = async () => {
                 try {
-                    validateCalledRef.current = true; // Set flag before API call
+                    validateCalledRef.current = true;
                     setMerchantOrderId(order);
                     const res = await validateToken(order);
                     if (res.data.data.error) {
                         setRedirectUrl(res.data.data.result.redirect_url);
                         setShowExpiredModal(true);
-                        setIsValidated(true); // Allow rendering to show error modal
-                    }
-                    else if (res.data.data) {
+                        setIsValidated(true);
+                    } else if (res.data.data) {
                         setUpi(res.data.data.is_qr);
                         setPhonePay(res.data.data.is_phonepay);
                         setBank(res.data.data.is_bank);
@@ -76,14 +120,13 @@ function AmountPage({ closeChat }) {
                             setAmount(res.data.data.amount);
                             setSelectMethod(true);
                         }
-                        setIsValidated(true); // Validation complete
+                        setIsValidated(true);
                     }
                 } catch (error) {
                     console.error('Error validating token:', error);
-                    validateCalledRef.current = false; // Reset on error
-                    // Show expired URL modal
+                    validateCalledRef.current = false;
                     setShowExpiredModal(true);
-                    setIsValidated(true); // Allow rendering to show error modal
+                    setIsValidated(true);
                 }
             };
             fetchAndValidate();
@@ -93,34 +136,30 @@ function AmountPage({ closeChat }) {
     useEffect(() => {
         const initializePayment = async () => {
             try {
-                // Only call API if it hasn't been called before and we have required params
                 if (!apiCalledRef.current && userId && code && ot && key) {
-                    apiCalledRef.current = true; // Mark API as called                    
+                    apiCalledRef.current = true;
                     const merchantOrderData = await generatePayIn(
                         userId,
                         code,
                         ot,
                         key,
                         amountParam ? amountParam : amount,
-                        encodeURIComponent(hashCode) || hashCode // Pass the hashCode here
+                        encodeURIComponent(hashCode) || hashCode
                     );
                     if (merchantOrderData?.error?.error?.message) {
                         toast.error(merchantOrderData?.error?.error?.message);
                         setTimeout(() => {
-                            setShowExpiredModal(true)
+                            setShowExpiredModal(true);
                         }, 5000);
-                        setIsValidated(true); // Allow rendering to show error
+                        setIsValidated(true);
                     } else {
                         const merchantOrderId = merchantOrderData?.data?.data?.merchantOrderId;
                         setMerchantOrderId(merchantOrderId);
 
                         if (merchantOrderId) {
-                            // Update URL parameters
                             const newSearchParams = new URLSearchParams();
                             newSearchParams.set('order', merchantOrderId);
                             if (amount) newSearchParams.set('amount', amount);
-                          
-                            // Update the URL without refreshing the page
                             navigate(`?${newSearchParams.toString()}`, { replace: true });
                         }
                     }
@@ -129,14 +168,13 @@ function AmountPage({ closeChat }) {
                 console.error('Error initializing payment:', error);
                 apiCalledRef.current = false;
                 setShowExpiredModal(true);
-                setIsValidated(true); // Allow rendering to show error
+                setIsValidated(true);
             }
         };
 
         if (!order) {
             initializePayment();
         } else {
-            // Ensure rendering after validateToken completes
             if (validateCalledRef.current) {
                 setIsValidated(true);
             }
@@ -162,21 +200,19 @@ function AmountPage({ closeChat }) {
     };
 
     const handlePayClick = (a) => {
-
         if (a === "upi" && (!visibleBank && !visibleCard)) {
-            setIncreaseSize(true); // Increase size
-            setVisible(true)
+            setIncreaseSize(true);
+            setVisible(true);
         }
-
         if (a === "cardpay" && (!visibleBank && !visible)) {
-            setIncreaseSize(true); // Increase size
-            setVisibleCard(true)
+            setIncreaseSize(true);
+            setVisibleCard(true);
         }
-
         if (a === "bank" && (!visible && !visibleCard)) {
-            setIncreaseSize(true); // Increase size
-            setVisibleBank(true)
+            setIncreaseSize(true);
+            setVisibleBank(true);
         }
+        setRemainingTime(totalDuration);
     };
 
     const handleChange = () => {
@@ -193,16 +229,58 @@ function AmountPage({ closeChat }) {
     return (
         <div onClick={closeChat} className="flex justify-center items-center">
             <div
-                className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => { setClick(false) }}
+                className={`flex justify-center ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem] mt-8"}`}
+                onClick={() => { setClick(false); }}
             >
                 <div className="flex justify-center">
                     <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
                     <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem] lg:shadow-md ${increaseSize ? "h-100 transition-active " : " bg-white "}`}>
                         {!selectMethod && (
                             <div className="flex flex-col px-2 mt-2 justify-center">
-                                <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
-                                    Please enter the amount :
-                                </label>
+                                <div className="flex justify-between items-center mb-4">
+                                    <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
+                                        Please enter the amount 
+                                    </label>
+                                    <div className="relative">
+                                        <svg
+                                            className="progress-circle"
+                                            width="60"
+                                            height="60"
+                                            viewBox="0 0 100 100"
+                                        >
+                                            <circle
+                                                className="progress-background"
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                                fill="none"
+                                                stroke="#e5e5e5"
+                                                strokeWidth="8"
+                                            />
+                                            <circle
+                                                className="progress-bar"
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                                fill="none"
+                                                stroke={calculateColor()}
+                                                strokeWidth="8"
+                                                strokeDasharray={2 * Math.PI * 40}
+                                                strokeDashoffset={2 * Math.PI * 40 - (progressPercentage / 100) * 2 * Math.PI * 40}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 50 50)"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <p className="text-gradient text-sm font-bold">
+                                                {formatTime(remainingTime)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-red-500 text-center text-sm mb-4">
+                                    <b>ATTENTION: </b>Enter the amount within the next 10 minutes.
+                                </p>
                                 <input
                                     type="number"
                                     value={amount}
@@ -221,7 +299,8 @@ function AmountPage({ closeChat }) {
                                     placeholder="Enter New Amount Here"
                                 />
                                 <div className="flex justify-center">
-                                    <button onClick={handleAmountSubmit}
+                                    <button
+                                        onClick={handleAmountSubmit}
                                         className="bg-gradient-to-r from-green-400 to-blue-500 w-[60rem] md:w-[46rem] h-10 font-bold text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-8 mt-4"
                                     >
                                         Submit
@@ -234,7 +313,48 @@ function AmountPage({ closeChat }) {
                         {selectMethod && (
                             <div className="mx-8">
                                 <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
-                                <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method:</h1>
+                                <div className="flex justify-between items-center mb-4">
+                                    <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method</h1>
+                                    <div className="relative">
+                                        <svg
+                                            className="progress-circle"
+                                            width="60"
+                                            height="60"
+                                            viewBox="0 0 100 100"
+                                        >
+                                            <circle
+                                                className="progress-background"
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                                fill="none"
+                                                stroke="#e5e5e5"
+                                                strokeWidth="8"
+                                            />
+                                            <circle
+                                                className="progress-bar"
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                                fill="none"
+                                                stroke={calculateColor()}
+                                                strokeWidth="8"
+                                                strokeDasharray={2 * Math.PI * 40}
+                                                strokeDashoffset={2 * Math.PI * 40 - (progressPercentage / 100) * 2 * Math.PI * 40}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 50 50)"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <p className="text-gradient text-sm font-bold">
+                                                {formatTime(remainingTime)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-red-500 text-center text-sm mb-4">
+                                    <b>ATTENTION: </b>Select a payment method within the remaining time.
+                                </p>
                                 <div className="flex flex-col relative gap-4 lg:flex-row justify-center mt-5 mb-5">
                                     {upi && (
                                         <div className="flex justify-center items-center">
@@ -246,11 +366,6 @@ function AmountPage({ closeChat }) {
                                                 }}
                                             >
                                                 <span className="mb-2">UPI</span>
-                                                {/* <div className="flex gap-2">
-                                                    <img src={paytm} alt="PAYTM" className="w-8 h-8" />
-                                                    <img src={googlePay} alt="Google Pay" className="w-8 h-8" />
-                                                    <img src={bhim} alt="Bhim UPI" className="w-8 h-8" />
-                                                </div> */}
                                             </button>
                                         </div>
                                     )}
@@ -263,7 +378,6 @@ function AmountPage({ closeChat }) {
                                                     setType("phone_pe");
                                                 }}
                                             >
-                                                {/* <img src={phonePe} alt="Phone Pe" className="w-8 h-8" /> */}
                                                 <span>Phone Pe</span>
                                             </button>
                                         </div>
@@ -297,15 +411,27 @@ function AmountPage({ closeChat }) {
                         />
                     )}
                 </div>
-                <div className="absolute top-0 ">
-                    {visibleBank &&
-                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} isRedirectUrl={redirectUrl} />
-                    }
+                <div className="absolute top-0">
+                    {visibleBank && (
+                        <BankTransfer
+                            amount={amount}
+                            code={code ? code : isCode}
+                            merchantOrderId={merchantOrderId}
+                            closeChat={closeChat}
+                            onBackClicked={handleChange}
+                            isRedirectUrl={redirectUrl}
+                        />
+                    )}
                 </div>
-                <div className="absolute top-0 ">
-                    {visibleCard &&
-                        <CardPay amount={amount} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
-                    }
+                <div className="absolute top-0">
+                    {visibleCard && (
+                        <CardPay
+                            amount={amount}
+                            merchantOrderId={merchantOrderId}
+                            closeChat={closeChat}
+                            onBackClicked={handleChange}
+                        />
+                    )}
                 </div>
             </div>
             {showExpiredModal && (
@@ -314,7 +440,6 @@ function AmountPage({ closeChat }) {
                     title="Payment URL is Expired"
                     redirectUrl={redirectUrl}
                     message="The payment URL you provided has expired. Please generate a new URL and try again."
-                    // onClose={() => setShowExpiredModal(false)}
                     type="EXPIRED"
                 />
             )}
