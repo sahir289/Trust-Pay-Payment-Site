@@ -89,7 +89,6 @@ function AmountPage({ closeChat }) {
             fetchAndValidate();
         }
     }, [order]);
-
     useEffect(() => {
         const initializePayment = async () => {
             try {
@@ -109,7 +108,7 @@ function AmountPage({ closeChat }) {
                         setTimeout(() => {
                             setShowExpiredModal(true)
                         }, 5000);
-                        setIsValidated(true); // Allow rendering to show error
+                        // setIsValidated(true); // Allow rendering to show error
                     } else {
                         const merchantOrderId = merchantOrderData?.data?.data?.merchantOrderId;
                         setMerchantOrderId(merchantOrderId);
@@ -129,7 +128,7 @@ function AmountPage({ closeChat }) {
                 console.error('Error initializing payment:', error);
                 apiCalledRef.current = false;
                 setShowExpiredModal(true);
-                setIsValidated(true); // Allow rendering to show error
+                // setIsValidated(true); // Allow rendering to show error
             }
         };
 
@@ -138,7 +137,7 @@ function AmountPage({ closeChat }) {
         } else {
             // Ensure rendering after validateToken completes
             if (validateCalledRef.current) {
-                setIsValidated(true);
+                // setIsValidated(true); //show modal after validate api 
             }
         }
     }, [userId, code, ot, key, hashCode, amountParam, amount, order, navigate]);
@@ -187,7 +186,12 @@ function AmountPage({ closeChat }) {
     };
 
     if (!isValidated) {
-        return null;
+        // return null;
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+                <div className="animate-spin rounded-full h-20 w-20 border-4 border-blue-500 border-t-transparent"></div>
+            </div>
+        );
     }
 
     return (
@@ -271,7 +275,8 @@ function AmountPage({ closeChat }) {
                                     {bank && (
                                         <div className="flex justify-center items-center">
                                             <button
-                                                className="w-64 h-16 lg:h-28 lg:w-32 items-center flex justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                                                className="w-64 h-16 lg:h-28 lg:w-32 items-center flex justify-center transform transition-transform duration-300 hover:scale-105 text-white 
+                                                text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                                                 onClick={() => handlePayClick("bank")}
                                             >
                                                 Bank Transfer
