@@ -10,8 +10,7 @@ import Modal from "../modal/modal";
 import { toast, ToastContainer } from "react-toastify";
 import { Status } from "../../constants";
 import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
-import ExpireModal from "../modal/expireUrl";
-function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked }) {
+function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -79,7 +78,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
         });
         if (res?.data?.data?.bank) {
             setBankDetails(res.data.data.bank);
-            setRedirectUrl(res.data.data.config?.urls?.return);
+            setRedirectUrl(isRedirectUrl ? isRedirectUrl : res.data.data.return);
         }
         else if (res?.error?.error) {
             setIsModalExpireOpen(true);
@@ -106,9 +105,10 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                     amount,
                 });
             } else if (screenShot) {
-                res = await imageSubmit(merchantOrderId, {
-                    amount,
-                });
+                const formData = new FormData();
+                formData.append('amount', amount);
+                formData.append('file', screenShot);
+                res = await imageSubmit(merchantOrderId, formData);
             }
 
             const transactionData = res?.data?.data;
@@ -137,6 +137,8 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
             case Status.BANK_MISMATCH:
             case Status.DISPUTE:
                 return 'red-theme';
+            case Status.PENDING:
+                return 'yellow-theme';
             default:
                 return 'yellow-theme';
         }
@@ -151,6 +153,7 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
     };
 
     return (
+        <div>
         <div className="flex justify-center mt-3 py-2 px-2 rounded-3xl " onClick={closeChat}>
             <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-4 ">
                 <div className="bg-white p-3 rounded-3xl shadow-md ">
@@ -270,29 +273,55 @@ function BankTransfer({ amount, code, merchantOrderId, closeChat, onBackClicked 
                     <p className="text-red-500 text-center text-lg sm:text-base mt-4">
                         <b>ATTENTION: </b>These details are valid for the next 10 minutes.
                     </p>
-                    <p className="text-red-500 text-left text-lg sm:text-base mb-4">
-                        If payment is made after this period, you will be responsible
+                    <p className="text-red-500 text-center text-lg sm:text-base mb-4">
+                        If payment is made after this period, you will be responsible for any 
                         <br />
-                        for any potential losses.
+                        potential losses.
                     </p>
                     <div className="mt-5 flex justify-center">
                         <UtrOrScreenShot onSubmit={handleFormSubmit} />
                     </div>
-                    <Modal isOpen={isModalOpen} amount={transactionDetails?.req_amount} orderId={transactionDetails.merchantOrderId} utr={transactionDetails.utr_id} redirectUrl={redirectUrl} theme={transactionStatus}></Modal>
-                    <ExpireModal isOpen={isModalExpireOpen} theme="blue-theme"></ExpireModal>
+                    <Modal
+                        isOpen={isModalOpen}
+                        amount={transactionDetails?.req_amount}
+                        orderId={transactionDetails.merchantOrderId}
+                        title={transactionDetails?.status}
+                        utr={transactionDetails.utr_id}
+                        redirectUrl={redirectUrl}
+                        theme={transactionStatus}
+                        type={transactionDetails?.status}
+                        message={transactionDetails?.status === "SUCCESS" ? "Payment has been made successfully" : "Your points will be credited soon in your account"}
+                    />
+                    <Modal
+                        isOpen={isModalExpireOpen}
+                        title="Payment URL is Expired"
+                        type="EXPIRED"
+                        message="The payment URL has expired. Please try again."
+                    />
                     <p className="text-black text-start text-lg sm:text-base mb-4">
-                        <b>Steps for Payment: </b>
+                        <b>Steps for Payment:</b>
                         <br />
-                        1. Transfer the displayed Amount using the Bank Transfer.<span className="text-red-500">*</span>
+                        1. Transfer the displayed Amount using the above details (e.g., IMPS)
+                        <span className="text-red-500">*</span>
                         <br />
-                        2. Enter UTR number or upload screen shot.<span className="text-red-500">*</span>
+                        2. Verify the payment amount
+                        <span className="text-red-500">*</span>
                         <br />
-                        3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
+                        3. Take a screenshot of your payment and upload or
+                        <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;copy 12-digit UTR number and paste in the blank space provided.
+                        <span className="text-red-500">*</span>
+                        <br />
+                        4. Click on <b>Submit</b> to complete the process.
+                        <span className="text-red-500">*</span>
+                        <br />
+                        5. Wait for confirmation — your transaction will be verified shortly.
+                        <span className="text-red-500">*</span>
                     </p>
                     <NortonAndVideoLink link={link} />
                 </div>
             </div>
-        </div>
+        </div></div>
     );
 }
 

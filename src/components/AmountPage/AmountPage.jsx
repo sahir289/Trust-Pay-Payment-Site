@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from "react";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import "./AmountPage.css";
 import { Upi } from "../upi";
 import { BankTransfer } from "../banktransfer";
 import { CardPay } from "../CardPay";
 import { validateToken, generatePayIn } from "../../services/transaction";
-import googlePay from "../../assets/google-pay.svg"
-import phonePe from "../../assets/phone-pe.svg"
-import bhim from "../../assets/bhim.svg"
-import paytm from "../../assets/paytm.svg"
+import { Modal } from '../modal';
+import { ToastContainer, toast } from "react-toastify";
 
 function AmountPage({ closeChat }) {
     const [amount, setAmount] = useState("");
+    const [minAmount, setMinAmount] = useState("");
+    const [maxAmount, setMaxAmount] = useState("");
     const [merchantOrderId, setMerchantOrderId] = useState("");
     const [selectMethod, setSelectMethod] = useState(false);
     const [click, setClick] = useState(false);
@@ -21,76 +21,141 @@ function AmountPage({ closeChat }) {
     const [visibleBank, setVisibleBank] = useState(false)
     const [visibleCard, setVisibleCard] = useState(false)
     const [isCode, setCode] = useState("");
-    const [type, setType] = useState('upi')
+    const [type, setType] = useState('upi');
+    const [isValidated, setIsValidated] = useState(false); 
     const [searchParams] = useSearchParams();
     const userId = searchParams.get('user_id');
     const code = searchParams.get('code');
     const ot = searchParams.get('ot');
     const key = searchParams.get('key');
     const order = searchParams.get("order");
+    const amountParam = searchParams.get("amount");
+    // const redirectUrl = searchParams.get("redirect_url");
+    const [showExpiredModal, setShowExpiredModal] = useState(false);
+    const [upi, setUpi] = useState(false);
+    const [phonePay, setPhonePay] = useState(false);
+    const [bank, setBank] = useState(false);
+    const [redirectUrl, setRedirectUrl] = useState(null);
+
+    const pathname = window.location.pathname;
+    const hashCode = pathname.split('/transaction/')[1];
 
     const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
-    console.log(userId, code, ot, key)
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (Number(amountParam)) {
+            setAmount(amountParam)
+            setSelectMethod(true)
+        }
+    }, [amountParam])
+
 
     useEffect(() => {
         if (order && !validateCalledRef.current) {
             const fetchAndValidate = async () => {
                 try {
                     validateCalledRef.current = true; // Set flag before API call
-                    setMerchantOrderId(order);     
+                    setMerchantOrderId(order);
                     const res = await validateToken(order);
-                    if (res) {
+                    if (res.data.data.error) {
+                        setRedirectUrl(res.data.data.result.redirect_url);
+                        setShowExpiredModal(true);
+                        setIsValidated(true); // Allow rendering to show error modal
+                    }
+                    else if (res.data.data) {
+                        setUpi(res.data.data.is_qr);
+                        setPhonePay(res.data.data.is_phonepay);
+                        setBank(res.data.data.is_bank);
                         setCode(res.data.data.code);
+                        setMinAmount(res.data.data.min_amount);
+                        setMaxAmount(res.data.data.max_amount);
+                        setRedirectUrl(res.data.data.redirect_url);
                         if (res.data.data.amount > 0) {
                             setAmount(res.data.data.amount);
                             setSelectMethod(true);
                         }
+                        setIsValidated(true); // Validation complete
                     }
                 } catch (error) {
                     console.error('Error validating token:', error);
                     validateCalledRef.current = false; // Reset on error
+                    // Show expired URL modal
+                    setShowExpiredModal(true);
+                    setIsValidated(true); // Allow rendering to show error modal
                 }
-            };   
+            };
             fetchAndValidate();
         }
     }, [order]);
-
     useEffect(() => {
         const initializePayment = async () => {
             try {
                 // Only call API if it hasn't been called before and we have required params
                 if (!apiCalledRef.current && userId && code && ot && key) {
-                    apiCalledRef.current = true; // Mark API as called
-                    
-                    const merchantOrderData = await generatePayIn(userId, code, ot, key, null);
-                    const merchantOrderId = merchantOrderData.data.data.merchantOrderId;
-                    setMerchantOrderId(merchantOrderId);
-                    
-                    if (merchantOrderId) {
-                        const res = await validateToken(merchantOrderId);
-                        if (res && res.data?.data?.amount > 0) {
-                            setAmount(res.data.data.amount);
-                            setSelectMethod(true);
+                    apiCalledRef.current = true; // Mark API as called                    
+                    const merchantOrderData = await generatePayIn(
+                        userId,
+                        code,
+                        ot,
+                        key,
+                        amountParam ? amountParam : amount,
+                        encodeURIComponent(hashCode) || hashCode // Pass the hashCode here
+                    );
+                    if (merchantOrderData?.error?.error?.message) {
+                        toast.error(merchantOrderData?.error?.error?.message);
+                        setTimeout(() => {
+                            setShowExpiredModal(true)
+                        }, 5000);
+                        // setIsValidated(true); // Allow rendering to show error
+                    } else {
+                        const merchantOrderId = merchantOrderData?.data?.data?.merchantOrderId;
+                        setMerchantOrderId(merchantOrderId);
+
+                        if (merchantOrderId) {
+                            // Update URL parameters
+                            const newSearchParams = new URLSearchParams();
+                            newSearchParams.set('order', merchantOrderId);
+                            if (amount) newSearchParams.set('amount', amount);
+                          
+                            // Update the URL without refreshing the page
+                            navigate(`?${newSearchParams.toString()}`, { replace: true });
                         }
                     }
                 }
             } catch (error) {
                 console.error('Error initializing payment:', error);
-                apiCalledRef.current = false; // Reset on error
+                apiCalledRef.current = false;
+                setShowExpiredModal(true);
+                // setIsValidated(true); // Allow rendering to show error
             }
         };
 
-        initializePayment();
-    }, [userId, code, ot, key]);
+        if (!order) {
+            initializePayment();
+        } else {
+            // Ensure rendering after validateToken completes
+            if (validateCalledRef.current) {
+                // setIsValidated(true); //show modal after validate api 
+            }
+        }
+    }, [userId, code, ot, key, hashCode, amountParam, amount, order, navigate]);
 
     const handleAmount = (e) => {
         setAmount(e.target.value);
     };
 
-    // Modify handleAmountSubmit to not call generatePayIn again
     const handleAmountSubmit = () => {
         if (amount) {
+            const numericAmount = Number(amount);
+            const numericMinAmount = Number(minAmount);
+            const numericMaxAmount = Number(maxAmount);
+
+            if (numericAmount < numericMinAmount || numericAmount > numericMaxAmount) {
+                toast.error(`Error: Amount must be between ${numericMinAmount} and ${numericMaxAmount}`);
+                return;
+            }
             setSelectMethod(true);
         }
     };
@@ -118,6 +183,15 @@ function AmountPage({ closeChat }) {
         setVisibleCard(false);
         setVisibleBank(false);
         setIncreaseSize(false);
+    };
+
+    if (!isValidated) {
+        // return null;
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+                <div className="animate-spin rounded-full h-20 w-20 border-4 border-blue-500 border-t-transparent"></div>
+            </div>
+        );
     }
 
     return (
@@ -125,10 +199,11 @@ function AmountPage({ closeChat }) {
             <div
                 className={`flex justify-center  ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem]  mt-8"}`} onClick={() => { setClick(false) }}
             >
-                {
-                    <div className="flex justify-center">
-                        <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem]  lg:shadow-md ${increaseSize ? "h-100  transition-active " : " bg-white "}`}>
-                            {!selectMethod && <div className="flex flex-col px-2 mt-2 justify-center">
+                <div className="flex justify-center">
+                    <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
+                    <div className={`rounded-3xl py-6 w-[20.4rem] lg:w-[32rem] lg:shadow-md ${increaseSize ? "h-100 transition-active " : " bg-white "}`}>
+                        {!selectMethod && (
+                            <div className="flex flex-col px-2 mt-2 justify-center">
                                 <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
                                     Please enter the amount :
                                 </label>
@@ -155,13 +230,17 @@ function AmountPage({ closeChat }) {
                                     >
                                         Submit
                                     </button>
+                                    <ToastContainer />
                                 </div>
-                            </div>}
+                            </div>
+                        )}
 
-                            {selectMethod &&
-                                <div className="mx-8">
-                                    <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method:</h1>
-                                    <div className="flex flex-col  relative gap-4 lg:flex-row justify-center mt-5 mb-5 ">
+                        {selectMethod && (
+                            <div className="mx-8">
+                                <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
+                                <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method:</h1>
+                                <div className="flex flex-col relative gap-4 lg:flex-row justify-center mt-5 mb-5">
+                                    {upi && (
                                         <div className="flex justify-center items-center">
                                             <button
                                                 className="w-64 h-20 lg:h-28 lg:w-40 flex flex-col justify-center items-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg p-2"
@@ -171,13 +250,15 @@ function AmountPage({ closeChat }) {
                                                 }}
                                             >
                                                 <span className="mb-2">UPI</span>
-                                                <div className="flex gap-2">
+                                                {/* <div className="flex gap-2">
                                                     <img src={paytm} alt="PAYTM" className="w-8 h-8" />
                                                     <img src={googlePay} alt="Google Pay" className="w-8 h-8" />
                                                     <img src={bhim} alt="Bhim UPI" className="w-8 h-8" />
-                                                </div>
+                                                </div> */}
                                             </button>
                                         </div>
+                                    )}
+                                    {phonePay && (
                                         <div className="flex justify-center items-center">
                                             <button
                                                 className="w-64 h-16 lg:h-28 lg:w-32 flex items-center justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
@@ -186,34 +267,44 @@ function AmountPage({ closeChat }) {
                                                     setType("phone_pe");
                                                 }}
                                             >
-                                                <img src={phonePe} alt="Phone Pe" className="w-8 h-8" />
+                                                {/* <img src={phonePe} alt="Phone Pe" className="w-8 h-8" /> */}
                                                 <span>Phone Pe</span>
                                             </button>
                                         </div>
+                                    )}
+                                    {bank && (
                                         <div className="flex justify-center items-center">
                                             <button
-                                                className=" w-64  h-16 lg:h-28 lg:w-32  items-center  flex justify-center transform transition-transform duration-300 hover:scale-105 text-white text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
+                                                className="w-64 h-16 lg:h-28 lg:w-32 items-center flex justify-center transform transition-transform duration-300 hover:scale-105 text-white 
+                                                text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                                                 onClick={() => handlePayClick("bank")}
                                             >
                                                 Bank Transfer
                                             </button>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        )}
                     </div>
+                </div>
 
-                }
-
-                <div className="absolute top-0 ">
-                    {visible &&
-                        <Upi amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} type={type} closeChat={closeChat} onBackClicked={handleChange} />
-                    }
+                <div className="absolute top-0">
+                    {visible && (
+                        <Upi
+                            amount={amount}
+                            code={code ? code : isCode}
+                            merchantOrderId={merchantOrderId}
+                            type={type}
+                            closeChat={closeChat}
+                            onBackClicked={handleChange}
+                            isRedirectUrl={redirectUrl}
+                        />
+                    )}
                 </div>
                 <div className="absolute top-0 ">
                     {visibleBank &&
-                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} />
+                        <BankTransfer amount={amount} code={code ? code : isCode} merchantOrderId={merchantOrderId} closeChat={closeChat} onBackClicked={handleChange} isRedirectUrl={redirectUrl} />
                     }
                 </div>
                 <div className="absolute top-0 ">
@@ -222,6 +313,16 @@ function AmountPage({ closeChat }) {
                     }
                 </div>
             </div>
+            {showExpiredModal && (
+                <Modal
+                    isOpen={showExpiredModal}
+                    title="Payment URL is Expired"
+                    redirectUrl={redirectUrl}
+                    message="The payment URL you provided has expired. Please generate a new URL and try again."
+                    // onClose={() => setShowExpiredModal(false)}
+                    type="EXPIRED"
+                />
+            )}
         </div>
     );
 }

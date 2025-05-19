@@ -1,18 +1,31 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useRef } from "react";
-import "./Upi.css";
-import { UtrOrScreenShot } from '../utrOrScreenShot'
-import { NortonAndVideoLink } from '../nortonAndVideoLink'
-import { QrGenerator } from '../qr-generator'
-import { IoCopy } from "react-icons/io5";
-import Modal from "../modal/modal";
-import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
-import { Status } from "../../constants";
-import ExpireModal from "../modal/expireUrl";
-import { toast } from "react-toastify";
-function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) {
+import { useState, useEffect, useRef } from 'react';
+import './Upi.css';
+import { UtrOrScreenShot } from '../utrOrScreenShot';
+import { NortonAndVideoLink } from '../nortonAndVideoLink';
+import { QrGenerator } from '../qr-generator';
+import { IoCopy } from 'react-icons/io5';
+import { SiPhonepe, SiGooglepay, SiPaytm } from "react-icons/si";
+import Modal from '../modal/modal';
+import {
+    assignBankToPayInUrl,
+    generateUpiUrls,
+    imageSubmit,
+    processTransaction,
+} from '../../services/transaction';
+import { Status } from '../../constants';
+import { toast } from 'react-toastify';
+function Upi({
+    amount,
+    code,
+    isRedirectUrl,
+    merchantOrderId,
+    type,
+    closeChat,
+    onBackClicked,
+}) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -26,15 +39,14 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
     const [redirectUrl, setRedirectUrl] = useState(null);
 
     useEffect(() => {
-        setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
+        setLink('https://www.youtube.com/embed/HZHHBwzmJLk');
         if (remainingTime > 0) {
             const timer = setInterval(() => {
                 setRemainingTime((prevTime) => prevTime - 1);
             }, 1000);
 
             return () => clearInterval(timer); // Cleanup timer on component unmount
-        }
-        else {
+        } else {
             setIsModalExpireOpen(true);
             setIsModalOpen(false);
         }
@@ -51,7 +63,8 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
     useEffect(() => {
         const updateSize = () => {
             if (placeholderRef.current) {
-                const { width, height } = placeholderRef.current.getBoundingClientRect();
+                const { width, height } =
+                    placeholderRef.current.getBoundingClientRect();
                 const newSize = Math.min(width, height) * 1;
                 setSize(newSize);
             }
@@ -75,8 +88,8 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
     }, []);
 
     const formatTime = (seconds) => {
-        const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
-        const secs = String(seconds % 60).padStart(2, "0");
+        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
         return `${mins}:${secs}`;
     };
     const progressPercentage = (remainingTime / totalDuration) * 100;
@@ -93,9 +106,7 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
         } else {
             // Yellow to Red (0% to 50%)
             const red = 255;
-            const green = Math.floor(
-                ((progressPercentage / halfPoint) * greenStart.g)
-            );
+            const green = Math.floor((progressPercentage / halfPoint) * greenStart.g);
             return `rgb(${red}, ${green}, 0)`; // Transition to red
         }
     };
@@ -104,19 +115,17 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
         try {
             const res = await assignBankToPayInUrl(merchantOrderId, {
                 amount: amount,
-                type: type
+                type: type,
             });
 
             if (res?.data?.data?.bank) {
                 setBankDetails(res.data.data.bank);
-                setRedirectUrl(res.data.data.config?.urls?.return);
-            }
-            else if (res?.error?.error) {
+                setRedirectUrl(isRedirectUrl ? isRedirectUrl : res.data.data.return);
+            } else if (res?.error?.error) {
                 setIsModalExpireOpen(true);
                 setIsModalOpen(false);
                 toast.error(`Error: ${res?.error?.error?.message}`);
-            }
-            else {
+            } else {
                 setIsModalExpireOpen(true);
                 setIsModalOpen(false);
             }
@@ -139,9 +148,10 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                     amount,
                 });
             } else if (screenShot) {
-                res = await imageSubmit(merchantOrderId, {
-                    amount,
-                });
+                const formData = new FormData();
+                formData.append('amount', amount);
+                formData.append('file', screenShot);
+                res = await imageSubmit(merchantOrderId, formData);
             }
 
             const transactionData = res?.data?.data;
@@ -149,8 +159,7 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                 setTransactionDetails(transactionData);
                 setTransactionStatus(getStatusTheme(transactionData.status));
                 setIsModalOpen(true);
-            }
-            else {
+            } else {
                 setIsModalExpireOpen(true);
                 setIsModalOpen(false);
             }
@@ -170,29 +179,123 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
             case Status.BANK_MISMATCH:
             case Status.DISPUTE:
                 return 'red-theme';
+            case Status.PENDING:
+                return 'yellow-theme';
             default:
                 return 'yellow-theme';
         }
     };
 
     const handleCopy = (text) => {
-        navigator.clipboard
-            .writeText(text)
-            .then(() => {
-                console.log("Text copied to clipboard:");
-            })
+        navigator.clipboard.writeText(text).then(() => {
+            console.log('Text copied to clipboard:');
+        });
     };
 
-    return (
-        <div className="flex justify-center" onClick={closeChat}>
-            <div className="w-full sm:h-full">
-                <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-6 ">
-                    {/* <AmountPage className="w-full h-screen bg-blur-lg p-6 sm:p-12 md:p-16 lg:p-20 xl:p-24"/> */}
-                    <div className="bg-white w-90 p-3  rounded-3xl shadow-md ">
-                        <div className="mb-5 ">
-                            <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header">
-                                <div className="flex flex-col items-center self-center">
-                                    {/* <button
+    const [upiUrls, setUpiUrls] = useState({
+        phonepe: '',
+        gpay: '',
+        paytm: '',
+        generic: '',
+        transactionId: ''
+    });
+    const [loading, setLoading] = useState();
+    const [error, setError] = useState('');
+
+    //   useEffect(() => {
+    //     const fetchUpiUrls = async () => {
+    //       try {
+    //         const payload = {
+    //             amount,
+    //             payeeVPA: bankDetails?.upi_id,
+    //             payeeName: 'Trust Pay',
+    //             transactionNote: code,
+    //             businessName: 'Trust-Pay',
+    //           };
+
+    //         const response = await generateUpiUrls(payload);
+    //         console.log(response, "respooo")
+
+    //         if (!response) {
+    //           throw new Error('Failed to generate UPI URLs');
+    //         }
+    //         setUpiUrls(response.data.data);
+    //         setLoading(false);
+    //       } catch (err) {
+    //         setError('Error generating payment links. Please try again.');
+    //         setLoading(false);
+    //       }
+    //     };
+
+    //     fetchUpiUrls();
+    //   }, []);
+
+
+    const openUpiLink = (upiUrl, fallbackUrl, appName) => {
+        console.log(`Attempting to open ${appName} with URL: ${upiUrl}`);
+
+        const packageMap = {
+            'PhonePe': 'com.phonepe.app',
+            'Google Pay': 'com.google.android.apps.nbu.paisa.user',
+            'Paytm': 'net.one97.paytm',
+        };
+
+        const isAndroid = /android/i.test(navigator.userAgent);
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+        let opened = false;
+
+        if (isAndroid && packageMap[appName]) {
+            const intentUrl = `intent://pay?${upiUrl.split('?')[1]}#Intent;scheme=upi;package=${packageMap[appName]};S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end;`;
+
+            window.location.href = intentUrl;
+        } else if (isIOS) {
+            toast.error(`Opening ${appName} is not supported on iOS. Please use the QR code.`);
+            return;
+        } else {
+            window.location.href = upiUrl;
+        }
+
+        // Fallback check after delay
+        setTimeout(() => {
+            if (!document.hidden && !document.visibilityState?.includes('hidden')) {
+                console.warn(`${appName} app did not open, redirecting to fallback`);
+                if (fallbackUrl) {
+                    window.location.href = fallbackUrl;
+                } else {
+                    toast.error(`Please install ${appName} to proceed.`);
+                }
+            } else {
+                console.log(`${appName} app opened successfully`);
+            }
+        }, 2000);
+    };
+
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <p className="text-lg font-medium text-gray-700">Loading...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <p className="text-lg font-medium text-red-600">{error}</p>
+            </div>
+        );
+    }
+return (
+  <div className="flex justify-center items-center min-h-full sm:min-h-screen 2xl:min-h-full">
+    <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:w-screen h-full 2xl:h-screen mx-auto">
+      <div className="bg-[#f1f1eb] rounded-3xl shadow-md py-4 px-4 mt-6">
+        <div className="bg-white p-4 rounded-3xl shadow-md">
+          <div className="mb-5">
+            <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header mx-auto">
+              <div className="flex flex-col items-center self-center">
+                                {/* <button
                                         onClick={() => onBackClicked()}
                                         className="mt-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
                                         <svg
@@ -207,8 +310,8 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                                     </button> */}
                                 </div>
                                 <div className="flex-col items-center">
-                                    <div className="relative">
-                                        <svg
+                                <div className="relative mx-auto">
+                                            <svg
                                             className="progress-circle"
                                             width="80"
                                             height="80"
@@ -231,8 +334,13 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                                                 fill="none"
                                                 stroke={calculateColor()}
                                                 strokeWidth="8" /* Scaled stroke width */
-                                                strokeDasharray={2 * Math.PI * 40} /* Circumference based on new radius */
-                                                strokeDashoffset={2 * Math.PI * 40 - (progressPercentage / 100) * 2 * Math.PI * 40}
+                                                strokeDasharray={
+                                                    2 * Math.PI * 40
+                                                } /* Circumference based on new radius */
+                                                strokeDashoffset={
+                                                    2 * Math.PI * 40 -
+                                                    (progressPercentage / 100) * 2 * Math.PI * 40
+                                                }
                                                 strokeLinecap="round"
                                                 transform="rotate(-90 50 50)" /* Adjusted rotation center */
                                             />
@@ -245,29 +353,125 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col sm:flex-row justify-center items-center mb-2">
-                                <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2">
-                                    ₹ {amount}
-                                </div>
+                        <div className="flex flex-col items-center mb-2">
+                            <div className="flex justify-center items-center w-full h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 shadow-lg transform transition-transform duration-300 mb-2 mx-auto">
+                                ₹ {amount}
                             </div>
-                            <p className="text-black text-center text-lg sm:text-base mb-2">
-                                Scan QR Code to Pay
-                            </p>
+                        </div>
+                        <p className="text-black text-center text-lg mb-2">
+                            Scan QR Code to Pay
+                        </p>
                             <div className="flex justify-center">
-                                <div ref={placeholderRef} className="flex justify-center items-center w-[12.5rem] ">
+                                <div
+                                    ref={placeholderRef}
+                                    className="flex justify-center items-center w-[12.5rem] "
+                                >
                                     <div className="qr-code" aria-label="QR Code Placeholder">
-                                        <QrGenerator upi_id={bankDetails?.upi_id} amount={amount} size={size} />
+                                        <QrGenerator
+                                            upi_id={bankDetails?.upi_id}
+                                            amount={amount}
+                                            size={size}
+                                        />
                                     </div>
                                 </div>
                             </div>
 
-                            <p className="text-red-500 text-center text-lg sm:text-base mb-4 mt-4">
-                                <b>ATTENTION: </b>Avoid depositing through PhonePe for any inconvenience
+                 <p className="text-red-500 text-center text-lg sm:text-base mb-4 mt-4">
+                                <b>ATTENTION: </b>Avoid depositing through PhonePe for any
+                                inconvenience
                             </p>
+
+                            {/* <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-6">
+                  <h1 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+                    Pay {amount} to {bankDetails?.upi_id}
+                  </h1>
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <button
+                      onClick={() =>
+                        openUpiLink(
+                          "upi://pay?pa=919797955998@ybl&pn=TrustPay&am=100.00&cu=INR&tn=Thanks",
+                          'https://play.google.com/store/apps/details?id=com.phonepe.app',
+                          'PhonePe'
+                        )
+                      }
+                      className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
+                    >
+                      <SiPhonepe />
+                      <span className="text-sm font-medium text-gray-700">
+                        PhonePe
+                      </span>
+                    </button>
+                    <button
+                      onClick={() =>
+                        openUpiLink(
+                          "upi://pay?pa=919797955998@ybl&pn=TrustPay&am=100.00&cu=INR&tn=Thanks",
+                          'https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user',
+                          'Google Pay',
+                        )
+                      }
+                      className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
+                    >
+                      <SiGooglepay />
+                      <span className="text-sm font-medium text-gray-700">
+                        GPay
+                      </span>
+                    </button>
+                    <button
+                      onClick={() =>
+                        openUpiLink(
+                          upiUrls.upiUrl,
+                          'https://play.google.com/store/apps/details?id=net.one97.paytm',
+                          'Paytm',
+                        )
+                      }
+                      className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
+                    >
+                      <SiPaytm />
+                      <span className="text-sm font-medium text-gray-700">
+                        Paytm
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => openUpiLink(upiUrls.upiUrl, '', 'Other UPI Apps')}
+                      className="flex-1 flex items-center bg-white border border-gray-300 rounded-md py-2 px-3 hover:bg-gray-50 transition"
+                    >
+
+                      <span className="text-sm font-medium text-gray-700">
+                        Other UPI Apps
+                      </span>
+                    </button>
+                  </div>
+                  <p className="mt-4 text-sm text-gray-600 text-center">
+                    Don’t have the app?{' '}
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.phonepe.app"
+                      className="text-blue-600 hover:underline"
+                    >
+                      PhonePe
+                    </a>
+                    ,{' '}
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Google Pay
+                    </a>
+                    ,{' '}
+                    <a
+                      href="https://play.google.com/store/apps/details?id=net.one97.paytm"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Paytm
+                    </a>
+                  </p>
+                </div> */}
 
                             <div className="flex items-center justify-center mb-4">
                                 <p className="text-lg mr-2">{bankDetails?.upi_id}</p>
-                                <button aria-label="Copy UPI ID" onClick={() => handleCopy(bankDetails?.upi_id)}>
+                                <button
+                                    aria-label="Copy UPI ID"
+                                    onClick={() => handleCopy(bankDetails?.upi_id)}
+                                >
                                     <IoCopy className="h-4 w-4" />
                                 </button>
                             </div>
@@ -275,16 +479,36 @@ function Upi({ amount, code, merchantOrderId, type, closeChat, onBackClicked }) 
                         <div className="mt-5 flex justify-center">
                             <UtrOrScreenShot onSubmit={handleFormSubmit} />
                         </div>
-                        <Modal isOpen={isModalOpen} amount={transactionDetails?.req_amount} orderId={transactionDetails.merchantOrderId} utr={transactionDetails.utr_id} redirectUrl={redirectUrl} theme={transactionStatus}></Modal>
-                        <ExpireModal isOpen={isModalExpireOpen} theme="blue-theme"></ExpireModal>
-                        <p className="text-black text-start text-lg sm:text-base mb-5">
-                            <b>Steps for Payment: </b>
+                        <Modal
+                            isOpen={isModalOpen}
+                            amount={transactionDetails?.req_amount}
+                            orderId={transactionDetails.merchantOrderId}
+                            title={transactionDetails?.status}
+                            redirectUrl={redirectUrl}
+                            utr={transactionDetails.utr_id}
+                            theme={transactionStatus}
+                            type={transactionDetails?.status}
+                        />
+                        <Modal
+                            isOpen={isModalExpireOpen}
+                            title="Payment URL is Expired"
+                            type="EXPIRED"
+                            message="The payment URL has expired. Please try again."
+                        />
+                        <p className="text-black text-start text-lg mb-5">
+                        <b>Steps for Payment: </b>
                             <br />
-                            1. Scan the QR code displayed above.<span className="text-red-500">*</span>
+                            1. Scan the QR code using any UPI app (eg: GPay)<span className="text-red-500">*</span>
                             <br />
-                            2. Enter UTR number or upload screen shot.<span className="text-red-500">*</span>
+                            2. Verify the payment amount<span className="text-red-500">*</span>
                             <br />
-                            3. Click on <b>Submit</b> to complete the payment.<span className="text-red-500">*</span>
+                            3. Take a screenshot of your payment and upload or
+                            <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;copy 12 digit UTR number and paste in the blank space provided.<span className="text-red-500">*</span>
+                            <br />
+                            4. Click on <b>Submit</b> to complete the process.<span className="text-red-500">*</span>
+                            <br />
+                            5. Wait for confirmation — your transaction will be verified shortly.<span className="text-red-500">*</span>
                         </p>
                         <NortonAndVideoLink link={link} />
                     </div>
