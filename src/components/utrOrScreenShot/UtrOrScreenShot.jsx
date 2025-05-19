@@ -67,7 +67,7 @@ function UtrOrScreenShot({ onSubmit }) {
     (file && isUtrHovered) || (utrNumber.trim() && isFileHovered);
 
     return (
-        <div className="text-center mb-4 mt-4 w-full max-w-xs mx-auto">
+        <div className="text-center mb-4 mt-4 w-full mx-auto md:mx-0">
             <form onSubmit={handleSubmit} className="w-full">
                 <div className="flex items-center justify-center space-x-2">
                     <div className="flex-1 w-full">
@@ -88,7 +88,7 @@ function UtrOrScreenShot({ onSubmit }) {
                                     disabled={isSubmitted || isLoading || file}
                                 />
                                 {showConflictMessage && (
-                                    <p className="text-red-600 text-sm mt-1 absolute w-full text-center">
+                                    <p className="text-red-600 text-sm mt-1 absolute w-full lg:max-w-[60vw] text-center">
                                         Enter UTR or Upload Screenshot
                                     </p>
                                 )}
@@ -141,7 +141,9 @@ function UtrOrScreenShot({ onSubmit }) {
         </div>
 
                 <button
-                    className="bg-gradient-to-r from-green-400 to-blue-500 w-full max-w-[70vw] sm:max-w-[40vw] md:max-w-[52vw] lg:max-w-[40vw] xl:max-w-[30vw] 2xl:max-w-[30vw] py-2 text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-md mb-2 mt-5 mx-auto block"
+                    className="bg-gradient-to-r from-green-400 to-blue-500 w-full max-w-[80vw]
+                     sm:max-w-[40vw] md:max-w-[65vw] lg:max-w-[60vw] xl:max-w-[70vw] 2xl:max-w-[30vw] py-2 text-lg
+                      text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-md mb-2 mx-auto mt-5 block"
                     aria-label="Submit payment details"
           disabled={isSubmitted || isLoading}
         >
