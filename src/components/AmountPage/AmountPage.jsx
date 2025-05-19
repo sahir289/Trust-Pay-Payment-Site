@@ -10,7 +10,7 @@ import { Modal } from '../modal';
 import { ToastContainer, toast } from "react-toastify";
 
 function AmountPage({ closeChat }) {
-    const totalDuration = 1 * 60; // Total duration in seconds (10 minutes)
+    const totalDuration = 10 * 60; 
     const [amount, setAmount] = useState("");
     const [minAmount, setMinAmount] = useState("");
     const [maxAmount, setMaxAmount] = useState("");
