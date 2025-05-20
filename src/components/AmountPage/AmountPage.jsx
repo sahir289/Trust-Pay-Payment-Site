@@ -296,6 +296,9 @@ function AmountPage({ closeChat }) {
                                     onClick={(e) => { e.stopPropagation(); setClick(true); }}
                                     onChange={handleAmount}
                                     onKeyDown={(e) => {
+                                        if (e.key === ".") {
+                                            e.preventDefault();
+                                          }
                                         if (e.key === "Enter" && amount) {
                                             handleAmountSubmit();
                                         }
