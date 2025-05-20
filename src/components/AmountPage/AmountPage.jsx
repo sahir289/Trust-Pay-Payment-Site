@@ -181,8 +181,12 @@ function AmountPage({ closeChat }) {
     }, [userId, code, ot, key, hashCode, amountParam, amount, order, navigate]);
 
     const handleAmount = (e) => {
-        setAmount(e.target.value);
-    };
+        const inputValue = e.target.value;
+        const isValid = /^\d{1,10}$/.test(inputValue);
+        if (isValid || inputValue === "") {
+          setAmount(inputValue);
+        }
+      };
 
     const handleAmountSubmit = () => {
         if (amount) {
