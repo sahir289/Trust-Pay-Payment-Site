@@ -180,6 +180,8 @@ function AmountPage({ closeChat }) {
         }
     }, [userId, code, ot, key, hashCode, amountParam, amount, order, navigate]);
 
+
+    //handle amount validation
     const handleAmount = (e) => {
         const inputValue = e.target.value;
         const isValid = /^\d{1,10}$/.test(inputValue);
