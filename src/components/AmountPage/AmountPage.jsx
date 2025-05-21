@@ -8,6 +8,7 @@ import { CardPay } from "../CardPay";
 import { validateToken, generatePayIn } from "../../services/transaction";
 import { Modal } from '../modal';
 import { ToastContainer, toast } from "react-toastify";
+import { manageTimer } from "../../utils/timer";
 
 function AmountPage({ closeChat }) {
     const totalDuration = 10 * 60; 
@@ -38,34 +39,30 @@ function AmountPage({ closeChat }) {
     const [redirectUrl, setRedirectUrl] = useState(null);
     // Timer state
     const [remainingTime, setRemainingTime] = useState(totalDuration);
-
+    const [expireTime] = useState(Date.now() + 10 * 60 * 1000);
+    const [startTime] = useState(Date.now());
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
-
     const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
     const navigate = useNavigate();
-
+    ///set time in session storage
+    
+    useEffect(() => {
+        sessionStorage.setItem("X_Y_Z", expireTime);
+        sessionStorage.setItem("A_B_C", startTime);  
+   },[expireTime,startTime])
+    
     // Timer logic
     useEffect(() => {
-        if (showExpiredModal) return; 
-
+        if (showExpiredModal) return;
         if (remainingTime > 0) {
-            const timer = setInterval(() => {
-                setRemainingTime((prevTime) => {
-                    if (prevTime <= 1) {
-                        setShowExpiredModal(true);
-                        clearInterval(timer);
-                        return 0;
-                    }
-                    return prevTime - 1;
-                });
-            }, 1000);
-            return () => clearInterval(timer);
+            //timer for url expired 10 mins
+            manageTimer(totalDuration, setRemainingTime,remainingTime, setShowExpiredModal)
         } else {
             setShowExpiredModal(true);
         }
-    }, [remainingTime, showExpiredModal]);
+    }, [showExpiredModal, expireTime, startTime, totalDuration, remainingTime]);
 
     const formatTime = (seconds) => {
         const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -215,7 +212,10 @@ function AmountPage({ closeChat }) {
             setIncreaseSize(true);
             setVisibleBank(true);
         }
-        setRemainingTime(totalDuration);
+        sessionStorage.clear();
+        // setRemainingTime(totalDuration);
+        // setExpireTime(new Date(Date.now() + 10 * 60 * 1000));
+        // setStartTime((new Date()));
     };
 
     const handleChange = () => {
