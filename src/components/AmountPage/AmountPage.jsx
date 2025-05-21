@@ -39,7 +39,7 @@ function AmountPage({ closeChat }) {
     const [redirectUrl, setRedirectUrl] = useState(null);
     // Timer state
     const [remainingTime, setRemainingTime] = useState(totalDuration);
-    const [expireTime] = useState(Date.now() + 10 * 60 * 1000);
+    const [accessDenied, setAccessDennied] = useState(false);    const [expireTime] = useState(Date.now() + 10 * 60 * 1000);
     const [startTime] = useState(Date.now());
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
@@ -101,26 +101,28 @@ function AmountPage({ closeChat }) {
                     validateCalledRef.current = true;
                     setMerchantOrderId(order);
                     const res = await validateToken(order);
-                    if (res.data.data.error) {
-                        setRedirectUrl(res.data.data.result.redirect_url);
+                    if (res?.data?.data?.error) {
+                        setRedirectUrl(res?.data?.data?.result?.redirect_url);
                         setShowExpiredModal(true);
                         setIsValidated(true);
-                    } else if (res.data.data) {
-                        setUpi(res.data.data.is_qr);
-                        setPhonePay(res.data.data.is_phonepay);
-                        setBank(res.data.data.is_bank);
-                        setCode(res.data.data.code);
-                        setMinAmount(res.data.data.min_amount);
-                        setMaxAmount(res.data.data.max_amount);
-                        setRedirectUrl(res.data.data.redirect_url);
-                        if (res.data.data.amount > 0) {
-                            setAmount(res.data.data.amount);
+                    } else if (res?.data?.data){
+                        setUpi(res?.data?.data?.is_qr);
+                        setPhonePay(res?.data?.data?.is_phonepay);
+                        setBank(res?.data?.data?.is_bank);
+                        setCode(res?.data?.data?.code);
+                        setMinAmount(res?.data?.data?.min_amount);
+                        setMaxAmount(res?.data?.data?.max_amount);
+                        setRedirectUrl(res?.data?.data?.redirect_url);
+                        if (res?.data?.data?.amount > 0) {
+                            setAmount(res?.data?.data?.amount);
                             setSelectMethod(true);
                         }
                         setIsValidated(true);
+                    }else if(res.error){
+                        setShowExpiredModal(true);
+                        setAccessDennied(res.error.error.message);
                     }
-                } catch (error) {
-                    console.error('Error validating token:', error);
+                }catch (error) {
                     validateCalledRef.current = false;
                     setShowExpiredModal(true);
                     setIsValidated(true);
@@ -225,7 +227,7 @@ function AmountPage({ closeChat }) {
         setIncreaseSize(false);
     };
 
-    if (!isValidated) {
+    if (!isValidated && !showExpiredModal) {
         // return null;
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
@@ -449,7 +451,7 @@ function AmountPage({ closeChat }) {
             {showExpiredModal && (
                 <Modal
                     isOpen={showExpiredModal}
-                    title="Payment URL is Expired"
+                    title={accessDenied ? "Access Denied For User !" : "Payment URL Expired !"}
                     redirectUrl={redirectUrl}
                     message="The payment URL you provided has expired. Please generate a new URL and try again."
                     type="EXPIRED"
