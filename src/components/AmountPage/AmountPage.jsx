@@ -8,6 +8,7 @@ import { CardPay } from "../CardPay";
 import { validateToken, generatePayIn } from "../../services/transaction";
 import { Modal } from '../modal';
 import { ToastContainer, toast } from "react-toastify";
+import { manageTimer } from "../../utils/timer";
 
 function AmountPage({ closeChat }) {
     const totalDuration = 10 * 60; 
@@ -38,34 +39,30 @@ function AmountPage({ closeChat }) {
     const [redirectUrl, setRedirectUrl] = useState(null);
     // Timer state
     const [remainingTime, setRemainingTime] = useState(totalDuration);
-    const [accessDenied, setAccessDennied] = useState(false);
+    const [accessDenied, setAccessDennied] = useState(false);    const [expireTime] = useState(Date.now() + 10 * 60 * 1000);
+    const [startTime] = useState(Date.now());
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
-
     const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
     const navigate = useNavigate();
-
+    ///set time in session storage
+    
+    useEffect(() => {
+        sessionStorage.setItem("expireSession", expireTime);
+        sessionStorage.setItem("startSession", startTime);  
+   },[expireTime,startTime])
+    
     // Timer logic
     useEffect(() => {
-        if (showExpiredModal) return; 
-
+        if (showExpiredModal) return;
         if (remainingTime > 0) {
-            const timer = setInterval(() => {
-                setRemainingTime((prevTime) => {
-                    if (prevTime <= 1) {
-                        setShowExpiredModal(true);
-                        clearInterval(timer);
-                        return 0;
-                    }
-                    return prevTime - 1;
-                });
-            }, 1000);
-            return () => clearInterval(timer);
+            //timer for url expired 10 mins
+            manageTimer(totalDuration, setRemainingTime,remainingTime, setShowExpiredModal)
         } else {
             setShowExpiredModal(true);
         }
-    }, [remainingTime, showExpiredModal]);
+    }, [showExpiredModal, expireTime, startTime, totalDuration, remainingTime]);
 
     const formatTime = (seconds) => {
         const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -217,7 +214,10 @@ function AmountPage({ closeChat }) {
             setIncreaseSize(true);
             setVisibleBank(true);
         }
-        setRemainingTime(totalDuration);
+        sessionStorage.clear();
+        // setRemainingTime(totalDuration);
+        // setExpireTime(new Date(Date.now() + 10 * 60 * 1000));
+        // setStartTime((new Date()));
     };
 
     const handleChange = () => {
@@ -251,7 +251,7 @@ function AmountPage({ closeChat }) {
                                     <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
                                         Please enter the amount 
                                     </label>
-                                    <div className="relative">
+                                    {/* <div className="relative">
                                         <svg
                                             className="progress-circle"
                                             width="60"
@@ -286,11 +286,9 @@ function AmountPage({ closeChat }) {
                                                 {formatTime(remainingTime)}
                                             </p>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
-                                <p className="text-red-500 text-center text-sm mb-4">
-                                    <b>ATTENTION: </b>Enter the amount within the next 10 minutes.
-                                </p>
+                               
                                 <input
                                     type="number"
                                     value={amount}
@@ -328,46 +326,9 @@ function AmountPage({ closeChat }) {
                                 <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
                                 <div className="flex justify-between items-center mb-4">
                                     <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method</h1>
-                                    <div className="relative">
-                                        <svg
-                                            className="progress-circle"
-                                            width="60"
-                                            height="60"
-                                            viewBox="0 0 100 100"
-                                        >
-                                            <circle
-                                                className="progress-background"
-                                                cx="50"
-                                                cy="50"
-                                                r="40"
-                                                fill="none"
-                                                stroke="#e5e5e5"
-                                                strokeWidth="8"
-                                            />
-                                            <circle
-                                                className="progress-bar"
-                                                cx="50"
-                                                cy="50"
-                                                r="40"
-                                                fill="none"
-                                                stroke={calculateColor()}
-                                                strokeWidth="8"
-                                                strokeDasharray={2 * Math.PI * 40}
-                                                strokeDashoffset={2 * Math.PI * 40 - (progressPercentage / 100) * 2 * Math.PI * 40}
-                                                strokeLinecap="round"
-                                                transform="rotate(-90 50 50)"
-                                            />
-                                        </svg>
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <p className="text-gradient text-sm font-bold">
-                                                {formatTime(remainingTime)}
-                                            </p>
-                                        </div>
-                                    </div>
+                                  
                                 </div>
-                                <p className="text-red-500 text-center text-sm mb-4">
-                                    <b>ATTENTION: </b>Select a payment method within the remaining time.
-                                </p>
+                              
                                 <div className="flex flex-col relative gap-4 lg:flex-row justify-center mt-5 mb-5">
                                     {upi && (
                                         <div className="flex justify-center items-center">

@@ -9,20 +9,28 @@ import { IoCopy } from "react-icons/io5";
 import Modal from "../modal/modal";
 import { toast, ToastContainer } from "react-toastify";
 import { Status } from "../../constants";
+import { manageTimer } from "../../utils/timer";
+
 import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
 function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalExpireOpen, setIsModalExpireOpen] = useState(false);
+    const [showExpiredModal, setShowExpiredModal] = useState(false);
     const [bankDetails, setBankDetails] = useState({});
     const [transactionDetails, setTransactionDetails] = useState({});
     const [transactionStatus, setTransactionStatus] = useState(null);
     const [redirectUrl, setRedirectUrl] = useState(null);
-
+    const [expireTime] = useState(Date.now() + 10 * 60 * 1000);
+    const [startTime] = useState(Date.now());
     const hasRun = useRef(false);
-
+    
+    ///set time in session storage
+    useEffect(() => {
+        sessionStorage.setItem("expireSession", expireTime);
+        sessionStorage.setItem("startSession", startTime);  
+   },[expireTime,startTime])
     useEffect(() => {
         if (hasRun.current) return; // Skip if already run
         hasRun.current = true;
@@ -30,16 +38,14 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
     }, []);
 
     useEffect(() => {
+        if (showExpiredModal) return;
         setLink("https://www.youtube.com/embed/HZHHBwzmJLk");
         if (remainingTime > 0) {
-            const timer = setInterval(() => {
-                setRemainingTime((prevTime) => prevTime - 1);
-            }, 1000);
-
-            return () => clearInterval(timer); // Cleanup timer on component unmount
+            manageTimer(totalDuration, setRemainingTime,remainingTime, setShowExpiredModal)
         }
         else {
-            setIsModalExpireOpen(true);
+            sessionStorage.clear()
+            setShowExpiredModal(true);
             setIsModalOpen(false);
         }
     }, [remainingTime]);
@@ -81,12 +87,12 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
             setRedirectUrl(isRedirectUrl ? isRedirectUrl : res.data.data.return);
         }
         else if (res?.error?.error) {
-            setIsModalExpireOpen(true);
+            setShowExpiredModal(true);
             setIsModalOpen(false);
             toast.error(`Error: ${res?.error?.error?.message}`);
         }
         else {
-            setIsModalExpireOpen(true);
+            setShowExpiredModal(true);
             setIsModalOpen(false);
         }
 
@@ -118,11 +124,11 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                 setIsModalOpen(true);
             }
             else {
-                setIsModalExpireOpen(true);
+                setShowExpiredModal(true);
                 setIsModalOpen(false);
             }
         } catch (error) {
-            setIsModalExpireOpen(true);
+            setShowExpiredModal(true);
             setIsModalOpen(false);
         }
     };
@@ -293,7 +299,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                         message={transactionDetails?.status === "SUCCESS" ? "Payment has been made successfully" : "Your points will be credited soon in your account"}
                     />
                     <Modal
-                        isOpen={isModalExpireOpen}
+                        isOpen={showExpiredModal}
                         title="Payment URL is Expired"
                         type="EXPIRED"
                         message="The payment URL has expired. Please try again."
