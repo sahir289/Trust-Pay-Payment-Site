@@ -174,7 +174,7 @@ function Intent() {
                     <br />
                     3. Pay the display Amount.<span className="text-red-500">*</span>
                 </p>
-                <NortonAndVideoLink link={link} />
+                <NortonAndVideoLink lang={lang} link={link} />
             </div>
         </div>
     );

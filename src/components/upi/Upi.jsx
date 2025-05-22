@@ -23,6 +23,7 @@ function Upi({
     isRedirectUrl,
     merchantOrderId,
     type,
+    lang,
     closeChat,
     onBackClicked,
 }) {
@@ -359,7 +360,7 @@ return (
                             </div>
                         </div>
                         <p className="text-black text-center text-lg mb-2">
-                            Scan QR Code to Pay
+                            {lang.scanQrCodeToPay}
                         </p>
                             <div className="flex justify-center">
                                 <div
@@ -377,8 +378,7 @@ return (
                             </div>
 
                  <p className="text-red-500 text-center text-lg sm:text-base mb-4 mt-4">
-                                <b>ATTENTION: </b>Avoid depositing through PhonePe for any
-                                inconvenience
+                                <b>{lang.attention}: </b>{lang.avoidPhonePe}
                             </p>
 
                             {/* <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-6">
@@ -469,7 +469,7 @@ return (
                             <div className="flex items-center justify-center mb-4">
                                 <p className="text-lg mr-2">{bankDetails?.upi_id}</p>
                                 <button
-                                    aria-label="Copy UPI ID"
+                                    aria-label= {lang.copyUpiId}
                                     onClick={() => handleCopy(bankDetails?.upi_id)}
                                 >
                                     <IoCopy className="h-4 w-4" />
@@ -477,40 +477,45 @@ return (
                             </div>
                         </div>
                         <div className="mt-5 flex justify-center">
-                            <UtrOrScreenShot onSubmit={handleFormSubmit} />
+                            <UtrOrScreenShot lang={lang} onSubmit={handleFormSubmit} />
                         </div>
                         <Modal
+                            lang={lang}
                             isOpen={isModalOpen}
                             amount={transactionDetails?.req_amount}
                             orderId={transactionDetails.merchantOrderId}
-                            title={transactionDetails?.status}
+                            // title={transactionDetails?.status}
+                            title={lang[transactionDetails?.status] || transactionDetails?.status} 
                             redirectUrl={redirectUrl}
                             utr={transactionDetails.utr_id}
                             theme={transactionStatus}
                             type={transactionDetails?.status}
                         />
                         <Modal
+                            lang={lang}
                             isOpen={isModalExpireOpen}
                             title="Payment URL is Expired"
                             type="EXPIRED"
                             message="The payment URL has expired. Please try again."
                         />
                         <p className="text-black text-start text-lg mb-5">
-                        <b>Steps for Payment: </b>
+                        <b>{lang.stepsForPayment}</b>
                             <br />
-                            1. Scan the QR code using any UPI app (eg: GPay)<span className="text-red-500">*</span>
+                            1. {lang.scanQrCode}<span className="text-red-500">*</span>
                             <br />
-                            2. Verify the payment amount<span className="text-red-500">*</span>
+                            2. {lang.verifyAmount}<span className="text-red-500">*</span>
                             <br />
-                            3. Take a screenshot of your payment and upload or
+                            3. {lang.takeScreenshot}
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;copy 12 digit UTR number and paste in the blank space provided.<span className="text-red-500">*</span>
+                            {/* &nbsp;&nbsp;&nbsp;&nbsp;copy 12 digit UTR number and paste in the blank space provided. */}
+                            <span className="text-red-500">*</span>
                             <br />
-                            4. Click on <b>Submit</b> to complete the process.<span className="text-red-500">*</span>
+                            4. {lang.clickSubmitStart} <b>{lang.submit}</b> {lang.clickSubmitEnd}
+                             <span className="text-red-500">*</span>
                             <br />
-                            5. Wait for confirmation — your transaction will be verified shortly.<span className="text-red-500">*</span>
+                            5. {lang.waitForConfirmation}<span className="text-red-500">*</span>
                         </p>
-                        <NortonAndVideoLink link={link} />
+                        <NortonAndVideoLink lang={lang} link={link} />
                     </div>
                 </div>
             </div>

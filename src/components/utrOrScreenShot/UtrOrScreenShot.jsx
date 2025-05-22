@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 
-function UtrOrScreenShot({ onSubmit }) {
+function UtrOrScreenShot({ onSubmit, lang }) {
   const [utrNumber, setUtrNumber] = useState('');
   const [file, setFile] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -15,7 +15,7 @@ function UtrOrScreenShot({ onSubmit }) {
     if (isSubmitted || isLoading) return;
 
     if (!utrNumber.trim() && !file) {
-      setError('Please provide either a UTR number or a screenshot.');
+      setError(lang.provideUtrOrScreenshot);
       return;
     }
 
@@ -74,13 +74,13 @@ function UtrOrScreenShot({ onSubmit }) {
                         <div className="flex justify-center relative">
                             <div className="relative w-full max-w-[70vw] sm:max-w-[40vw] md:max-w-[52vw] lg:max-w-[40vw] xl:max-w-[30vw] 2xl:max-w-[30vw] mb-2">
                                 <input
-                                    placeholder="Enter UTR Number"
+                                    placeholder={lang.enterUtrNumber}
                                     className={`bg-slate-100 border-2 border-blue-500 rounded-l-md w-full p-2 text-sm ${
                                         file || isSubmitted || isLoading
                                             ? 'cursor-not-allowed opacity-75'
                                             : ''
                                     }`}
-                                    aria-label="Enter UTR Number"
+                                    aria-label={lang.enterUtrNumber}
                                     value={utrNumber}
                                     onChange={handleUtrChange}
                                     onMouseEnter={() => setIsUtrHovered(true)}
@@ -89,7 +89,7 @@ function UtrOrScreenShot({ onSubmit }) {
                                 />
                                 {showConflictMessage && (
                                     <p className="text-red-600 text-sm mt-1 absolute w-full lg:max-w-[60vw] text-center">
-                                        Enter UTR or Upload Screenshot
+                                        {lang.enterUtrOrScreenshot}
                                     </p>
                                 )}
                             </div>
@@ -125,14 +125,14 @@ function UtrOrScreenShot({ onSubmit }) {
                   className="ml-2 text-sm text-red-600 hover:underline"
                   aria-label="Remove uploaded file"
                 >
-                  Remove
+                  {lang.removeFile}
                 </button>
               </div>
             )}
 
             {/* No file, but form submitted */}
             {!file && isSubmitted && !error && (
-              <p className="text-sm text-gray-600 mt-2 text-center">No file uploaded</p>
+              <p className="text-sm text-gray-600 mt-2 text-center">{lang.noFileUploaded}</p>
             )}
 
             {/* Error message */}
@@ -169,7 +169,7 @@ function UtrOrScreenShot({ onSubmit }) {
               ></path>
             </svg>
           ) : (
-            'SUBMIT'
+            <span>{lang.submit}</span>
           )}
         </button>
       </form>

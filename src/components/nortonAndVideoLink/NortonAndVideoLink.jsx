@@ -2,7 +2,7 @@ import { useState } from "react";
 import norton from "../../assets/norton.png"
 import pci from "../../assets/pci.png"
 
-function NortonAndVideoLink(linkUrl) {
+function NortonAndVideoLink({linkUrl, lang}) {
     const [showVideo, setShowVideo] = useState(false);
     const [video, setVideo] = useState();
     return (
@@ -11,12 +11,12 @@ function NortonAndVideoLink(linkUrl) {
                 <div className="flex items-center justify-center">
                     <img
                         src={norton}
-                        alt="Norton Logo"
+                        alt={lang.nortonLogoAlt}
                         className="h-12 w-auto"
                     />
                     <img
                         src={pci}
-                        alt="PCI Logo"
+                        alt={lang.pciLogoAlt}
                         className="h-12 w-auto ml-4"
                     />
                 </div>
@@ -32,7 +32,7 @@ function NortonAndVideoLink(linkUrl) {
                                 }}
                                 className="text-black font-medium hover:underline"
                             >
-                                Watch a video for Quick Deposit instructions
+                                {lang.watchVideoInstructions}
                             </a>
                         )}
                     </h2>
@@ -48,7 +48,7 @@ function NortonAndVideoLink(linkUrl) {
                         >
                             <iframe
                                 src={video}
-                                title="Quick Deposit Instructions"
+                                title={lang.quickDepositInstructions}
                                 // frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
@@ -57,7 +57,7 @@ function NortonAndVideoLink(linkUrl) {
                             <button
                                 onClick={() => setShowVideo(false)}
                                 className="absolute top-2 right-2 text-black bg-gray-300 rounded-full p-1 hover:bg-gray-400"
-                                aria-label="Close video"
+                                aria-label={lang.closeVideo}
                             >
                                 &times; {/* Close icon (X) */}
                             </button>
@@ -74,7 +74,7 @@ function NortonAndVideoLink(linkUrl) {
                             }}
                             className="text-black font-medium hover:underline"
                         >
-                            Telugu -
+                            {lang.telugu} -
                         </a>
                         <a
                             href="#"
@@ -85,7 +85,7 @@ function NortonAndVideoLink(linkUrl) {
                             }}
                             className="text-black font-medium hover:underline"
                         >
-                            Hindi -
+                            {lang.gujarati} -
                         </a>
                         <a
                             href="#"
@@ -96,7 +96,7 @@ function NortonAndVideoLink(linkUrl) {
                             }}
                             className="text-black font-medium hover:underline"
                         >
-                            Tamil -
+                            {lang.bengali} -
                         </a>
                         <a
                             href="#"
@@ -107,7 +107,51 @@ function NortonAndVideoLink(linkUrl) {
                             }}
                             className="text-black font-medium hover:underline"
                         >
-                            English
+                            {lang.hindi} -
+                        </a>
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setVideo(linkUrl.link);
+                                setShowVideo(true); // Show the video when a language link is clicked
+                            }}
+                            className="text-black font-medium hover:underline"
+                        >
+                            {lang.tamil} -
+                        </a>
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setVideo(linkUrl.link);
+                                setShowVideo(true); // Show the video when a language link is clicked
+                            }}
+                            className="text-black font-medium hover:underline"
+                        >
+                            {lang.english} -
+                        </a>
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setVideo(linkUrl.link);
+                                setShowVideo(true); // Show the video when a language link is clicked
+                            }}
+                            className="text-black font-medium hover:underline"
+                        >
+                            {lang.kannada} -
+                        </a>
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setVideo(linkUrl.link);
+                                setShowVideo(true); // Show the video when a language link is clicked
+                            }}
+                            className="text-black font-medium hover:underline"
+                        >
+                            {lang.malayalam} 
                         </a>
                     </div>
                 </div>

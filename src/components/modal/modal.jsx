@@ -13,7 +13,7 @@ const Modal = ({
   message,
   amount,
   orderId,
-  utr,
+  utr, lang,
   redirectUrl,
   type = "SUCCESS",
   onClose,
@@ -31,12 +31,12 @@ const Modal = ({
   }, [redirectUrl]);
 
   const defaultMessages = {
-    processing: "Your payment is being processed. Please wait while we verify the transaction.",
-    dispute: "There is a dispute in the payment. Please wait while we verify the transaction.",
-    duplicate: "Duplicate payment found. Please wait while we verify the transaction.",
-    failed: "Payment failed. Please try again with correct details.",
-    expired: "The payment URL has expired. Please try again.",
-    success: "Your payment has been successfully processed. Points will be credited shortly.",
+    processing: lang.processing,
+    dispute: lang.dispute,
+    duplicate: lang.duplicate,
+    failed: lang.failed,
+    expired: lang.expired,
+    success: lang.success,
   };
   
   const statusConfig = {
@@ -103,7 +103,7 @@ const Modal = ({
           <div className="modal-content">
             {amount && (
               <div className="amount-display">
-                <span className="amount-label">Amount:</span>
+                <span className="amount-label">{lang.amount}:</span>
                 <span className="amount-value">₹{amount}</span>
               </div>
             )}
@@ -112,20 +112,20 @@ const Modal = ({
               <div className="transaction-details">
                 {orderId && (
                   <div className="detail-item">
-                    <span className="detail-label">Order ID:</span>
+                    <span className="detail-label">{lang.orderId}:</span>
                     <span className="detail-value">{orderId}</span>
                   </div>
                 )}
                 {utr && (
                   <div className="detail-item">
-                    <span className="detail-label">UTR:</span>
+                    <span className="detail-label">{lang.utr}.</span>
                     <span className="detail-value">{utr}</span>
                   </div>
                 )}
               </div>
             )}
             {redirectUrl && (
-              <p className="redirect-notice">Redirecting in 5 seconds...</p>
+              <p className="redirect-notice">{lang.redirecting}</p>
             )}
           </div>
         </div>

@@ -10,7 +10,7 @@ import Modal from "../modal/modal";
 import { toast, ToastContainer } from "react-toastify";
 import { Status } from "../../constants";
 import { assignBankToPayInUrl, imageSubmit, processTransaction } from "../../services/transaction";
-function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat, onBackClicked }) {
+function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,lang, onBackClicked }) {
     const totalDuration = 10 * 60; // Total duration in seconds (10 minutes)
     const [remainingTime, setRemainingTime] = useState(totalDuration);
     const [link, setLink] = useState();
@@ -222,7 +222,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
 
                         <div className="w-full flex justify-between mb-5 mt-5">
                             <div className="flex flex-col item-center">
-                                <p className="text-md sm:text-lgmr-2">Bank Name</p>
+                                <p className="text-md sm:text-lgmr-2">{lang.bankName}</p>
                             </div>
                             <div className="flex flex-col item-center">
                                 <p className="text-sm sm:text-lg mr-2">{bankDetails.nick_name}
@@ -234,7 +234,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                         </div>
                         <div className="w-full flex justify-between mb-5 mt-5">
                             <div className="flex flex-col item-center">
-                                <p className="text-lg mr-2">Account Number</p>
+                                <p className="text-lg mr-2">{lang.accountNumber}</p>
                             </div>
                             <div className="flex flex-col item-center">
                                 <p className="text-sm sm:text-lg mt-1 sm:mt-0 mr-2">{bankDetails.acc_no}
@@ -246,7 +246,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                         </div>
                         <div className="w-full flex justify-between mb-5 mt-5">
                             <div className="flex flex-col item-center">
-                                <p className="text-lg mr-2">Name</p>
+                                <p className="text-lg mr-2">{lang.name}</p>
                             </div>
                             <div className="flex flex-col item-center">
                                 <p className="text-sm sm:text-lg  mr-2">{bankDetails.acc_holder_name}
@@ -258,7 +258,7 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                         </div>
                         <div className="w-full flex justify-between mb-5 mt-5">
                             <div className="flex flex-col item-center">
-                                <p className="text-lg mr-2">IFSC Code</p>
+                                <p className="text-lg mr-2">{lang.ifscCode}</p>
                             </div>
                             <div className="flex flex-col item-center">
                                 <p className="text-sm sm:text-lg  mr-2">{bankDetails.ifsc}
@@ -271,54 +271,53 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                     </div>
 
                     <p className="text-red-500 text-center text-lg sm:text-base mt-4">
-                        <b>ATTENTION: </b>These details are valid for the next 10 minutes.
+                        <b>{lang.attention}: </b>{lang.attentionEnterAmount}
                     </p>
                     <p className="text-red-500 text-center text-lg sm:text-base mb-4">
-                        If payment is made after this period, you will be responsible for any 
+                        {lang.paymentAfterPeriod}
                         <br />
-                        potential losses.
                     </p>
                     <div className="mt-5 flex justify-center">
-                        <UtrOrScreenShot onSubmit={handleFormSubmit} />
+                        <UtrOrScreenShot onSubmit={handleFormSubmit} lang={lang}/>
                     </div>
                     <Modal
                         isOpen={isModalOpen}
                         amount={transactionDetails?.req_amount}
                         orderId={transactionDetails.merchantOrderId}
-                        title={transactionDetails?.status}
+                        title={lang[transactionDetails?.status] || transactionDetails?.status} 
                         utr={transactionDetails.utr_id}
                         redirectUrl={redirectUrl}
+                        lang={lang}
                         theme={transactionStatus}
                         type={transactionDetails?.status}
                         message={transactionDetails?.status === "SUCCESS" ? "Payment has been made successfully" : "Your points will be credited soon in your account"}
                     />
                     <Modal
                         isOpen={isModalExpireOpen}
+                        lang={lang}
                         title="Payment URL is Expired"
                         type="EXPIRED"
                         message="The payment URL has expired. Please try again."
                     />
                     <p className="text-black text-start text-lg sm:text-base mb-4">
-                        <b>Steps for Payment:</b>
+                        <b>{lang.stepsForPayment}:</b>
                         <br />
-                        1. Transfer the displayed Amount using the above details (e.g., IMPS)
+                        1. {lang.transferAmount}
                         <span className="text-red-500">*</span>
                         <br />
-                        2. Verify the payment amount
+                        2. {lang.verifyAmount}
                         <span className="text-red-500">*</span>
                         <br />
-                        3. Take a screenshot of your payment and upload or
-                        <br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;copy 12-digit UTR number and paste in the blank space provided.
+                        3. {lang.takeScreenshot}
                         <span className="text-red-500">*</span>
                         <br />
-                        4. Click on <b>Submit</b> to complete the process.
+                        4. {lang.clickSubmitStart} <b>{lang.submit}</b> {lang.clickSubmitEnd}
                         <span className="text-red-500">*</span>
                         <br />
-                        5. Wait for confirmation — your transaction will be verified shortly.
+                        5. {lang.waitForConfirmation}
                         <span className="text-red-500">*</span>
                     </p>
-                    <NortonAndVideoLink link={link} />
+                    <NortonAndVideoLink link={link} lang={lang}/>
                 </div>
             </div>
         </div></div>
