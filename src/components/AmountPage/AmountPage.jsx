@@ -8,6 +8,7 @@ import { CardPay } from "../CardPay";
 import { validateToken, generatePayIn } from "../../services/transaction";
 import { Modal } from '../modal';
 import { ToastContainer, toast } from "react-toastify";
+import { languageConfig } from "../utils/language";
 
 function AmountPage({ closeChat }) {
     const totalDuration = 10 * 60; 
@@ -38,7 +39,7 @@ function AmountPage({ closeChat }) {
     const [redirectUrl, setRedirectUrl] = useState(null);
     // Timer state
     const [remainingTime, setRemainingTime] = useState(totalDuration);
-
+    const [accessDenied, setAccessDennied] = useState(false);
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
 
@@ -46,9 +47,11 @@ function AmountPage({ closeChat }) {
     const apiCalledRef = useRef(false);
     const navigate = useNavigate();
 
+    const [language, setLanguage] = useState("en"); 
+    const lang = languageConfig[language];
     // Timer logic
     useEffect(() => {
-        if (showExpiredModal) return; 
+        if (showExpiredModal) return;
 
         if (remainingTime > 0) {
             const timer = setInterval(() => {
@@ -104,26 +107,28 @@ function AmountPage({ closeChat }) {
                     validateCalledRef.current = true;
                     setMerchantOrderId(order);
                     const res = await validateToken(order);
-                    if (res.data.data.error) {
-                        setRedirectUrl(res.data.data.result.redirect_url);
+                    if (res?.data?.data?.error) {
+                        setRedirectUrl(res?.data?.data?.result?.redirect_url);
                         setShowExpiredModal(true);
                         setIsValidated(true);
-                    } else if (res.data.data) {
-                        setUpi(res.data.data.is_qr);
-                        setPhonePay(res.data.data.is_phonepay);
-                        setBank(res.data.data.is_bank);
-                        setCode(res.data.data.code);
-                        setMinAmount(res.data.data.min_amount);
-                        setMaxAmount(res.data.data.max_amount);
-                        setRedirectUrl(res.data.data.redirect_url);
-                        if (res.data.data.amount > 0) {
-                            setAmount(res.data.data.amount);
+                    } else if (res?.data?.data){
+                        setUpi(res?.data?.data?.is_qr);
+                        setPhonePay(res?.data?.data?.is_phonepay);
+                        setBank(res?.data?.data?.is_bank);
+                        setCode(res?.data?.data?.code);
+                        setMinAmount(res?.data?.data?.min_amount);
+                        setMaxAmount(res?.data?.data?.max_amount);
+                        setRedirectUrl(res?.data?.data?.redirect_url);
+                        if (res?.data?.data?.amount > 0) {
+                            setAmount(res?.data?.data?.amount);
                             setSelectMethod(true);
                         }
                         setIsValidated(true);
+                    }else if(res.error){
+                        setShowExpiredModal(true);
+                        setAccessDennied(res.error.error.message);
                     }
-                } catch (error) {
-                    console.error('Error validating token:', error);
+                }catch (error) {
                     validateCalledRef.current = false;
                     setShowExpiredModal(true);
                     setIsValidated(true);
@@ -195,7 +200,7 @@ function AmountPage({ closeChat }) {
             const numericMaxAmount = Number(maxAmount);
 
             if (numericAmount < numericMinAmount || numericAmount > numericMaxAmount) {
-                toast.error(`Error: Amount must be between ${numericMinAmount} and ${numericMaxAmount}`);
+                toast.error(`${lang.invalidAmount} ${numericMinAmount} ${lang.and} ${numericMaxAmount}`);
                 return;
             }
             setSelectMethod(true);
@@ -225,7 +230,7 @@ function AmountPage({ closeChat }) {
         setIncreaseSize(false);
     };
 
-    if (!isValidated) {
+    if (!isValidated && !showExpiredModal) {
         // return null;
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
@@ -236,6 +241,21 @@ function AmountPage({ closeChat }) {
 
     return (
         <div onClick={closeChat} className="flex justify-center items-center">
+            <select
+                onChange={(e) => setLanguage(e.target.value)}
+                value={language}
+                className="absolute top-4 right-4 bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 transition-all"
+            >
+                <option value="en">🌐 English</option>
+                <option value="hi">🇮🇳 हिंदी</option>
+                <option value="gu">🏳️ ગુજરાતી</option>
+                <option value="bn">🏳️ বাংলা</option>
+                <option value="ta">🏳️ தமிழ்</option>
+                <option value="te">🏳️ తెలుగు</option>
+                <option value="kn">🏳️ ಕನ್ನಡ</option>
+                <option value="ml">🏳️ മലയാളം</option>
+            </select>
+
             <div
                 className={`flex justify-center ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem] mt-8"}`}
                 onClick={() => { setClick(false); }}
@@ -247,7 +267,7 @@ function AmountPage({ closeChat }) {
                             <div className="flex flex-col px-2 mt-2 justify-center">
                                 <div className="flex justify-between items-center mb-4">
                                     <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
-                                        Please enter the amount 
+                                        {lang.enterAmountLabel}
                                     </label>
                                     <div className="relative">
                                         <svg
@@ -287,7 +307,7 @@ function AmountPage({ closeChat }) {
                                     </div>
                                 </div>
                                 <p className="text-red-500 text-center text-sm mb-4">
-                                    <b>ATTENTION: </b>Enter the amount within the next 10 minutes.
+                                    <b>{lang.attention} </b>{lang.attentionEnterAmount}
                                 </p>
                                 <input
                                     type="number"
@@ -307,14 +327,14 @@ function AmountPage({ closeChat }) {
                                     style={{
                                         boxShadow: click ? '0 4px 10px rgba(0,0,0,0.1), 0 0 15px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 0, 255, 0.5)' : "none"
                                     }}
-                                    placeholder="Enter New Amount Here"
+                                    placeholder={lang.enterAmountPlaceholder}
                                 />
                                 <div className="flex justify-center">
                                     <button
                                         onClick={handleAmountSubmit}
                                         className="bg-gradient-to-r from-green-400 to-blue-500 w-[60rem] md:w-[46rem] h-10 font-bold text-lg text-white shadow-lg transform transition-transform duration-300 hover:scale-105 rounded-lg mb-8 mt-4"
                                     >
-                                        Submit
+                                        {lang.submit}
                                     </button>
                                     <ToastContainer />
                                 </div>
@@ -325,7 +345,7 @@ function AmountPage({ closeChat }) {
                             <div className="mx-8">
                                 <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
                                 <div className="flex justify-between items-center mb-4">
-                                    <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">Payment Method</h1>
+                                    <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">{lang.paymentMethod}</h1>
                                     <div className="relative">
                                         <svg
                                             className="progress-circle"
@@ -364,7 +384,7 @@ function AmountPage({ closeChat }) {
                                     </div>
                                 </div>
                                 <p className="text-red-500 text-center text-sm mb-4">
-                                    <b>ATTENTION: </b>Select a payment method within the remaining time.
+                                    <b>{lang.attention}: </b>{lang.attentionSelectMethod}
                                 </p>
                                 <div className="flex flex-col relative gap-4 lg:flex-row justify-center mt-5 mb-5">
                                     {upi && (
@@ -376,7 +396,7 @@ function AmountPage({ closeChat }) {
                                                     setType("upi");
                                                 }}
                                             >
-                                                <span className="mb-2">UPI</span>
+                                                <span className="mb-2">{lang.upi}</span>
                                             </button>
                                         </div>
                                     )}
@@ -389,7 +409,7 @@ function AmountPage({ closeChat }) {
                                                     setType("phone_pe");
                                                 }}
                                             >
-                                                <span>Phone Pe</span>
+                                                <span>{lang.phonePe}</span>
                                             </button>
                                         </div>
                                     )}
@@ -400,7 +420,7 @@ function AmountPage({ closeChat }) {
                                                 text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 shadow-lg rounded-lg"
                                                 onClick={() => handlePayClick("bank")}
                                             >
-                                                Bank Transfer
+                                                {lang.bankTransfer}
                                             </button>
                                         </div>
                                     )}
@@ -420,6 +440,7 @@ function AmountPage({ closeChat }) {
                             closeChat={closeChat}
                             onBackClicked={handleChange}
                             isRedirectUrl={redirectUrl}
+                            lang={lang}
                         />
                     )}
                 </div>
@@ -432,6 +453,7 @@ function AmountPage({ closeChat }) {
                             closeChat={closeChat}
                             onBackClicked={handleChange}
                             isRedirectUrl={redirectUrl}
+                            lang={lang}
                         />
                     )}
                 </div>
@@ -442,6 +464,7 @@ function AmountPage({ closeChat }) {
                             merchantOrderId={merchantOrderId}
                             closeChat={closeChat}
                             onBackClicked={handleChange}
+                            lang={lang}
                         />
                     )}
                 </div>
@@ -449,10 +472,11 @@ function AmountPage({ closeChat }) {
             {showExpiredModal && (
                 <Modal
                     isOpen={showExpiredModal}
-                    title="Payment URL is Expired"
+                    title={accessDenied ? `${lang.accessDeniedTitle}` : `${lang.paymentUrlExpiredTitle}`}
                     redirectUrl={redirectUrl}
-                    message="The payment URL you provided has expired. Please generate a new URL and try again."
+                    message={lang.paymentUrlExpiredMessage}
                     type="EXPIRED"
+                    lang={lang}
                 />
             )}
         </div>

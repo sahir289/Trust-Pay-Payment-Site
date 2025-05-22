@@ -232,7 +232,7 @@ function CardPay({ amount, closeChat, onBackClicked }) {
                                 <button className="flex justify-center mb-8 items-center w-[90vw] sm:w-[60vw] md:w-[30vw] items-center ml-2  h-12 text-3xl font-bold text-white rounded-lg bg-gradient-to-r from-green-400 to-blue-500 p-4 rounded-lg shadow-lg transform transition-transform duration-300 mb-2" onClick={openModal}>
                                     Submit
                                 </button>
-                                <Modal isOpen={isModalOpen} amount={amount} theme="green-theme"></Modal>
+                                <Modal isOpen={isModalOpen} amount={amount} lang={lang} theme="green-theme"></Modal>
                             </div>
                             <p className="text-black text-start text-lg sm:text-base mb-5">
                                 <b>Steps for Payment: </b>
@@ -243,7 +243,7 @@ function CardPay({ amount, closeChat, onBackClicked }) {
                                 <br />
                                 3. Pay the display Amount.<span className="text-red-500">*</span>
                             </p>
-                            <NortonAndVideoLink link={link} />
+                            <NortonAndVideoLink lang={lang} link={link} />
                         </div>
                     </div>
                 </div>
