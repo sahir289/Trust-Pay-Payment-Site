@@ -9,6 +9,7 @@ import { validateToken, generatePayIn } from "../../services/transaction";
 import { Modal } from '../modal';
 import { ToastContainer, toast } from "react-toastify";
 import { languageConfig } from "../utils/language";
+import { manageTimer } from "../../utils/timer";
 
 function AmountPage({ closeChat }) {
     const totalDuration = 10 * 60; 
@@ -39,36 +40,31 @@ function AmountPage({ closeChat }) {
     const [redirectUrl, setRedirectUrl] = useState(null);
     // Timer state
     const [remainingTime, setRemainingTime] = useState(totalDuration);
-    const [accessDenied, setAccessDennied] = useState(false);
+    const [accessDenied, setAccessDennied] = useState(false);    const [expireTime] = useState(Date.now() + 10 * 60 * 1000);
+    const [startTime] = useState(Date.now());
     const pathname = window.location.pathname;
     const hashCode = pathname.split('/transaction/')[1];
-
     const validateCalledRef = useRef(false);
     const apiCalledRef = useRef(false);
     const navigate = useNavigate();
-
+    ///set time in session storage
     const [language, setLanguage] = useState("en"); 
     const lang = languageConfig[language];
+    useEffect(() => {
+        sessionStorage.setItem("expireSession", expireTime);
+        sessionStorage.setItem("startSession", startTime);  
+   },[expireTime,startTime])
+    
     // Timer logic
     useEffect(() => {
         if (showExpiredModal) return;
-
         if (remainingTime > 0) {
-            const timer = setInterval(() => {
-                setRemainingTime((prevTime) => {
-                    if (prevTime <= 1) {
-                        setShowExpiredModal(true);
-                        clearInterval(timer);
-                        return 0;
-                    }
-                    return prevTime - 1;
-                });
-            }, 1000);
-            return () => clearInterval(timer);
+            //timer for url expired 10 mins
+            manageTimer(totalDuration, setRemainingTime,remainingTime, setShowExpiredModal)
         } else {
             setShowExpiredModal(true);
         }
-    }, [remainingTime, showExpiredModal]);
+    }, [showExpiredModal, expireTime, startTime, totalDuration, remainingTime]);
 
     const formatTime = (seconds) => {
         const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -128,7 +124,7 @@ function AmountPage({ closeChat }) {
                         setShowExpiredModal(true);
                         setAccessDennied(res.error.error.message);
                     }
-                }catch (error) {
+                }catch {
                     validateCalledRef.current = false;
                     setShowExpiredModal(true);
                     setIsValidated(true);
@@ -220,7 +216,10 @@ function AmountPage({ closeChat }) {
             setIncreaseSize(true);
             setVisibleBank(true);
         }
-        setRemainingTime(totalDuration);
+        sessionStorage.clear();
+        // setRemainingTime(totalDuration);
+        // setExpireTime(new Date(Date.now() + 10 * 60 * 1000));
+        // setStartTime((new Date()));
     };
 
     const handleChange = () => {
@@ -269,7 +268,7 @@ function AmountPage({ closeChat }) {
                                     <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
                                         {lang.enterAmountLabel}
                                     </label>
-                                    <div className="relative">
+                                    {/* <div className="relative">
                                         <svg
                                             className="progress-circle"
                                             width="60"
@@ -304,7 +303,7 @@ function AmountPage({ closeChat }) {
                                                 {formatTime(remainingTime)}
                                             </p>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <p className="text-red-500 text-center text-sm mb-4">
                                     <b>{lang.attention} </b>{lang.attentionEnterAmount}
