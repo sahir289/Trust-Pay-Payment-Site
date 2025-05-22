@@ -1,8 +1,8 @@
 
 export const manageTimer = (totalDuration, setRemainingTime, remainingTime, setShowExpiredModal) => {
   const timer = setInterval(() => {
-    const startTime = Number(sessionStorage.getItem('A_B_C')) || 0;
-    const expireTime = Number(sessionStorage.getItem('X_Y_Z')) || 0;
+    const startTime = Number(sessionStorage.getItem('startSession')) || 0;
+    const expireTime = Number(sessionStorage.getItem('expireSession')) || 0;
     const now = new Date().getTime();
     if (now !== startTime) {
       const elapsed = now - startTime;

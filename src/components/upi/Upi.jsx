@@ -42,8 +42,8 @@ function Upi({
     const [startTime] = useState(Date.now());
 
     useEffect(() => {
-        sessionStorage.setItem("X_Y_Z", expireTime);
-        sessionStorage.setItem("A_B_C", startTime);  
+        sessionStorage.setItem("expireSession", expireTime);
+        sessionStorage.setItem("startSession", startTime);  
    },[expireTime,startTime])
 
 
