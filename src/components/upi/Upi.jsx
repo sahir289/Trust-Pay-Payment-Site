@@ -8,6 +8,7 @@ import { NortonAndVideoLink } from '../nortonAndVideoLink';
 import { QrGenerator } from '../qr-generator';
 import { IoCopy } from 'react-icons/io5';
 import { SiPhonepe, SiGooglepay, SiPaytm } from "react-icons/si";
+import { manageTimer } from "../../utils/timer";
 import Modal from '../modal/modal';
 import {
     assignBankToPayInUrl,
@@ -38,16 +39,21 @@ function Upi({
     const [transactionDetails, setTransactionDetails] = useState({});
     const [transactionStatus, setTransactionStatus] = useState(null);
     const [redirectUrl, setRedirectUrl] = useState(null);
+    const [expireTime] = useState(Date.now() + 10 * 60 * 1000);
+    const [startTime] = useState(Date.now());
+
+    useEffect(() => {
+        sessionStorage.setItem("expireSession", expireTime);
+        sessionStorage.setItem("startSession", startTime);  
+   },[expireTime,startTime])
+
 
     useEffect(() => {
         setLink('https://www.youtube.com/embed/HZHHBwzmJLk');
         if (remainingTime > 0) {
-            const timer = setInterval(() => {
-                setRemainingTime((prevTime) => prevTime - 1);
-            }, 1000);
-
-            return () => clearInterval(timer); // Cleanup timer on component unmount
+            manageTimer(totalDuration, setRemainingTime,remainingTime, setIsModalExpireOpen)
         } else {
+            sessionStorage.clear()
             setIsModalExpireOpen(true);
             setIsModalOpen(false);
         }
