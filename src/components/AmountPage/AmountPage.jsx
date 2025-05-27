@@ -305,9 +305,9 @@ function AmountPage({ closeChat }) {
                                         </div>
                                     </div> */}
                                 </div>
-                                <p className="text-red-500 text-center text-sm mb-4">
+                                {/* <p className="text-red-500 text-center text-sm mb-4">
                                     <b>{lang.attention} </b>{lang.attentionEnterAmount}
-                                </p>
+                                </p> */}
                                 <input
                                     type="number"
                                     value={amount}
@@ -345,7 +345,7 @@ function AmountPage({ closeChat }) {
                                 <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
                                 <div className="flex justify-between items-center mb-4">
                                     <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">{lang.paymentMethod}</h1>
-                                    <div className="relative">
+                                    {/* <div className="relative">
                                         <svg
                                             className="progress-circle"
                                             width="60"
@@ -380,11 +380,11 @@ function AmountPage({ closeChat }) {
                                                 {formatTime(remainingTime)}
                                             </p>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
-                                <p className="text-red-500 text-center text-sm mb-4">
+                                {/* <p className="text-red-500 text-center text-sm mb-4">
                                     <b>{lang.attention}: </b>{lang.attentionSelectMethod}
-                                </p>
+                                </p> */}
                                 <div className="flex flex-col relative gap-4 lg:flex-row justify-center mt-5 mb-5">
                                     {upi && (
                                         <div className="flex justify-center items-center">
