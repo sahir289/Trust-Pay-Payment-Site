@@ -240,20 +240,7 @@ function AmountPage({ closeChat }) {
 
     return (
         <div onClick={closeChat} className="flex justify-center items-center">
-            <select
-                onChange={(e) => setLanguage(e.target.value)}
-                value={language}
-                className="absolute top-4 right-4 bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 transition-all"
-            >
-                <option value="en">🌐 English</option>
-                <option value="hi">🇮🇳 हिंदी</option>
-                <option value="gu">🏳️ ગુજરાતી</option>
-                <option value="bn">🏳️ বাংলা</option>
-                <option value="ta">🏳️ தமிழ்</option>
-                <option value="te">🏳️ తెలుగు</option>
-                <option value="kn">🏳️ ಕನ್ನಡ</option>
-                <option value="ml">🏳️ മലയാളം</option>
-            </select>
+           
 
             <div
                 className={`flex justify-center ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem] mt-8"}`}

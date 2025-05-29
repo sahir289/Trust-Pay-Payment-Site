@@ -159,13 +159,13 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
     };
 
     return (
-        <div>
-        <div className="flex justify-center mt-3 py-2 px-2 rounded-3xl " onClick={closeChat}>
-            <div className="bg-[#f1f1eb] rounded-3xl  shadow-md py-2 px-2  mt-4 ">
-                <div className="bg-white p-3 rounded-3xl shadow-md ">
+        <div className="flex justify-center items-center min-h-full sm:min-h-screen 2xl:min-h-full">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:w-screen h-full 2xl:h-screen mx-auto">
+                 <div className="bg-[#f1f1eb] rounded-3xl sm:shadow-md sm:py-2 sm:px-2  mt-4 ">
+                <div className="bg-white p-3 rounded-3xl sm:shadow-md ">
                     <ToastContainer />
                     <div className="mb-5">
-                        <div className="w-full flex justify-between rounded-t-3xl p-4 text-white">
+                        <div className="w-70 sm:w-50 flex justify-between rounded-t-3xl p-4 text-white">
                             <div className="flex flex-col items-center self-center">
                                 {/* <button
                                     onClick={() => onBackClicked()}
@@ -326,7 +326,8 @@ function BankTransfer({ amount, code, isRedirectUrl, merchantOrderId, closeChat,
                     <NortonAndVideoLink link={link} lang={lang}/>
                 </div>
             </div>
-        </div></div>
+        </div>
+        </div>
     );
 }
 
