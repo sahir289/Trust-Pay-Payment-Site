@@ -241,20 +241,7 @@ function AmountPage({ closeChat }) {
 
     return (
         <div onClick={closeChat} className="flex justify-center items-center">
-            <select
-                onChange={(e) => setLanguage(e.target.value)}
-                value={language}
-                className="absolute top-4 right-4 bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 transition-all"
-            >
-                <option value="en">🌐 English</option>
-                <option value="hi">🇮🇳 हिंदी</option>
-                <option value="gu">🏳️ ગુજરાતી</option>
-                <option value="bn">🏳️ বাংলা</option>
-                <option value="ta">🏳️ தமிழ்</option>
-                <option value="te">🏳️ తెలుగు</option>
-                <option value="kn">🏳️ ಕನ್ನಡ</option>
-                <option value="ml">🏳️ മലയാളം</option>
-            </select>
+           
 
             <div
                 className={`flex justify-center ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem] mt-8"}`}
@@ -266,10 +253,8 @@ function AmountPage({ closeChat }) {
                         {!selectMethod && (
                             <div className="flex flex-col px-2 mt-2 justify-center">
                                 <div className="flex justify-between items-center mb-4">
-                                    <label className="text-gray-500 text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
-                                        {lang.enterAmountLabel}
-                                    </label>
-                                    <div className="relative">
+
+                                    <div className="relative ml-4">
                                         <svg
                                             className="progress-circle"
                                             width="60"
@@ -305,8 +290,26 @@ function AmountPage({ closeChat }) {
                                             </p>
                                         </div>
                                     </div>
+                                    <div className="relative">
+                                        <select
+                                            onChange={(e) => setLanguage(e.target.value)}
+                                            value={language}
+                                            className="mr-4 bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 transition-all"
+                                        >
+                                            <option value="en">🌐 English</option>
+                                            <option value="hi">🇮🇳 हिंदी</option>
+                                            <option value="gu">🏳️ ગુજરાતી</option>
+                                            <option value="bn">🏳️ বাংলা</option>
+                                            <option value="ta">🏳️ தமிழ்</option>
+                                            <option value="te">🏳️ తెలుగు</option>
+                                            <option value="kn">🏳️ ಕನ್ನಡ</option>
+                                            <option value="ml">🏳️ മലയാളം</option>
+                                        </select></div>
                                 </div>
-                                <p className="text-red-500 text-center text-sm mb-4">
+                                <label className="text-gray-500  text-center justify-center text-xl px-4 py-1 cursor-pointer transform transition-transform rounded-sm duration-300 font-bold">
+                                    {lang.enterAmountLabel}
+                                </label>
+                                <p className="text-red-500 text-center justify-center text-sm mb-4">
                                     <b>{lang.attention} </b>{lang.attentionEnterAmount}
                                 </p>
                                 <input
@@ -344,8 +347,7 @@ function AmountPage({ closeChat }) {
                         {selectMethod && (
                             <div className="mx-8">
                                 <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
-                                <div className="flex justify-between items-center mb-4">
-                                    <h1 className="text-xl sm:text-2xl text-gray-500 font-bold px-6 py-2">{lang.paymentMethod}</h1>
+                                <div className="flex justify-between items-center mb-4">                        
                                     <div className="relative">
                                         <svg
                                             className="progress-circle"
@@ -383,6 +385,7 @@ function AmountPage({ closeChat }) {
                                         </div>
                                     </div>
                                 </div>
+                                <h1 className="text-xl sm:text-2xl text-gray-500 text-center justify-center font-bold px-6 py-2">{lang.paymentMethod}</h1>
                                 <p className="text-red-500 text-center text-sm mb-4">
                                     <b>{lang.attention}: </b>{lang.attentionSelectMethod}
                                 </p>

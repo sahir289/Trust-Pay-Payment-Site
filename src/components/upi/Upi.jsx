@@ -291,8 +291,8 @@ function Upi({
 return (
   <div className="flex justify-center items-center min-h-full sm:min-h-screen 2xl:min-h-full">
     <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg 2xl:w-screen h-full 2xl:h-screen mx-auto">
-      <div className="bg-[#f1f1eb] rounded-3xl shadow-md py-4 px-4 mt-6">
-        <div className="bg-white p-4 rounded-3xl shadow-md">
+      <div className="bg-[#f1f1eb] rounded-3xl sm:shadow-md sm:py-4 sm:px-4 mt-6">
+        <div className="bg-white p-4 rounded-3xl sm:shadow-md">
           <div className="mb-5">
             <div className="w-full flex justify-between rounded-t-3xl p-4 text-white upi-header mx-auto">
               <div className="flex flex-col items-center self-center">
