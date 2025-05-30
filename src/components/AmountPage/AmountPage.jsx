@@ -255,6 +255,7 @@ function AmountPage({ closeChat }) {
                 <option value="ml">🏳️ മലയാളം</option>
             </select>
 
+
             <div
                 className={`flex justify-center ${increaseSize ? " " : "py-8 bg-[#f1f1eb] px-4 sm:px-8 rounded-3xl w-[21.6rem] lg:w-[36rem] mt-8"}`}
                 onClick={() => { setClick(false); }}
